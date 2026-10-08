@@ -7,12 +7,21 @@ const phoneTel = "+919599229585";
 const whatsapp = "https://wa.me/919599229585";
 const linkedin = "https://www.linkedin.com/in/ravikishore-b-917b85226/";
 
+// Generic drawn icons, not brand logos.
+const icons = {
+  email: '<path d="M3.5 6.5h17v11h-17z"/><path d="m3.5 7 8.5 6.5L20.5 7"/>',
+  chat: '<path d="M4 5.5h16v10H9.5L5.5 19v-3.5H4z"/><path d="M8 9.5h8M8 12.5h5"/>',
+  phone: '<path d="M7.2 3.8 9.7 4.4l1 4.1-2 1.4a12 12 0 0 0 5.4 5.4l1.4-2 4.1 1-.1 2.6c-.1 1.2-1.1 2.1-2.3 2A16.5 16.5 0 0 1 3.6 7c-.1-1.2.8-2.2 2-2.3z"/>',
+  profile: '<rect x="3.5" y="5" width="17" height="14" rx="2"/><circle cx="9" cy="11" r="2.2"/><path d="M5.8 16.2c.6-1.6 1.8-2.4 3.2-2.4s2.6.8 3.2 2.4M14.5 10h3.5M14.5 13h3.5"/>',
+  code: '<path d="m8.5 7-5 5 5 5M15.5 7l5 5-5 5M13.5 5l-3 14"/>',
+};
+
 const channels = [
-  { label: "Email", value: email, href: `mailto:${email}`, note: "Best for roles, CV requests and anything detailed" },
-  { label: "WhatsApp", value: phoneDisplay, href: whatsapp, note: "Quickest for a short message" },
-  { label: "Phone", value: phoneDisplay, href: `tel:${phoneTel}`, note: "Message first if you can; I work shifts" },
-  { label: "LinkedIn", value: "Ravi Kishore", href: linkedin, note: "Connect or message" },
-  { label: "GitHub", value: "BODAPATI88", href: "https://github.com/BODAPATI88", note: "Code for this site and other projects" },
+  { label: "Email", icon: icons.email, href: `mailto:${email}`, primary: true },
+  { label: "WhatsApp", icon: icons.chat, href: whatsapp },
+  { label: "Call", icon: icons.phone, href: `tel:${phoneTel}` },
+  { label: "LinkedIn", icon: icons.profile, href: linkedin },
+  { label: "GitHub", icon: icons.code, href: "https://github.com/BODAPATI88" },
 ];
 
 const reasons = [
@@ -40,17 +49,23 @@ const reasons = [
     Email or WhatsApp is the most reliable way to reach me.
   </p>
 
-  <ul class="channels">
-    {channels.map((c, i) => (
-      <li class:list={[i === 0 && "primary"]}>
-        <a href={c.href}>
-          <span class="label">{c.label}</span>
-          <span class="value">{c.value}</span>
-          <span class="note">{c.note}</span>
+  <ul class="channels" aria-label="Ways to reach me">
+    {channels.map((c) => (
+      <li>
+        <a href={c.href} class:list={["chan", c.primary && "primary"]}>
+          <span class="disc" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" set:html={c.icon} />
+          </span>
+          <span class="chan-label">{c.label}</span>
         </a>
       </li>
     ))}
   </ul>
+
+  <p class="plain">
+    <span>{email}</span>
+    <span>{phoneDisplay}</span>
+  </p>
 
   <section class="block" aria-labelledby="where">
     <h2 id="where">Where and when</h2>
@@ -77,25 +92,30 @@ const reasons = [
 <style>
   .channels {
     list-style: none; margin: clamp(2rem, 5vw, 3rem) 0 0; padding: 0;
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
-    gap: 0.9rem;
-    max-width: 62rem;
+    display: flex; flex-wrap: wrap; gap: clamp(0.75rem, 3vw, 1.75rem);
   }
-  .channels a {
-    display: flex; flex-direction: column; gap: 0.2rem; height: 100%;
-    min-height: 44px;
-    padding: 1.05rem 1.2rem 1.15rem;
-    background: var(--panel); border: 1px solid var(--rule); border-radius: 8px;
+  .chan {
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    min-width: 4.5rem;
     color: var(--ink); text-decoration: none;
   }
-  .channels a:hover { border-color: var(--ink); }
-  .channels a:hover .value { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.2em; }
-  .label { color: var(--muted); font-size: 0.85rem; font-stretch: 85%; }
-  .value { font-weight: 750; font-size: 1.15rem; font-stretch: 92%; overflow-wrap: anywhere; }
-  .note { color: var(--muted); font-size: 0.9rem; }
-  .primary a { background: var(--steel); border-color: var(--led-live); color: var(--steel-ink); }
-  .primary .label, .primary .note { color: var(--steel-muted); }
-  .primary a:hover { border-color: var(--led-live); }
+  .disc {
+    display: grid; place-items: center;
+    width: 4rem; height: 4rem; border-radius: 50%;
+    background: var(--panel); border: 1px solid var(--rule);
+  }
+  .chan:hover .disc { border-color: var(--ink); transform: translateY(-2px); }
+  .chan:focus-visible { outline: none; }
+  .chan:focus-visible .disc { outline: 3px solid var(--cable); outline-offset: 3px; }
+  .chan-label { font-size: 0.9rem; font-stretch: 88%; }
+  .primary .disc { background: var(--led-live); border-color: var(--led-live); color: #06210f; }
+  .primary .chan-label { font-weight: 700; }
+
+  .plain {
+    margin: 1.5rem 0 0;
+    display: flex; flex-wrap: wrap; gap: 0.25rem 1.5rem;
+    color: var(--muted); font-size: 0.95rem;
+  }
 
   .block { margin-top: clamp(2.5rem, 6vw, 3.5rem); max-width: 46rem; }
   .block h2 {
@@ -118,7 +138,15 @@ const reasons = [
   .reasons p { margin: 0.3rem 0 0; color: var(--muted); max-width: 38em; }
 
   @media (forced-colors: active) {
-    .channels a, .primary a { border: 1px solid CanvasText; }
+    .disc { border: 1px solid CanvasText; }
+    .primary .disc { forced-color-adjust: none; }
+  }
+  @media (max-width: 30rem) {
+    .channels { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.25rem; }
+    .chan { min-width: 0; }
+    .disc { width: 3.1rem; height: 3.1rem; }
+    .disc svg { width: 22px; height: 22px; }
+    .chan-label { font-size: 0.78rem; }
   }
   @media (max-width: 40rem) {
     .where div { grid-template-columns: 1fr; gap: 0.2rem; }
