@@ -1,0 +1,110 @@
+---
+import Base from "../layouts/Base.astro";
+import { skills } from "../data/skills";
+---
+<Base
+  title="Skills, Ravi Kishore"
+  description="About 9.5 years in infrastructure: Windows Server, Active Directory, VMware vSphere, hybrid Azure, Terraform and data-centre operations, with an honest note on how deep each goes."
+>
+  <h1 class="page-title">Skills</h1>
+  <p class="lede">
+    About 9.5 years in infrastructure. Each area below says where I've used it and how deep it goes,
+    including where that is homelab scale rather than production.
+  </p>
+
+  <section class="block" aria-labelledby="skills">
+    <h2 id="skills" class="visually-hidden">Skill areas</h2>
+    <ul class="skills">
+      {skills.map((s) => (
+        <li>
+          <h3>{s.area}</h3>
+          <p class="tools">{s.tools.join(" · ")}</p>
+          <p class="depth">{s.depth}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="block creds" aria-labelledby="creds">
+    <h2 id="creds">Credentials</h2>
+    <dl>
+      <div>
+        <dt>Certification</dt>
+        <dd>Microsoft Certified: Windows Server Hybrid Administrator Associate (AZ-800, AZ-801). Earned September 2024, valid to September 2027.</dd>
+      </div>
+      <div>
+        <dt>Education</dt>
+        <dd>BTech, Electronics and Communication Engineering, JNTU Hyderabad, 2011</dd>
+      </div>
+    </dl>
+  </section>
+
+  <aside class="request" aria-labelledby="history">
+    <h2 id="history">Full work history</h2>
+    <p>My CV, with every role, employer and date, is available on request for roles and engagements.</p>
+    <p><a class="cta" href="/contact/">Ask for my CV</a></p>
+  </aside>
+</Base>
+
+<style>
+  .block { margin-top: clamp(2rem, 5vw, 3.5rem); }
+  .block > h2, .request h2 {
+    font-size: clamp(1.35rem, 1.1rem + 0.8vw, 1.8rem);
+    font-stretch: 90%;
+    margin-bottom: 1.25rem;
+  }
+
+  .skills {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+    gap: 1rem;
+  }
+  .skills li {
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 1.1rem 1.2rem;
+  }
+  .skills h3 { font-size: 1.1rem; font-stretch: 92%; }
+  .tools { margin: 0.4rem 0 0.6rem; font-weight: 650; font-size: 0.95rem; }
+  .depth { margin: 0; color: var(--muted); font-size: 0.95rem; }
+
+  .creds dl { margin: 0; max-width: 46rem; }
+  .creds div {
+    display: grid; grid-template-columns: 11rem minmax(0, 1fr); gap: 1.5rem;
+    padding-block: 1rem; border-top: 1px solid var(--rule);
+  }
+  .creds div:last-child { border-bottom: 1px solid var(--rule); }
+  .creds dt { color: var(--muted); font-stretch: 85%; }
+  .creds dd { margin: 0; }
+
+  .request {
+    margin-top: clamp(2.5rem, 6vw, 4rem);
+    padding: clamp(1.25rem, 3vw, 1.75rem);
+    border-radius: 8px;
+    background: var(--steel); color: var(--steel-ink);
+    max-width: 46rem;
+  }
+  .request p { margin: 0 0 1rem; color: var(--steel-muted); max-width: 34em; }
+  .request p:last-child { margin: 0; }
+  .cta {
+    display: inline-flex; align-items: center; min-height: 44px;
+    padding: 0 1.1rem; border-radius: 6px;
+    background: var(--led-live); color: #06210f;
+    font-weight: 700; text-decoration: none;
+  }
+  .cta:hover { text-decoration: underline; }
+
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+  }
+
+  @media (forced-colors: active) {
+    .request { border: 1px solid CanvasText; }
+    .cta { border: 2px solid ButtonText; }
+  }
+  @media (max-width: 40rem) {
+    .creds div { grid-template-columns: 1fr; gap: 0.35rem; }
+  }
+</style>
