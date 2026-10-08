@@ -13,7 +13,7 @@ export interface Unit {
 export const stack: Unit[] = [
   { name: "Site", detail: "Static Astro on Cloudflare Pages", status: "live" },
   { name: "CI", detail: "Build check on every pull request", status: "live" },
-  { name: "DNS as code", detail: "Terraform, Cloudflare provider", status: "planned" },
+  { name: "DNS as code", detail: "Terraform, Cloudflare provider", status: "building" },
   { name: "Monitoring", detail: "Uptime Kuma, public status page", status: "planned" },
   { name: "Backups", detail: "restic, with a tested restore", status: "planned" },
 ];
