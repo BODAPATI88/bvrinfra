@@ -1,25 +1,34 @@
 ---
 import { stack, statusLabel } from "../data/stack";
 // Racks are numbered from the bottom, so U1 renders last.
-const units = stack.map((u, i) => ({ ...u, u: i + 1 })).reverse();
+// --boot is the unit's place in the power-on order: U1 lights first.
+const units = stack.map((u, i) => ({ ...u, u: i + 1, boot: i })).reverse();
 const live = stack.filter((u) => u.status === "live").length;
 ---
-<figure class="rack">
-  <figcaption>
-    <span class="rack-name">This site, as built</span>
-    <span class="rack-count">{live} of {stack.length} units live</span>
-  </figcaption>
+<figure class="rack" aria-labelledby="rack-caption">
+  <div class="rack-head">
+    <p id="rack-caption" class="rack-name">This site, as built</p>
+    <p class="rack-count"><strong>{live}</strong> of {stack.length} units live</p>
+  </div>
+
   <ol class="units" reversed>
     {units.map((unit) => (
-      <li class:list={["unit", unit.status]}>
-        <span class="u">U{unit.u}</span>
+      <li class:list={["unit", unit.status]} style={`--boot:${unit.boot}`}>
+        <span class="u" aria-hidden="true">U{unit.u}</span>
+        <span class="ear" aria-hidden="true"></span>
         <span class="body">
           <span class="name">{unit.name}</span>
           <span class="detail">{unit.detail}</span>
         </span>
+        <span class="vent" aria-hidden="true"></span>
         <span class="state">
           <span class="led" aria-hidden="true"></span>
-          {statusLabel[unit.status]}
+          <span class="state-label">{statusLabel[unit.status]}</span>
+          {unit.evidence && (
+            <a class="evidence" href={unit.evidence.href}>
+              {unit.evidence.label}<span class="visually-hidden"> for {unit.name}</span>
+            </a>
+          )}
         </span>
       </li>
     ))}
@@ -30,63 +39,137 @@ const live = stack.filter((u) => u.status === "live").length;
   .rack {
     margin: 0;
     background: var(--steel);
-    color: #dfe5ea;
-    border-radius: 6px;
-    padding: 0.9rem 1.1rem 1.1rem;
+    color: var(--steel-ink);
+    border-radius: 8px;
+    padding: clamp(0.9rem, 2vw, 1.4rem);
     box-shadow: inset 0 0 0 1px var(--steel-line);
   }
-  figcaption {
-    display: flex; justify-content: space-between; align-items: baseline; gap: 1rem;
-    padding: 0.1rem 0.15rem 0.8rem;
-    font-variation-settings: "wdth" 75;
+  .rack-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    gap: 0.5rem 1rem; flex-wrap: wrap;
+    padding: 0 0.2rem 0.9rem;
   }
-  .rack-name { font-weight: 650; }
-  .rack-count { color: #a9b4be; font-size: 0.9rem; }
+  .rack-head p { margin: 0; }
+  .rack-name { font-weight: 700; font-stretch: 80%; font-size: 1.05rem; }
+  .rack-count { color: var(--steel-muted); font-stretch: 80%; }
+  .rack-count strong { color: var(--led-live); font-size: 1.6em; font-weight: 800; line-height: 1; }
 
   .units {
     list-style: none; margin: 0; padding: 0;
-    border-inline: 6px solid #3b4550;
-    background: repeating-linear-gradient(to bottom, #1d242b 0 1px, transparent 1px 100%);
+    border-inline: 8px solid var(--steel-3);
+    border-radius: 2px;
   }
   .unit {
     display: grid;
-    grid-template-columns: 2.6rem 1fr auto;
+    grid-template-columns: 3rem 0.6rem minmax(0, 1fr) minmax(0, 0.7fr) auto;
     align-items: center;
-    gap: 0.9rem;
-    padding: 0.75rem 0.85rem;
-    background: #333d47;
-    border-bottom: 2px solid #1d242b;
+    gap: 1rem;
+    min-height: clamp(4.5rem, 7vw, 5.5rem);
+    padding: 0.8rem 1.1rem 0.8rem 0.9rem;
+    background: var(--steel-2);
+    border-bottom: 2px solid var(--steel);
   }
   .unit:last-child { border-bottom: 0; }
   .u {
-    font-variation-settings: "wdth" 62;
-    font-weight: 600; font-size: 0.85rem; color: #93a0ab;
-    font-variant-numeric: tabular-nums;
+    font-stretch: 62%; font-weight: 700; font-size: 0.85rem;
+    color: var(--steel-muted); font-variant-numeric: tabular-nums;
+  }
+  /* Rack ear with two screw holes. */
+  .ear {
+    align-self: stretch;
+    background:
+      radial-gradient(circle at 50% 22%, var(--steel) 0 2.5px, transparent 3px),
+      radial-gradient(circle at 50% 78%, var(--steel) 0 2.5px, transparent 3px),
+      var(--steel-3);
+    border-radius: 2px;
   }
   .body { display: flex; flex-direction: column; min-width: 0; }
-  .name { font-weight: 650; font-variation-settings: "wdth" 85; font-size: 1.05rem; }
-  .detail { color: #a9b4be; font-size: 0.88rem; }
+  .name {
+    font-weight: 750; font-stretch: 88%;
+    font-size: clamp(1.15rem, 1rem + 0.6vw, 1.45rem);
+    line-height: 1.15;
+  }
+  .detail { color: var(--steel-muted); font-size: 0.9rem; }
+  /* Front-panel vent slots. Pure decoration; hidden on narrow screens. */
+  .vent {
+    height: 1.6rem;
+    background: repeating-linear-gradient(90deg, var(--steel) 0 3px, transparent 3px 8px);
+    border-radius: 2px;
+    opacity: 0.8;
+  }
   .state {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    font-size: 0.85rem; font-variation-settings: "wdth" 75; color: #c9d1d8;
-    white-space: nowrap;
+    display: inline-flex; align-items: center; justify-content: flex-end; gap: 0.6rem;
+    min-width: 11.5rem;
+    font-stretch: 80%; font-size: 0.95rem; white-space: nowrap;
   }
   .led {
-    width: 0.6rem; height: 0.6rem; border-radius: 50%;
+    width: 0.75rem; height: 0.75rem; border-radius: 50%;
     background: var(--led-off);
-    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.35);
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.4);
+    flex: none;
   }
-  .live .led { background: var(--led-live); box-shadow: 0 0 0 3px rgba(47,179,107,0.18); }
-  .building .led { background: var(--led-build); box-shadow: 0 0 0 3px rgba(224,165,38,0.16); }
-  .planned { background: #2d363f; }
-  .planned .name { color: #b9c3cb; }
+  .live .led { background: var(--led-live); box-shadow: 0 0 0 4px rgba(47, 191, 113, 0.2), 0 0 12px rgba(47, 191, 113, 0.55); }
+  .building .led { background: var(--led-build); box-shadow: 0 0 0 4px rgba(240, 180, 41, 0.18); }
+  .planned { background: var(--steel-3); }
+  .planned .name { color: var(--steel-muted); }
 
+  .evidence {
+    color: var(--steel-ink);
+    font-size: 0.85rem;
+    display: inline-flex; align-items: center;
+    min-height: 44px; padding-inline: 0.75rem;
+    border: 1px solid var(--steel-line);
+    border-radius: 6px;
+    text-decoration: none;
+  }
+  .evidence:hover { border-color: var(--steel-ink); }
+  .evidence:focus-visible { outline: 3px solid var(--led-live); outline-offset: 2px; }
+
+  /* One orchestrated moment: on first load, units power on bottom-up. */
   @media (prefers-reduced-motion: no-preference) {
-    .building .led { animation: blink 1.6s steps(2, jump-none) infinite; }
+    .live .led, .building .led {
+      animation: power-on 0.35s ease-out both;
+      animation-delay: calc(0.25s + var(--boot) * 0.18s);
+    }
+    .building .led {
+      animation: power-on 0.35s ease-out both, blink 1.6s steps(2, jump-none) infinite;
+      animation-delay: calc(0.25s + var(--boot) * 0.18s), calc(1.4s + var(--boot) * 0.18s);
+    }
+    @keyframes power-on {
+      from { background: var(--led-off); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.4); }
+    }
     @keyframes blink { 50% { opacity: 0.35; } }
   }
-  @media (max-width: 22rem) {
-    .unit { grid-template-columns: 2.1rem 1fr; }
-    .state { grid-column: 2; }
+
+  @media (prefers-contrast: more) {
+    .unit { border-bottom-color: var(--steel-ink); }
+    .evidence { border-color: var(--steel-ink); }
+  }
+
+  @media (forced-colors: active) {
+    .rack, .unit, .planned { background: Canvas; color: CanvasText; border-color: CanvasText; }
+    .units { border-color: CanvasText; }
+    .ear, .vent { display: none; }
+    .led { border: 2px solid CanvasText; }
+    .live .led { background: CanvasText; forced-color-adjust: none; }
+  }
+
+  @media (max-width: 52rem) {
+    .unit { grid-template-columns: 2.6rem 0.5rem minmax(0, 1fr) auto; }
+    .vent { display: none; }
+  }
+  @media (max-width: 30rem) {
+    .unit {
+      grid-template-columns: 2.2rem minmax(0, 1fr);
+      row-gap: 0.5rem;
+      padding-inline: 0.75rem;
+    }
+    .ear { display: none; }
+    .state { grid-column: 2; white-space: normal; flex-wrap: wrap; justify-content: flex-start; min-width: 0; }
+  }
+
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
   }
 </style>

@@ -1,5 +1,6 @@
 ---
 import "@fontsource-variable/archivo/wdth.css";
+import ThemeSwitch from "../components/ThemeSwitch.astro";
 
 interface Props {
   title: string;
@@ -17,11 +18,31 @@ const nav = [
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#e9eef2" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#11171d" media="(prefers-color-scheme: dark)" />
+
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <!-- Runs before first paint so a saved theme never flashes the wrong colours. -->
+    <script is:inline>
+      (function () {
+        var mode = "auto";
+        try { mode = localStorage.getItem("theme") || "auto"; } catch (e) {}
+        if (mode === "light" || mode === "dark") {
+          document.documentElement.dataset.theme = mode;
+          var c = mode === "dark" ? "#11171d" : "#e9eef2";
+          document.querySelectorAll('meta[name="theme-color"]').forEach(function (m) { m.setAttribute("content", c); });
+        }
+      })();
+    </script>
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
@@ -32,6 +53,7 @@ const nav = [
           <a href={item.href} aria-current={path === item.href ? "page" : undefined}>{item.label}</a>
         ))}
       </nav>
+      <ThemeSwitch />
     </header>
     <main id="main">
       <slot />
@@ -44,92 +66,139 @@ const nav = [
 </html>
 
 <style is:global>
+  /* Light tokens are the default; dark applies when the system asks for it
+     (and the visitor hasn't picked light), or when the visitor picks dark. */
   :root {
-    --aisle: #e7ecf0;
-    --panel: #f6f8fa;
-    --ink: #16202a;
-    --muted: #4f5d69;
-    --steel: #2a333d;
-    --steel-line: #48525d;
-    --cable: #1d5da4;
-    --led-live: #2fb36b;
-    --led-build: #e0a526;
-    --led-off: #6b7680;
-    --rule: #c7d0d8;
+    --aisle: #e9eef2;
+    --panel: #f7f9fb;
+    --ink: #111a22;
+    --muted: #46535f;
+    --rule: #c3cdd6;
+    --cable: #1559a8;
+    --steel: #1e262e;
+    --steel-2: #29323b;
+    --steel-3: #343e48;
+    --steel-line: #4a5561;
+    --steel-ink: #e6ebf0;
+    --steel-muted: #a3afba;
+    --led-live: #2fbf71;
+    --led-build: #f0b429;
+    --led-off: #66717c;
     --font: "Archivo Variable", "Helvetica Neue", Arial, sans-serif;
-    color-scheme: light dark;
+    --gutter: max(1rem, env(safe-area-inset-left), env(safe-area-inset-right));
+    --page: min(100% - 2 * var(--gutter), 78rem);
+    color-scheme: light;
   }
   @media (prefers-color-scheme: dark) {
-    :root {
-      --aisle: #141a20;
-      --panel: #1b232b;
-      --ink: #e4e9ee;
-      --muted: #9aa6b1;
-      --steel: #0c1116;
-      --steel-line: #36414c;
-      --cable: #7fb0e8;
-      --rule: #2c3640;
+    :root:not([data-theme="light"]) {
+      --aisle: #11171d;
+      --panel: #182028;
+      --ink: #e8edf2;
+      --muted: #9eabb7;
+      --rule: #2a343e;
+      --cable: #7db3ef;
+      --steel: #0b1015;
+      --steel-2: #161e26;
+      --steel-3: #1e2731;
+      --steel-line: #34404c;
+      color-scheme: dark;
     }
   }
+  :root[data-theme="dark"] {
+    --aisle: #11171d;
+    --panel: #182028;
+    --ink: #e8edf2;
+    --muted: #9eabb7;
+    --rule: #2a343e;
+    --cable: #7db3ef;
+    --steel: #0b1015;
+    --steel-2: #161e26;
+    --steel-3: #1e2731;
+    --steel-line: #34404c;
+    color-scheme: dark;
+  }
+
+  /* Visitors who ask the system for more contrast get it. */
+  @media (prefers-contrast: more) {
+    :root { --muted: var(--ink); --rule: var(--ink); --steel-muted: var(--steel-ink); }
+  }
+
   *, *::before, *::after { box-sizing: border-box; }
-  html { font-size: 106.25%; }
+  html {
+    font-size: clamp(100%, 0.94rem + 0.25vw, 118.75%);
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
   body {
     margin: 0;
+    min-height: 100dvh;
     background: var(--aisle);
     color: var(--ink);
     font-family: var(--font);
-    font-variation-settings: "wdth" 100;
     line-height: 1.55;
     -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
   }
   a { color: var(--cable); text-underline-offset: 0.18em; text-decoration-thickness: 1px; }
   a:hover { text-decoration-thickness: 2px; }
   :focus-visible { outline: 3px solid var(--cable); outline-offset: 3px; border-radius: 2px; }
-  h1, h2, h3 { line-height: 1.1; margin: 0; font-weight: 650; }
+  h1, h2, h3 { line-height: 1.05; margin: 0; font-weight: 700; }
   p { margin: 0 0 1em; }
 
   .skip {
     position: absolute; left: -9999px; top: 0;
-    background: var(--ink); color: var(--aisle); padding: 0.5rem 1rem;
+    background: var(--ink); color: var(--aisle); padding: 0.75rem 1rem;
   }
-  .skip:focus { left: 1rem; top: 1rem; }
+  .skip:focus { left: var(--gutter); top: max(1rem, env(safe-area-inset-top)); z-index: 10; }
 
-  .masthead, main, .foot {
-    width: min(100% - 2rem, 70rem);
-    margin-inline: auto;
-  }
+  .masthead, main, .foot { width: var(--page); margin-inline: auto; }
+
   .masthead {
-    display: flex; justify-content: space-between; align-items: baseline;
-    gap: 1rem; flex-wrap: wrap;
-    padding-block: 1.5rem 0;
+    display: flex; align-items: center; flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    padding-top: max(1rem, env(safe-area-inset-top));
   }
   .wordmark {
     color: var(--ink); text-decoration: none;
-    font-weight: 700; font-size: 1.05rem;
-    font-variation-settings: "wdth" 75;
-    letter-spacing: 0.01em;
+    font-weight: 800; font-size: 1.1rem;
+    font-stretch: 75%;
+    margin-right: auto;
+    padding-block: 0.6rem;
   }
-  .masthead nav { display: flex; gap: 1.5rem; }
-  .masthead nav a { color: var(--muted); text-decoration: none; }
+  .masthead nav { display: flex; gap: 0.25rem 1.25rem; flex-wrap: wrap; }
+  .masthead nav a {
+    color: var(--muted); text-decoration: none;
+    display: inline-flex; align-items: center; min-height: 44px;
+  }
   .masthead nav a:hover, .masthead nav a[aria-current="page"] { color: var(--ink); }
   .masthead nav a[aria-current="page"] { text-decoration: underline; text-decoration-thickness: 2px; }
 
-  main { padding-block: 3.5rem 4rem; }
+  main { padding-block: clamp(2rem, 6vw, 4.5rem) clamp(3rem, 8vw, 5rem); }
 
   .foot {
     border-top: 1px solid var(--rule);
-    padding-block: 1.25rem 2rem;
+    padding-block: 1.25rem max(2rem, env(safe-area-inset-bottom));
     display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
     color: var(--muted); font-size: 0.9rem;
   }
   .foot p { margin: 0; }
 
   .page-title {
-    font-size: clamp(2.2rem, 5vw, 3.4rem);
-    font-variation-settings: "wdth" 112;
-    letter-spacing: -0.015em;
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    font-stretch: 112%;
+    letter-spacing: -0.02em;
     margin-bottom: 1.25rem;
   }
   .lede { font-size: 1.15rem; color: var(--muted); max-width: 38em; }
   .prose { max-width: 38em; }
+
+  /* Windows High Contrast and other forced-colour modes: let the system palette win,
+     but keep the rack's structure visible. */
+  @media (forced-colors: active) {
+    .masthead nav a[aria-current="page"] { text-decoration: underline; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
 </style>
