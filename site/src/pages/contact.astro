@@ -1,0 +1,33 @@
+---
+import Base from "../layouts/Base.astro";
+const email = "bodapatigroups@gmail.com";
+---
+<Base
+  title="Contact, Ravi Kishore"
+  description="How to reach Ravi Kishore about infrastructure roles and projects."
+>
+  <h1 class="page-title">Contact</h1>
+  <p class="lede">Open to infrastructure and systems engineering roles. Email is the quickest way to reach me.</p>
+
+  <dl class="channels">
+    <div>
+      <dt>Email</dt>
+      <dd><a href={`mailto:${email}`}>{email}</a></dd>
+    </div>
+    <div>
+      <dt>GitHub</dt>
+      <dd><a href="https://github.com/BODAPATI88">github.com/BODAPATI88</a></dd>
+    </div>
+  </dl>
+</Base>
+
+<style>
+  .channels { margin: 2.5rem 0 0; max-width: 34rem; }
+  .channels div {
+    display: grid; grid-template-columns: 7rem 1fr; gap: 1rem;
+    padding-block: 1rem; border-top: 1px solid var(--rule);
+  }
+  .channels div:last-child { border-bottom: 1px solid var(--rule); }
+  dt { color: var(--muted); font-variation-settings: "wdth" 85; }
+  dd { margin: 0; font-size: 1.1rem; overflow-wrap: anywhere; }
+</style>

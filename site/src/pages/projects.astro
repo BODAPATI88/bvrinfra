@@ -1,0 +1,55 @@
+---
+import Base from "../layouts/Base.astro";
+
+const projects = [
+  {
+    name: "bvrinfra",
+    href: "https://github.com/BODAPATI88/bvrinfra",
+    state: "Active",
+    summary: "This site and the infrastructure behind it: static Astro on Cloudflare Pages, a protected main branch, and decision records for every architectural choice. DNS moves into Terraform next.",
+  },
+  {
+    name: "infra-homelab",
+    href: "https://github.com/BODAPATI88/infra-homelab",
+    state: "Being hardened",
+    summary: "K3s homelab on Proxmox with ArgoCD, Traefik, MetalLB, Prometheus, Grafana and Loki. Resource quotas per namespace, ops scripts, and a written cluster recovery guide. Next: admin access behind Cloudflare Access, and off-site backups with a tested restore.",
+  },
+  {
+    name: "bvrinfra-site",
+    href: "https://github.com/BODAPATI88/bvrinfra-site",
+    state: "Archived",
+    summary: "The previous version of this site, served from Kubernetes behind a Cloudflare Tunnel. Kept as a record of what it got right, like its locked-down metrics API, and what it got wrong.",
+  },
+];
+---
+<Base
+  title="Projects, Ravi Kishore"
+  description="Infrastructure projects by Ravi Kishore: this site as code, a K3s homelab, and the archived previous site."
+>
+  <h1 class="page-title">Projects</h1>
+  <p class="lede">Public repositories, with an honest status for each. A write-up of the September 2026 outage is in progress.</p>
+
+  <ul class="projects">
+    {projects.map((p) => (
+      <li>
+        <div class="head">
+          <h2><a href={p.href}>{p.name}</a></h2>
+          <span class="state">{p.state}</span>
+        </div>
+        <p>{p.summary}</p>
+      </li>
+    ))}
+  </ul>
+</Base>
+
+<style>
+  .projects { list-style: none; margin: 2.5rem 0 0; padding: 0; max-width: 46rem; }
+  .projects li { padding-block: 1.5rem; border-top: 1px solid var(--rule); }
+  .projects li:last-child { border-bottom: 1px solid var(--rule); }
+  .head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+  .head h2 { font-size: 1.4rem; font-variation-settings: "wdth" 90; }
+  .head h2 a { color: var(--ink); text-decoration: none; }
+  .head h2 a:hover { color: var(--cable); text-decoration: underline; }
+  .state { color: var(--muted); font-variation-settings: "wdth" 75; font-size: 0.95rem; }
+  .projects p { margin: 0; max-width: 38em; }
+</style>
