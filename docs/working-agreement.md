@@ -13,7 +13,7 @@ How work on bvrinfra is planned and split between me and the AI tools I use, so 
 | Group | Labels | Meaning |
 |---|---|---|
 | Owner | `owner:claude` `owner:gemini` `owner:chatgpt` `owner:ravi` | Exactly one *doing* owner. A second owner label means a hand-off (for example, Gemini drafts, Ravi fact-checks). |
-| Type | `type:site` `type:infra` `type:content` `type:ops` `type:security` | What part of the system it touches |
+| Type | `type:site` `type:infra` `type:content` `type:ops` `type:security` `type:feature` | What part of the system it touches; `type:feature` marks a new capability rather than a fix |
 | Priority | `P0` → `P3` | P0 = correctness or trust, first |
 | Size | `size:S` (<1 h) `size:M` (1–3 h) `size:L` (more than a session) | Sizing for sprint planning |
 | State | `blocked` | Waiting on something outside the ticket; the note says what |

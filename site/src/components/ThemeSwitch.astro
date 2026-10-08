@@ -7,6 +7,7 @@ const options = [
   { value: "dark", label: "Dark" },
 ];
 ---
+<div class="theme">
 <fieldset class="theme-switch">
   <legend class="visually-hidden">Colour theme</legend>
   {options.map((o) => (
@@ -16,6 +17,14 @@ const options = [
     </label>
   ))}
 </fieldset>
+
+<!-- Phones: one button that cycles Auto → Light → Dark. Same setting as the switch above. -->
+<button type="button" class="theme-cycle" aria-label="Colour theme: Auto. Change theme" data-mode="auto">
+  <svg class="i-auto" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/></svg>
+  <svg class="i-light" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  <svg class="i-dark" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z" fill="currentColor"/></svg>
+</button>
+</div>
 
 <script is:inline src="/js/theme-switch.js" defer></script>
 
@@ -45,6 +54,28 @@ const options = [
 
   @media (forced-colors: active) {
     .theme-switch input:checked + span { background: Highlight; color: HighlightText; forced-color-adjust: none; }
+  }
+
+  .theme-cycle {
+    display: none;
+    align-items: center; justify-content: center;
+    width: 44px; height: 44px; padding: 0;
+    border: 1px solid var(--rule); border-radius: 999px;
+    background: var(--panel); color: var(--ink);
+    cursor: pointer;
+  }
+  .theme-cycle svg { width: 22px; height: 22px; display: none; }
+  .theme-cycle[data-mode="auto"] .i-auto,
+  .theme-cycle[data-mode="light"] .i-light,
+  .theme-cycle[data-mode="dark"] .i-dark { display: block; }
+  .theme-cycle:focus-visible { outline: 3px solid var(--cable); outline-offset: 2px; }
+
+  @media (max-width: 30rem) {
+    .theme-switch { display: none; }
+    .theme-cycle { display: inline-flex; }
+  }
+  @media (forced-colors: active) {
+    .theme-cycle { border-color: ButtonText; }
   }
 
   .visually-hidden {

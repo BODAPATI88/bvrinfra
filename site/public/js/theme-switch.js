@@ -20,8 +20,28 @@
       } catch (e) {}
     }
 
-    document.querySelectorAll('.theme-switch input[name="theme"]').forEach(function (input) {
-      input.checked = input.value === mode;
-      input.addEventListener("change", function () { if (input.checked) apply(input.value); });
+    var ORDER = ["auto", "light", "dark"];
+    var NAMES = { auto: "Auto", light: "Light", dark: "Dark" };
+    var inputs = document.querySelectorAll('.theme-switch input[name="theme"]');
+    var cycle = document.querySelector(".theme-cycle");
+
+    // Keep the radio switch (wide screens) and the cycle button (phones) in step.
+    function sync() {
+      inputs.forEach(function (input) { input.checked = input.value === mode; });
+      if (cycle) {
+        cycle.dataset.mode = mode;
+        cycle.setAttribute("aria-label", "Colour theme: " + NAMES[mode] + ". Change theme");
+      }
+    }
+    function set(next) { mode = next; apply(next); sync(); }
+
+    inputs.forEach(function (input) {
+      input.addEventListener("change", function () { if (input.checked) set(input.value); });
     });
+    if (cycle) {
+      cycle.addEventListener("click", function () {
+        set(ORDER[(ORDER.indexOf(mode) + 1) % ORDER.length]);
+      });
+    }
+    sync();
   })();
