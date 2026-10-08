@@ -1,15 +1,11 @@
 name: Site build check
 
+# Runs on every PR (no path filter) so it can be a required check:
+# a required check that skips never reports, and the PR could never merge.
 on:
   pull_request:
-    paths:
-      - "site/**"
-      - ".github/workflows/site-build.yml"
   push:
     branches: [main]
-    paths:
-      - "site/**"
-      - ".github/workflows/site-build.yml"
 
 permissions:
   contents: read
