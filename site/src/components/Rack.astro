@@ -10,26 +10,50 @@ const live = stack.filter((u) => u.status === "live").length;
     <p id="rack-caption" class="rack-name">This site, as built</p>
     <p class="rack-count"><strong>{live}</strong> of {stack.length} units live</p>
   </div>
+  <p class="rack-hint">Tap a unit to see how it works.</p>
 
   <ol class="units" reversed>
     {units.map((unit) => (
       <li class:list={["unit", unit.status]} style={`--boot:${unit.boot}`}>
-        <span class="u" aria-hidden="true">U{unit.u}</span>
-        <span class="ear" aria-hidden="true"></span>
-        <span class="body">
-          <span class="name">{unit.name}</span>
-          <span class="detail">{unit.detail}</span>
-        </span>
-        <span class="vent" aria-hidden="true"></span>
-        <span class="state">
-          <span class="led" aria-hidden="true"></span>
-          <span class="state-label">{statusLabel[unit.status]}</span>
-          {unit.evidence && (
-            <a class="evidence" href={unit.evidence.href}>
-              {unit.evidence.label}<span class="visually-hidden"> for {unit.name}</span>
-            </a>
-          )}
-        </span>
+        <details>
+          <summary class="row">
+            <span class="u" aria-hidden="true">U{unit.u}</span>
+            <span class="ear" aria-hidden="true"></span>
+            <span class="body">
+              <span class="name">{unit.name}</span>
+              <span class="detail">{unit.detail}</span>
+            </span>
+            <span class="vent" aria-hidden="true"></span>
+            <span class="state">
+              <span class="led" aria-hidden="true"></span>
+              <span class="state-label">{statusLabel[unit.status]}</span>
+              <span class="chev" aria-hidden="true"></span>
+            </span>
+          </summary>
+
+          <div class="panel">
+            <p class="how">{unit.how}</p>
+
+            <ol class="flow" aria-label={`How ${unit.name} works, step by step`}>
+              {unit.flow.map((step) => <li>{step}</li>)}
+            </ol>
+
+            <dl class="facts">
+              {unit.facts.map((f) => (
+                <div>
+                  <dt>{f.label}</dt>
+                  <dd>{f.value}</dd>
+                </div>
+              ))}
+            </dl>
+
+            <p class="proves"><span>What it proves</span>{unit.proves}</p>
+
+            {unit.source && (
+              <p class="source"><a href={unit.source.href}>{unit.source.label}</a></p>
+            )}
+          </div>
+        </details>
       </li>
     ))}
   </ol>
@@ -47,34 +71,41 @@ const live = stack.filter((u) => u.status === "live").length;
   .rack-head {
     display: flex; justify-content: space-between; align-items: baseline;
     gap: 0.5rem 1rem; flex-wrap: wrap;
-    padding: 0 0.2rem 0.9rem;
+    padding: 0 0.2rem 0.35rem;
   }
-  .rack-head p { margin: 0; }
+  .rack-head p, .rack-hint { margin: 0; }
   .rack-name { font-weight: 700; font-stretch: 80%; font-size: 1.05rem; }
   .rack-count { color: var(--steel-muted); font-stretch: 80%; }
   .rack-count strong { color: var(--led-live); font-size: 1.6em; font-weight: 800; line-height: 1; }
+  .rack-hint { color: var(--steel-muted); font-size: 0.85rem; padding: 0 0.2rem 0.9rem; }
 
   .units {
     list-style: none; margin: 0; padding: 0;
     border-inline: 8px solid var(--steel-3);
     border-radius: 2px;
   }
-  .unit {
+  .unit { background: var(--steel-2); border-bottom: 2px solid var(--steel); }
+  .unit:last-child { border-bottom: 0; }
+  .planned { background: var(--steel-3); }
+
+  .row {
     display: grid;
     grid-template-columns: 3rem 0.6rem minmax(0, 1fr) minmax(0, 0.7fr) auto;
     align-items: center;
     gap: 1rem;
     min-height: clamp(4.5rem, 7vw, 5.5rem);
     padding: 0.8rem 1.1rem 0.8rem 0.9rem;
-    background: var(--steel-2);
-    border-bottom: 2px solid var(--steel);
+    cursor: pointer;
+    list-style: none;
   }
-  .unit:last-child { border-bottom: 0; }
+  .row::-webkit-details-marker { display: none; }
+  .row:hover .name { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.2em; }
+  .row:focus-visible { outline: 3px solid var(--led-live); outline-offset: -3px; }
+
   .u {
     font-stretch: 62%; font-weight: 700; font-size: 0.85rem;
     color: var(--steel-muted); font-variant-numeric: tabular-nums;
   }
-  /* Rack ear with two screw holes. */
   .ear {
     align-self: stretch;
     background:
@@ -89,17 +120,16 @@ const live = stack.filter((u) => u.status === "live").length;
     font-size: clamp(1.15rem, 1rem + 0.6vw, 1.45rem);
     line-height: 1.15;
   }
+  .planned .name { color: var(--steel-muted); }
   .detail { color: var(--steel-muted); font-size: 0.9rem; }
-  /* Front-panel vent slots. Pure decoration; hidden on narrow screens. */
   .vent {
     height: 1.6rem;
     background: repeating-linear-gradient(90deg, var(--steel) 0 3px, transparent 3px 8px);
-    border-radius: 2px;
-    opacity: 0.8;
+    border-radius: 2px; opacity: 0.8;
   }
   .state {
     display: inline-flex; align-items: center; justify-content: flex-end; gap: 0.6rem;
-    min-width: 11.5rem;
+    min-width: 8.5rem;
     font-stretch: 80%; font-size: 0.95rem; white-space: nowrap;
   }
   .led {
@@ -110,22 +140,71 @@ const live = stack.filter((u) => u.status === "live").length;
   }
   .live .led { background: var(--led-live); box-shadow: 0 0 0 4px rgba(47, 191, 113, 0.2), 0 0 12px rgba(47, 191, 113, 0.55); }
   .building .led { background: var(--led-build); box-shadow: 0 0 0 4px rgba(240, 180, 41, 0.18); }
-  .planned { background: var(--steel-3); }
-  .planned .name { color: var(--steel-muted); }
 
-  .evidence {
-    color: var(--steel-ink);
-    font-size: 0.85rem;
-    display: inline-flex; align-items: center;
-    min-height: 44px; padding-inline: 0.75rem;
-    border: 1px solid var(--steel-line);
-    border-radius: 6px;
-    text-decoration: none;
+  /* Plus that turns into a minus when the unit is open. */
+  .chev {
+    position: relative; width: 1.75rem; height: 1.75rem; flex: none;
+    border: 1px solid var(--steel-line); border-radius: 50%;
+    margin-left: 0.25rem;
   }
-  .evidence:hover { border-color: var(--steel-ink); }
-  .evidence:focus-visible { outline: 3px solid var(--led-live); outline-offset: 2px; }
+  .chev::before, .chev::after {
+    content: ""; position: absolute; left: 50%; top: 50%;
+    width: 0.7rem; height: 2px; background: var(--steel-ink);
+    transform: translate(-50%, -50%);
+  }
+  .chev::after { transform: translate(-50%, -50%) rotate(90deg); transition: transform 0.2s ease; }
+  details[open] .chev::after { transform: translate(-50%, -50%) rotate(0deg); }
+  details[open] .chev { border-color: var(--steel-ink); }
 
-  /* One orchestrated moment: on first load, units power on bottom-up. */
+  .panel {
+    padding: 0.25rem 1.1rem 1.4rem calc(3rem + 0.6rem + 2rem + 0.9rem);
+    display: grid; gap: 1.1rem;
+    max-width: 62rem;
+  }
+  .how { margin: 0; line-height: 1.6; max-width: 40em; }
+
+  .flow {
+    list-style: none; margin: 0; padding: 0;
+    display: flex; flex-wrap: wrap; gap: 0.5rem;
+    counter-reset: step;
+  }
+  .flow li {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-size: 0.85rem; font-stretch: 85%;
+  }
+  .flow li::before {
+    counter-increment: step; content: counter(step);
+    display: inline-grid; place-items: center;
+    width: 1.4rem; height: 1.4rem; border-radius: 50%;
+    background: var(--steel); color: var(--steel-muted);
+    font-size: 0.75rem; font-weight: 700;
+  }
+  .flow li:not(:last-child)::after { content: "→"; color: var(--steel-muted); margin-left: 0.15rem; }
+
+  .facts {
+    margin: 0;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    gap: 0.5rem;
+  }
+  .facts div {
+    background: var(--steel); border-radius: 6px; padding: 0.6rem 0.75rem;
+  }
+  .facts dt { color: var(--steel-muted); font-size: 0.78rem; font-stretch: 85%; }
+  .facts dd { margin: 0.15rem 0 0; font-weight: 650; font-size: 0.95rem; }
+
+  .proves {
+    margin: 0; padding-left: 0.9rem;
+    border-left: 3px solid var(--led-live);
+    max-width: 40em;
+  }
+  .planned .proves { border-left-color: var(--led-off); }
+  .proves span {
+    display: block; color: var(--steel-muted);
+    font-size: 0.78rem; font-stretch: 85%; margin-bottom: 0.15rem;
+  }
+  .source { margin: 0; font-size: 0.9rem; }
+  .source a { color: var(--steel-ink); }
+
   @media (prefers-reduced-motion: no-preference) {
     .live .led, .building .led {
       animation: power-on 0.35s ease-out both;
@@ -143,33 +222,31 @@ const live = stack.filter((u) => u.status === "live").length;
 
   @media (prefers-contrast: more) {
     .unit { border-bottom-color: var(--steel-ink); }
-    .evidence { border-color: var(--steel-ink); }
+    .chev, .facts div { border: 1px solid var(--steel-ink); }
   }
 
   @media (forced-colors: active) {
-    .rack, .unit, .planned { background: Canvas; color: CanvasText; border-color: CanvasText; }
+    .rack, .unit, .planned, .facts div { background: Canvas; color: CanvasText; border-color: CanvasText; }
     .units { border-color: CanvasText; }
     .ear, .vent { display: none; }
     .led { border: 2px solid CanvasText; }
     .live .led { background: CanvasText; forced-color-adjust: none; }
+    .chev::before, .chev::after { background: CanvasText; }
   }
 
   @media (max-width: 52rem) {
-    .unit { grid-template-columns: 2.6rem 0.5rem minmax(0, 1fr) auto; }
+    .row { grid-template-columns: 2.6rem 0.5rem minmax(0, 1fr) auto; }
     .vent { display: none; }
+    .panel { padding-left: calc(2.6rem + 0.5rem + 2rem + 0.9rem); }
   }
   @media (max-width: 30rem) {
-    .unit {
+    .row {
       grid-template-columns: 2.2rem minmax(0, 1fr);
-      row-gap: 0.5rem;
-      padding-inline: 0.75rem;
+      row-gap: 0.5rem; padding-inline: 0.75rem;
     }
     .ear { display: none; }
-    .state { grid-column: 2; white-space: normal; flex-wrap: wrap; justify-content: flex-start; min-width: 0; }
-  }
-
-  .visually-hidden {
-    position: absolute; width: 1px; height: 1px; overflow: hidden;
-    clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+    .state { grid-column: 2; justify-content: flex-start; min-width: 0; }
+    .chev { margin-left: auto; }
+    .panel { padding: 0.25rem 0.75rem 1.25rem; }
   }
 </style>

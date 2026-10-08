@@ -1,0 +1,155 @@
+---
+import Base from "../../layouts/Base.astro";
+
+const fixes = [
+  { cause: "One machine held the site and everything needed to run it", fix: "The site is static on Cloudflare Pages; no server of mine is in the path", status: "Done" },
+  { cause: "No backup existed", fix: "restic to a home drive plus one cloud copy, done only after a tested restore", status: "Next" },
+  { cause: "Nothing described the setup as code, so nothing could rebuild it", fix: "Site, CI and DNS live in one repository; DNS is Terraform", status: "Done" },
+  { cause: "DNS was edited by hand and left pointing at things that no longer existed", fix: "Stale records removed; every change is now a reviewed plan with a manual apply", status: "Done" },
+  { cause: "Nothing outside the machine was watching it", fix: "Upptime checks the site every five minutes from GitHub, not from my hardware", status: "Done" },
+];
+---
+<Base
+  title="Post-mortem: the September 2026 outage, bvrinfra.in"
+  description="How bvrinfra.in went offline in September 2026, why it could not be restored, and what changed in the rebuild."
+>
+  <article class="post">
+    <header>
+      <p class="kind">Post-mortem · published 8 October 2026</p>
+      <h1 class="page-title">The September 2026 outage</h1>
+      <p class="lede">
+        In September 2026 I deleted the Azure virtual machine that ran bvrinfra.in, along with its network security group and resource group.
+        There was no backup. The site stayed down until I rebuilt it from scratch on 8 October 2026.
+      </p>
+    </header>
+
+    <section aria-labelledby="summary">
+      <h2 id="summary">Summary</h2>
+      <dl class="summary">
+        <div><dt>What broke</dt><dd>The public site, bvrinfra.in, and everything hosted on that machine</dd></div>
+        <div><dt>Down from</dt><dd>September 2026 until 8 October 2026</dd></div>
+        <div><dt>Data recovered</dt><dd>None from the machine. The site's code survived because it was in GitHub.</dd></div>
+        <div><dt>Root cause</dt><dd>A single machine with no backup and no way to rebuild it</dd></div>
+      </dl>
+    </section>
+
+    <section aria-labelledby="what">
+      <h2 id="what">What happened</h2>
+      <p>
+        The previous version of the site ran on one Azure VM. That machine was the only place the running setup existed:
+        the configuration, the deployed site and anything it served. When I deleted the VM, its network security group and its resource group,
+        all of that went with them.
+      </p>
+      <p>
+        There was nothing to restore from. No backup existed, and the steps to rebuild the setup had never been written down.
+        The code in GitHub described a Kubernetes stack built to serve what was mostly a static site. That was far more machinery than the job
+        needed, and none of it could be stood back up without the machine it assumed.
+      </p>
+      <p>
+        The DNS outlived the server. When I went to rebuild, the bvrinfra.in zone still held 22 records pointing at things that no longer existed:
+        17 at a deleted Cloudflare Tunnel, one at a private address on my home network, others at the dead machine and at a project that had ended.
+        None of them was dangerous on its own, but together they described a system that was gone.
+      </p>
+    </section>
+
+    <section aria-labelledby="why">
+      <h2 id="why">Why it couldn't be recovered</h2>
+      <p>The deletion was the trigger. These were the causes.</p>
+      <ol class="causes">
+        <li><strong>One machine, one blast radius.</strong> The site, its runtime and its configuration all lived on the same VM.</li>
+        <li><strong>No backup.</strong> Not an old one, not a partial one. My only backup script, on another machine, wrote its copies to the same disk it was protecting.</li>
+        <li><strong>No infrastructure as code.</strong> Nothing described the machine well enough to recreate it.</li>
+        <li><strong>Hand-edited DNS.</strong> Records drifted away from reality, with no record of why each one existed.</li>
+        <li><strong>No outside monitoring.</strong> Nothing that didn't run on that machine was checking the site.</li>
+      </ol>
+    </section>
+
+    <section aria-labelledby="went-well">
+      <h2 id="went-well">What went right</h2>
+      <ul>
+        <li>The domain and DNS were in a separate Cloudflare account, so the name itself was never at risk.</li>
+        <li>The code was in GitHub, so I had the history of what I'd built, even if I couldn't run it.</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="changed">
+      <h2 id="changed">What changed</h2>
+      <p>Each cause maps to a fix. The rack on the <a href="/">home page</a> shows the same list as live units.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">Cause</th><th scope="col">Fix</th><th scope="col">Status</th></tr></thead>
+          <tbody>
+            {fixes.map((f) => (
+              <tr>
+                <td>{f.cause}</td>
+                <td>{f.fix}</td>
+                <td><span class:list={["pill", f.status === "Done" ? "done" : "next"]}>{f.status}</span></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section aria-labelledby="lesson">
+      <h2 id="lesson">The lesson</h2>
+      <p class="pull">
+        A backup only counts once a restore from it has worked. Until then it is a hope with a schedule.
+      </p>
+      <p>
+        That is why the backups unit on the home page is the last one, and why it stays grey until a full restore has been tested.
+        You can follow the rest of the rebuild in the <a href="/log/">build log</a>.
+      </p>
+    </section>
+  </article>
+</Base>
+
+<style>
+  .post { max-width: 46rem; }
+  .post header { margin-bottom: 2.5rem; }
+  .kind { color: var(--muted); font-stretch: 85%; margin-bottom: 0.75rem; }
+  .post section { margin-top: 2.5rem; }
+  .post h2 {
+    font-size: clamp(1.35rem, 1.1rem + 0.8vw, 1.75rem);
+    font-stretch: 92%;
+    margin-bottom: 0.9rem;
+  }
+  .post p, .post li { line-height: 1.65; }
+  .post ul, .causes { padding-left: 1.25rem; }
+  .causes li, .post ul li { margin-bottom: 0.6rem; }
+  .post li::marker { color: var(--muted); }
+
+  .summary { margin: 0; }
+  .summary div {
+    display: grid; grid-template-columns: 9.5rem minmax(0, 1fr); gap: 1.25rem;
+    padding-block: 0.8rem; border-top: 1px solid var(--rule);
+  }
+  .summary div:last-child { border-bottom: 1px solid var(--rule); }
+  .summary dt { color: var(--muted); font-stretch: 85%; }
+  .summary dd { margin: 0; }
+
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.95rem; min-width: 32rem; }
+  th { text-align: left; font-weight: 650; color: var(--muted); font-stretch: 85%; padding: 0.6rem 0.75rem 0.6rem 0; border-bottom: 2px solid var(--rule); }
+  td { vertical-align: top; padding: 0.8rem 0.75rem 0.8rem 0; border-bottom: 1px solid var(--rule); }
+  .pill {
+    display: inline-block; padding: 0.15rem 0.6rem; border-radius: 999px;
+    font-size: 0.8rem; font-weight: 700; font-stretch: 85%; white-space: nowrap;
+  }
+  .pill.done { background: color-mix(in srgb, var(--led-live) 18%, transparent); color: var(--ink); }
+  .pill.next { background: color-mix(in srgb, var(--led-build) 22%, transparent); color: var(--ink); }
+
+  .pull {
+    font-size: clamp(1.25rem, 1.05rem + 0.8vw, 1.6rem);
+    font-weight: 700; font-stretch: 95%; line-height: 1.3;
+    border-left: 4px solid var(--led-live);
+    padding-left: 1rem;
+  }
+
+  @media (forced-colors: active) {
+    .pill { border: 1px solid CanvasText; }
+  }
+  @media (max-width: 40rem) {
+    .summary div { grid-template-columns: 1fr; gap: 0.2rem; }
+  }
+</style>

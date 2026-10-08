@@ -1,0 +1,125 @@
+---
+import Base from "../layouts/Base.astro";
+import { roles, skills } from "../data/experience";
+---
+<Base
+  title="Experience, Ravi Kishore"
+  description="About 9.5 years in infrastructure: Windows Server, Active Directory, VMware vSphere, hybrid Azure and data-centre operations. Current role: L3 system administrator across eight data-centre sites."
+>
+  <h1 class="page-title">Experience</h1>
+  <p class="lede">
+    About 9.5 years in infrastructure, most recently running operations across eight data-centre sites in the US and Japan.
+    Employers are listed as on my records; clients are described, not named.
+  </p>
+
+  <section class="block" aria-labelledby="roles">
+    <h2 id="roles">Roles</h2>
+    <ol class="timeline">
+      {roles.map((r) => (
+        <li class:list={["role", r.kind === "break" && "break"]}>
+          <p class="when"><time>{r.start}</time> – <time>{r.end}</time></p>
+          <div class="what">
+            <h3>
+              {r.employer}
+              {r.note && <span class="note">{r.note}</span>}
+            </h3>
+            {r.title && <p class="title">{r.title}</p>}
+            {r.context && <p class="context">{r.context}</p>}
+            {r.duties && (
+              <ul class="duties">
+                {r.duties.map((d) => <li>{d}</li>)}
+              </ul>
+            )}
+          </div>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="block" aria-labelledby="skills">
+    <h2 id="skills">Skills, and how deep they go</h2>
+    <ul class="skills">
+      {skills.map((s) => (
+        <li>
+          <h3>{s.area}</h3>
+          <p class="tools">{s.tools.join(" · ")}</p>
+          <p class="depth">{s.depth}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="block creds" aria-labelledby="creds">
+    <h2 id="creds">Credentials</h2>
+    <dl>
+      <div>
+        <dt>Certification</dt>
+        <dd>Microsoft Certified: Windows Server Hybrid Administrator Associate (AZ-800, AZ-801). Earned September 2024, valid to September 2027.</dd>
+      </div>
+      <div>
+        <dt>Education</dt>
+        <dd>BTech, Electronics and Communication Engineering, JNTU Hyderabad, 2011</dd>
+      </div>
+    </dl>
+  </section>
+</Base>
+
+<style>
+  .block { margin-top: clamp(2.5rem, 6vw, 4rem); }
+  .block > h2 {
+    font-size: clamp(1.35rem, 1.1rem + 0.8vw, 1.8rem);
+    font-stretch: 90%;
+    margin-bottom: 1.25rem;
+  }
+
+  .timeline { list-style: none; margin: 0; padding: 0; max-width: 60rem; }
+  .role {
+    display: grid;
+    grid-template-columns: 11rem minmax(0, 1fr);
+    gap: 1.5rem;
+    padding-block: 1.25rem;
+    border-top: 1px solid var(--rule);
+  }
+  .role:last-child { border-bottom: 1px solid var(--rule); }
+  .when {
+    margin: 0; color: var(--muted);
+    font-stretch: 85%; font-variant-numeric: tabular-nums;
+    padding-top: 0.2rem;
+  }
+  .what h3 { font-size: 1.25rem; font-stretch: 92%; }
+  .note { font-weight: 400; color: var(--muted); font-size: 0.95rem; margin-left: 0.5rem; }
+  .title { margin: 0.3rem 0 0; font-weight: 650; }
+  .context { margin: 0.4rem 0 0; max-width: 38em; }
+  .duties { margin: 0.75rem 0 0; padding-left: 1.1rem; max-width: 38em; }
+  .duties li { margin-bottom: 0.3rem; }
+  .duties li::marker { color: var(--led-live); }
+  .break .what h3 { color: var(--muted); font-weight: 600; }
+
+  .skills {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+    gap: 1rem;
+  }
+  .skills li {
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 1.1rem 1.2rem;
+  }
+  .skills h3 { font-size: 1.1rem; font-stretch: 92%; }
+  .tools { margin: 0.4rem 0 0.6rem; font-weight: 650; font-size: 0.95rem; }
+  .depth { margin: 0; color: var(--muted); font-size: 0.95rem; }
+
+  .creds dl { margin: 0; max-width: 46rem; }
+  .creds div {
+    display: grid; grid-template-columns: 11rem minmax(0, 1fr); gap: 1.5rem;
+    padding-block: 1rem; border-top: 1px solid var(--rule);
+  }
+  .creds div:last-child { border-bottom: 1px solid var(--rule); }
+  .creds dt { color: var(--muted); font-stretch: 85%; }
+  .creds dd { margin: 0; }
+
+  @media (max-width: 40rem) {
+    .role, .creds div { grid-template-columns: 1fr; gap: 0.35rem; }
+  }
+</style>

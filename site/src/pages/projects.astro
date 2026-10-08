@@ -11,13 +11,13 @@ const projects = [
   {
     name: "infra-homelab",
     state: "Private while being hardened",
-    summary: "K3s homelab on Proxmox with ArgoCD, Traefik, MetalLB, Prometheus, Grafana and Loki. Resource quotas per namespace, ops scripts, and a written cluster recovery guide. Next: admin access behind Cloudflare Access, and off-site backups with a tested restore.",
+    summary: "My Proxmox homelab: manifests, ops scripts, namespace quotas and runbooks from a K3s, ArgoCD and Prometheus setup I ran there until September 2026. Services run on Docker Compose today. Next: admin access behind Cloudflare Access, off-site backups with a tested restore, and the homelab described as code.",
   },
   {
     name: "bvrinfra-site",
     href: "https://github.com/BODAPATI88/bvrinfra-site",
     state: "Archived",
-    summary: "The previous version of this site, served from Kubernetes behind a Cloudflare Tunnel. Kept as a record of what it got right, like its locked-down metrics API, and what it got wrong.",
+    summary: "The previous version of this site, built as a Kubernetes stack behind a Cloudflare Tunnel. Kept as a record of what it got right, like its locked-down metrics API, and what it got wrong. The post-mortem covers how it was lost.",
   },
 ];
 ---
@@ -26,7 +26,7 @@ const projects = [
   description="Infrastructure projects by Ravi Kishore: this site as code, a K3s homelab, and the archived previous site."
 >
   <h1 class="page-title">Projects</h1>
-  <p class="lede">What I'm building, with an honest status for each. A write-up of the September 2026 outage is in progress.</p>
+  <p class="lede">What I'm building, with an honest status for each. The <a href="/writing/september-2026-outage/">September 2026 post-mortem</a> explains why the rebuild looks the way it does.</p>
 
   <ul class="projects">
     {projects.map((p) => (

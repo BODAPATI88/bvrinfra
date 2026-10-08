@@ -42,6 +42,6 @@ jobs:
 
       - name: Check expected pages exist
         run: |
-          for f in index.html projects/index.html contact/index.html 404.html; do
+          for f in index.html projects/index.html contact/index.html experience/index.html log/index.html writing/september-2026-outage/index.html 404.html; do
             test -s "dist/$f" || { echo "::error::missing dist/$f"; exit 1; }
           done
