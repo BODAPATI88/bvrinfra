@@ -1,33 +1,126 @@
 ---
 import Base from "../layouts/Base.astro";
+
 const email = "bodapatigroups@gmail.com";
+const phoneDisplay = "+91 95992 29585";
+const phoneTel = "+919599229585";
+const whatsapp = "https://wa.me/919599229585";
+const linkedin = "https://www.linkedin.com/in/ravikishore-b-917b85226/";
+
+const channels = [
+  { label: "Email", value: email, href: `mailto:${email}`, note: "Best for roles, CV requests and anything detailed" },
+  { label: "WhatsApp", value: phoneDisplay, href: whatsapp, note: "Quickest for a short message" },
+  { label: "Phone", value: phoneDisplay, href: `tel:${phoneTel}`, note: "Message first if you can; I work shifts" },
+  { label: "LinkedIn", value: "Ravi Kishore", href: linkedin, note: "Connect or message" },
+  { label: "GitHub", value: "BODAPATI88", href: "https://github.com/BODAPATI88", note: "Code for this site and other projects" },
+];
+
+const reasons = [
+  {
+    title: "Infrastructure and platform roles",
+    body: "Windows Server and Active Directory, VMware, hybrid Azure and data-centre operations, moving towards platform engineering and SRE.",
+  },
+  {
+    title: "Freelance infrastructure work",
+    body: "Active Directory, vSphere, Azure and Microsoft 365, scoped as a defined piece of work.",
+  },
+  {
+    title: "My CV and full work history",
+    body: "Every role, employer and date. Ask by email and I'll send it.",
+  },
+];
 ---
 <Base
   title="Contact, Ravi Kishore"
-  description="How to reach Ravi Kishore about infrastructure roles and projects."
+  description="How to reach Ravi Kishore: email, WhatsApp, phone and LinkedIn. Hyderabad, India (IST, UTC+5:30)."
 >
   <h1 class="page-title">Contact</h1>
-  <p class="lede">Open to infrastructure and systems engineering roles. Email is the quickest way to reach me.</p>
+  <p class="lede">
+    Open to infrastructure and platform engineering roles, and to freelance infrastructure work.
+    Email or WhatsApp is the most reliable way to reach me.
+  </p>
 
-  <dl class="channels">
-    <div>
-      <dt>Email</dt>
-      <dd><a href={`mailto:${email}`}>{email}</a></dd>
-    </div>
-    <div>
-      <dt>GitHub</dt>
-      <dd><a href="https://github.com/BODAPATI88">github.com/BODAPATI88</a></dd>
-    </div>
-  </dl>
+  <ul class="channels">
+    {channels.map((c, i) => (
+      <li class:list={[i === 0 && "primary"]}>
+        <a href={c.href}>
+          <span class="label">{c.label}</span>
+          <span class="value">{c.value}</span>
+          <span class="note">{c.note}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+
+  <section class="block" aria-labelledby="where">
+    <h2 id="where">Where and when</h2>
+    <dl class="where">
+      <div><dt>Based in</dt><dd>Hyderabad, India</dd></div>
+      <div><dt>Time zone</dt><dd>IST, UTC+5:30</dd></div>
+      <div><dt>Availability</dt><dd>I work rotational shifts, so I may not answer a call straight away. A message always reaches me.</dd></div>
+    </dl>
+  </section>
+
+  <section class="block" aria-labelledby="about">
+    <h2 id="about">Good reasons to get in touch</h2>
+    <ul class="reasons">
+      {reasons.map((r) => (
+        <li>
+          <h3>{r.title}</h3>
+          <p>{r.body}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
 </Base>
 
 <style>
-  .channels { margin: 2.5rem 0 0; max-width: 34rem; }
-  .channels div {
-    display: grid; grid-template-columns: 7rem 1fr; gap: 1rem;
-    padding-block: 1rem; border-top: 1px solid var(--rule);
+  .channels {
+    list-style: none; margin: clamp(2rem, 5vw, 3rem) 0 0; padding: 0;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+    gap: 0.9rem;
+    max-width: 62rem;
   }
-  .channels div:last-child { border-bottom: 1px solid var(--rule); }
-  dt { color: var(--muted); font-variation-settings: "wdth" 85; }
-  dd { margin: 0; font-size: 1.1rem; overflow-wrap: anywhere; }
+  .channels a {
+    display: flex; flex-direction: column; gap: 0.2rem; height: 100%;
+    min-height: 44px;
+    padding: 1.05rem 1.2rem 1.15rem;
+    background: var(--panel); border: 1px solid var(--rule); border-radius: 8px;
+    color: var(--ink); text-decoration: none;
+  }
+  .channels a:hover { border-color: var(--ink); }
+  .channels a:hover .value { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.2em; }
+  .label { color: var(--muted); font-size: 0.85rem; font-stretch: 85%; }
+  .value { font-weight: 750; font-size: 1.15rem; font-stretch: 92%; overflow-wrap: anywhere; }
+  .note { color: var(--muted); font-size: 0.9rem; }
+  .primary a { background: var(--steel); border-color: var(--led-live); color: var(--steel-ink); }
+  .primary .label, .primary .note { color: var(--steel-muted); }
+  .primary a:hover { border-color: var(--led-live); }
+
+  .block { margin-top: clamp(2.5rem, 6vw, 3.5rem); max-width: 46rem; }
+  .block h2 {
+    font-size: clamp(1.35rem, 1.1rem + 0.8vw, 1.8rem);
+    font-stretch: 90%;
+    margin-bottom: 1rem;
+  }
+  .where { margin: 0; }
+  .where div {
+    display: grid; grid-template-columns: 9rem minmax(0, 1fr); gap: 1.25rem;
+    padding-block: 0.85rem; border-top: 1px solid var(--rule);
+  }
+  .where div:last-child { border-bottom: 1px solid var(--rule); }
+  .where dt { color: var(--muted); font-stretch: 85%; }
+  .where dd { margin: 0; }
+
+  .reasons { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.1rem; }
+  .reasons li { padding-left: 1rem; border-left: 3px solid var(--led-live); }
+  .reasons h3 { font-size: 1.1rem; font-stretch: 92%; }
+  .reasons p { margin: 0.3rem 0 0; color: var(--muted); max-width: 38em; }
+
+  @media (forced-colors: active) {
+    .channels a, .primary a { border: 1px solid CanvasText; }
+  }
+  @media (max-width: 40rem) {
+    .where div { grid-template-columns: 1fr; gap: 0.2rem; }
+  }
 </style>
