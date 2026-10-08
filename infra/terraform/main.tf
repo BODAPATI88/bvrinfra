@@ -24,6 +24,13 @@ locals {
       proxied = true
       comment = "Site: Cloudflare Pages custom domain"
     }
+    status = {
+      name    = "status.bvrinfra.in"
+      type    = "CNAME"
+      content = "bodapati88.github.io"
+      proxied = false # GitHub Pages must see real traffic to issue the HTTPS certificate
+      comment = "Monitoring: Upptime status page on GitHub Pages"
+    }
     dmarc = {
       name    = "_dmarc.bvrinfra.in"
       type    = "TXT"

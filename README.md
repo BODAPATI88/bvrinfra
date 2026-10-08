@@ -13,6 +13,9 @@ laptop ──PR──▶ GitHub (this repo, main protected)
                  ├─ Cloudflare Pages ─ builds site/ on merge → bvrinfra.in
                  └─ HCP Terraform ──── Cloudflare DNS (manual apply)
 
+BODAPATI88/status (Upptime)
+  GitHub Actions checks bvrinfra.in every 5 min → status.bvrinfra.in
+
 homelab (separate repo: infra-homelab)
   K3s + ArgoCD, reached only via Cloudflare Tunnel + Access
   backups: restic → home HDD + one cloud copy (planned)
@@ -23,7 +26,7 @@ homelab (separate repo: infra-homelab)
 | Site | Astro (static) on Cloudflare Pages | Live |
 | CI | GitHub Actions build check | Live |
 | DNS as code | Terraform, Cloudflare provider, HCP Terraform state | Live |
-| Monitoring | Uptime Kuma + public status page | Planned |
+| Monitoring | Upptime (GitHub Actions) + status page at status.bvrinfra.in | In progress |
 | Backups | restic, with a tested restore | Planned |
 
 ## Layout
