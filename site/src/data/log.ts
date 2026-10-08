@@ -43,6 +43,12 @@ export const done: Entry[] = [
     body: "Upptime on GitHub Actions checks the site every five minutes and publishes a public status page.",
     link: { href: "https://status.bvrinfra.in", label: "status.bvrinfra.in" },
   },
+  {
+    date: "8 Oct 2026",
+    title: "Why this site is static",
+    body: "A write-up explaining the decision to move to a static architecture after the September 2026 outage.",
+    link: { href: "/writing/why-this-site-is-static/", label: "Read the article" },
+  },
 ];
 
 export const next: Entry[] = [
