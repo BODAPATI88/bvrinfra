@@ -23,16 +23,25 @@ How work on bvrinfra is planned and split between me and the AI tools I use, so 
 | Role | Does | Never |
 |---|---|---|
 | **Ravi** | Decides, approves, merges, applies Terraform, owns dashboards and credentials, checks facts | Merges without reading the plan or the preview |
-| **Claude** | Writes code and infrastructure changes, opens PRs, keeps docs current | Pushes to `main`, holds production credentials, publishes unchecked AI drafts |
-| **Gemini** | Drafts long-form writing from a supplied fact list | Touches the repo; output goes to Ravi |
-| **ChatGPT** | Reviews copy and PR text, drafts short posts | Touches the repo; output goes to Ravi |
+| **Claude** (Claude Code) | Code and infrastructure, CI, design system, Terraform; reviews agent PRs | Pushes to `main`, holds production credentials |
+| **Gemini** (Jules) | New articles under `site/src/pages/writing/`, from a supplied fact list | Touches infra, CI, styles, components or the rack data |
+| **ChatGPT** (Codex if the plan allows, otherwise chat) | Copy edits named in an issue; PR review comments | Touches layout, infra or data files |
 
-Only one writer touches the repository: changes from Gemini or ChatGPT reach it through Ravi and then a Claude PR. That single path is what prevents crossed edits.
+Every agent works in a **lane**, a set of folders it may change, defined in [AGENTS.md](../AGENTS.md). Jules and Codex read that file automatically. Lanes don't overlap, so two agents can work at the same time without conflicting edits.
+
+## Access
+
+- Each agent connects through **its own GitHub app**, installed on **this repository only** (`BODAPATI88/bvrinfra`). Never on `status`, `infra-homelab` or any private repo.
+- No agent receives Cloudflare, HCP Terraform or GitHub tokens. Terraform runs only in HCP Terraform, applied by Ravi.
+- Agents can open branches and PRs. Only Ravi merges.
+- To revoke an agent: GitHub → Settings → Applications → the app → Configure → remove the repository.
 
 ## Rules
 
 1. **No ticket, no PR.** Every PR description starts with `Closes #N`, which closes the ticket on merge.
-2. **One ticket in progress per owner.** Finish or hand off before starting another.
-3. **Facts before publishing.** AI-drafted text marks assumptions with `[CHECK]`; nothing with an open `[CHECK]` is merged.
-4. **The rack stays honest.** A rack unit changes status in the same PR that ships the work, never ahead of it.
-5. **Sprint review, each Monday:** close what's done, move what isn't, size anything new.
+2. **One agent per ticket.** Whoever holds the `owner:` label works it; nobody else opens a PR for it.
+3. **Build must pass.** The `build` check is required by the `main` ruleset; a red PR can't merge.
+4. **One ticket in progress per owner.** Finish or hand off before starting another.
+5. **Facts before publishing.** AI-drafted text marks assumptions with `[CHECK]`; nothing with an open `[CHECK]` is merged.
+6. **The rack stays honest.** A rack unit changes status in the same PR that ships the work, never ahead of it.
+7. **Sprint review, each Monday:** close what's done, move what isn't, size anything new.
