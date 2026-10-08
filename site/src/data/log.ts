@@ -46,7 +46,7 @@ export const done: Entry[] = [
   {
     date: "8 Oct 2026",
     title: "Why this site is static",
-    body: "A write-up explaining the decision to move to a static architecture after the September 2026 outage.",
+    body: "Why the rebuild has no server, what that costs, and what I would revisit.",
     link: { href: "/writing/why-this-site-is-static/", label: "Read the article" },
   },
 ];
@@ -77,6 +77,6 @@ export const later: Entry[] = [
   },
   {
     title: "More write-ups",
-    body: "Short pieces on decisions that shaped this site: why static, why manual apply, and why the monitor runs off my hardware.",
+    body: "Short pieces on decisions that shaped this site: why DNS changes need a manual apply, and why the monitor runs off my hardware.",
   },
 ];
