@@ -20,8 +20,8 @@ homelab (separate repo: infra-homelab)
 
 | Layer | Tool | Status |
 |---|---|---|
-| Site | Astro (static) on Cloudflare Pages | In progress |
-| CI | GitHub Actions build check | In progress |
+| Site | Astro (static) on Cloudflare Pages | Live |
+| CI | GitHub Actions build check | Live |
 | DNS as code | Terraform, Cloudflare provider, HCP Terraform state | Planned |
 | Monitoring | Uptime Kuma + public status page | Planned |
 | Backups | restic, with a tested restore | Planned |
@@ -54,7 +54,7 @@ npm run build    # output in site/dist
 ## Roadmap
 
 - [x] Phase 1: audit of existing repos, ADR 0001 accepted
-- [ ] Site live on Cloudflare Pages at bvrinfra.in
+- [x] Site live on Cloudflare Pages at bvrinfra.in
 - [ ] DNS imported into Terraform
 - [ ] Monitoring and public status page
 - [ ] Off-site backups with a passed restore test
