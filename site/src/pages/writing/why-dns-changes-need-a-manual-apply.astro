@@ -1,0 +1,113 @@
+---
+import Base from "../../layouts/Base.astro";
+---
+<Base
+  type="article"
+  title="Why DNS changes need a manual apply"
+  description="Why DNS changes for bvrinfra.in require a manual apply in HCP Terraform instead of auto-applying on merge."
+>
+  <article class="post">
+    <header>
+      <p class="kind">DNS · published 8 October 2026</p>
+      <h1 class="page-title">Why DNS changes need a manual apply</h1>
+      <p class="lede">
+        Managing DNS as code prevents silent drift and forgotten records.
+        For bvrinfra.in, every DNS change goes through a pull request and a speculative plan,
+        but live updates wait for a human to confirm and apply them. Here is why.
+      </p>
+    </header>
+
+    <section aria-labelledby="the-22-stale-records">
+      <h2 id="the-22-stale-records">The 22 stale records</h2>
+      <p>
+        During the October 2026 infrastructure audit following the server outage,
+        the Cloudflare DNS zone for bvrinfra.in contained 22 stale records.
+      </p>
+      <p>
+        Seventeen of those records pointed to a deleted Cloudflare Tunnel.
+        One exposed an internal IP address from a private home network.
+        The remaining records pointed to a deleted virtual machine or projects that had ended.
+      </p>
+      <p>
+        None of these records caused an immediate incident on their own,
+        but together they represented unmanaged drift accumulated over time through hand edits in the web dashboard.
+        There was no recorded intent, no review process, and no easy way to know if a record was still needed.
+      </p>
+    </section>
+
+    <section aria-labelledby="dns-as-code">
+      <h2 id="dns-as-code">DNS as code with Terraform</h2>
+      <p>
+        To fix this, DNS was imported into Terraform using the Cloudflare provider,
+        with state stored in HCP Terraform under the <code>bvrinfra-dns</code> workspace.
+        The dashboard is now considered read-only by convention.
+      </p>
+      <p>
+        All zone records are defined in <code>infra/terraform/main.tf</code> inside a <code>local.records</code> map.
+        To prevent accidental record deletions, every record resource includes a <code>prevent_destroy = true</code> lifecycle guardrail.
+        Deleting a record requires a pull request that explicitly removes that guard first.
+      </p>
+    </section>
+
+    <section aria-labelledby="the-workflow">
+      <h2 id="the-workflow">The plan-on-PR workflow</h2>
+      <p>
+        When a DNS change is needed, the process follows three distinct stages:
+      </p>
+      <ol class="workflow">
+        <li>
+          <strong>Pull request:</strong> A branch updates <code>infra/terraform/main.tf</code>.
+          GitHub Actions checks syntax and formatting without holding production credentials.
+        </li>
+        <li>
+          <strong>Speculative plan:</strong> HCP Terraform automatically runs a speculative plan against live Cloudflare DNS
+          and reports the exact diff in the PR review.
+        </li>
+        <li>
+          <strong>Merge and queue:</strong> Merging the PR triggers a production plan on <code>main</code> in HCP Terraform,
+          which pauses and waits for manual approval.
+        </li>
+      </ol>
+    </section>
+
+    <section aria-labelledby="why-manual-apply">
+      <h2 id="why-manual-apply">Why auto-apply is turned off</h2>
+      <p>
+        Auto-applying infrastructure changes on merge can be risky when automated tools or AI assistants draft code.
+        Under ADR 0001 (D7), AI agents work strictly in the build loop to draft pull requests,
+        and no automated tool holds credentials to apply live infrastructure changes unattended.
+      </p>
+      <p>
+        Requiring a human operator to log into HCP Terraform, review the queued plan against the merged PR,
+        and click <strong>Confirm & apply</strong> provides a deliberate circuit breaker.
+        It guarantees that no DNS record is added, modified, or deleted without a person inspecting the final diff before it touches production.
+      </p>
+    </section>
+
+    <section aria-labelledby="summary">
+      <h2 id="summary">Summary</h2>
+      <p>
+        Hand edits caused 22 stale records.
+        Terraform enforces structure and intent in code,
+        and manual apply ensures that live DNS changes always have explicit human sign-off.
+      </p>
+    </section>
+  </article>
+</Base>
+
+<style>
+  .post { max-width: 46rem; }
+  .post header { margin-bottom: 2.5rem; }
+  .kind { color: var(--muted); font-stretch: 85%; margin-bottom: 0.75rem; }
+  .post section { margin-top: 2.5rem; }
+  .post h2 {
+    font-size: clamp(1.35rem, 1.1rem + 0.8vw, 1.75rem);
+    font-stretch: 92%;
+    margin-bottom: 0.9rem;
+  }
+  .post p, .post li { line-height: 1.65; }
+  .post p { margin-bottom: 1.25rem; }
+  .post ol.workflow { padding-left: 1.25rem; }
+  .workflow li { margin-bottom: 0.6rem; }
+  .workflow li::marker { color: var(--muted); }
+</style>
