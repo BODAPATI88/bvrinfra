@@ -36,6 +36,19 @@ Every agent works in a **lane**, a set of folders it may change, defined in [AGE
 - Agents can open branches and PRs. Only Ravi merges.
 - To revoke an agent: GitHub → Settings → Applications → the app → Configure → remove the repository.
 
+## Pipeline: from ticket to merge
+
+| Step | Who | What happens | Board column |
+|---|---|---|---|
+| 1. Pick | Ravi | Moves a ticket to **This sprint** and sets one `owner:` label | This sprint |
+| 2. Start | Agent | Ravi hands the issue link to the agent (Jules: add the `jules` label or paste the link; Codex: paste the link) | In progress |
+| 3. PR | Agent | Branch `<agent>/<issue>-<name>`, PR starting `Closes #N` | In review |
+| 4. Guard | CI | `build` and `guard` must pass: lane, `Closes #N`, no open `[CHECK]`, no private IPs | In review |
+| 5. Review | Claude | Reads the diff against the issue's **Done when** list, posts approve or change requests | In review |
+| 6. Merge | Ravi | Merges only when both checks are green **and** Claude's latest review has no open items | Done |
+
+Nothing merges itself. Steps 4 and 5 make step 6 a two-minute decision, not a re-review.
+
 ## Rules
 
 1. **No ticket, no PR.** Every PR description starts with `Closes #N`, which closes the ticket on merge.

@@ -1,0 +1,72 @@
+name: PR guard
+
+# Enforces AGENTS.md mechanically so a merge can't skip it.
+# Runs on every PR (no path filter) so it can be a required check.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-guard-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: List changed files
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          git diff --name-only --diff-filter=ACMR "$BASE" "$HEAD" > changed.txt
+          echo "Changed files:"; cat changed.txt
+
+      - name: Lane check (branch prefix decides the lane)
+        env:
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          case "$BRANCH" in
+            jules/*|gemini/*)   allow='^(site/src/pages/writing/[^/]+\.astro|site/src/data/log\.ts)$' ;;
+            codex/*|chatgpt/*)  allow='^site/src/pages/.+\.astro$' ;;
+            *)                  echo "Branch '$BRANCH' is not an agent lane; no path limit."; exit 0 ;;
+          esac
+          bad=$(grep -Ev "$allow" changed.txt || true)
+          if [ -n "$bad" ]; then
+            echo "::error::Branch '$BRANCH' changed files outside its lane (see AGENTS.md):"
+            echo "$bad" | sed 's/^/  /'
+            exit 1
+          fi
+          echo "All changed files are inside the lane for '$BRANCH'."
+
+      - name: PR description starts with Closes or Refs
+        env:
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+          BODY: ${{ github.event.pull_request.body }}
+        run: |
+          case "$BRANCH" in jules/*|gemini/*|codex/*|chatgpt/*) ;; *) exit 0 ;; esac
+          first=$(printf '%s\n' "$BODY" | sed -n '/[^[:space:]]/{p;q}')
+          echo "$first" | grep -Eq '^(Closes|Fixes|Refs) #[0-9]+' \
+            || { echo "::error::First line of the PR description must be 'Closes #<issue>'."; exit 1; }
+
+      - name: Content check (no open [CHECK], no IP addresses)
+        run: |
+          files=$(grep -E '^(site/src|docs)/' changed.txt || true)
+          [ -z "$files" ] && { echo "No site or docs files changed."; exit 0; }
+          fail=0
+          site=$(echo "$files" | grep '^site/src/' || true)
+          if [ -n "$site" ] && grep -nF '[CHECK]' $site; then
+            echo "::error::Open [CHECK] markers. Confirm or remove each fact before merging."; fail=1
+          fi
+          if grep -nE '\b(10\.[0-9]{1,3}|192\.168|172\.(1[6-9]|2[0-9]|3[01]))\.[0-9]{1,3}\.[0-9]{1,3}\b' $files; then
+            echo "::error::Private IP address found. Keep addresses off the public site."; fail=1
+          fi
+          exit $fail
