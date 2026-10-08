@@ -19,7 +19,7 @@ const fixes = [
       <p class="kind">Post-mortem · published 8 October 2026</p>
       <h1 class="page-title">The September 2026 outage</h1>
       <p class="lede">
-        In September 2026 I deleted the Azure virtual machine that ran bvrinfra.in, along with its network security group and resource group.
+        In September 2026 I deleted the Azure server that ran bvrinfra.in, along with everything attached to it.
         There was no backup. The site stayed down until I rebuilt it from scratch on 8 October 2026.
       </p>
     </header>
@@ -37,18 +37,19 @@ const fixes = [
     <section aria-labelledby="what">
       <h2 id="what">What happened</h2>
       <p>
-        The previous version of the site ran on one Azure VM. That machine was the only place the running setup existed:
-        the configuration, the deployed site and anything it served. When I deleted the VM, its network security group and its resource group,
-        all of that went with them.
+        The previous version of the site ran on one Azure virtual machine. That machine was the only place where the live configuration,
+        the deployed site and everything it served existed. When I deleted it, together with its network rules and the resource group that held them,
+        all of that went too.
       </p>
       <p>
         There was nothing to restore from. No backup existed, and the steps to rebuild the setup had never been written down.
-        The code in GitHub described a Kubernetes stack built to serve what was mostly a static site. That was far more machinery than the job
-        needed, and none of it could be stood back up without the machine it assumed.
+        The code in GitHub described a Kubernetes stack built to serve what was mostly a static site. That setup was far more complex than the site
+        needed, and it couldn't be rebuilt without the original machine.
       </p>
       <p>
-        The DNS outlived the server. When I went to rebuild, the bvrinfra.in zone still held 22 records pointing at things that no longer existed:
-        17 at a deleted Cloudflare Tunnel, one at a private address on my home network, others at the dead machine and at a project that had ended.
+        The DNS outlived the server. DNS is the set of records that tells browsers where bvrinfra.in lives.
+        When I went to rebuild, it still held 22 records pointing to systems that no longer existed.
+        Seventeen pointed to a deleted Cloudflare Tunnel and one to a private address on my home network; the rest pointed to the deleted machine or to a project that had ended.
         None of them was dangerous on its own, but together they described a system that was gone.
       </p>
     </section>
@@ -57,10 +58,10 @@ const fixes = [
       <h2 id="why">Why it couldn't be recovered</h2>
       <p>The deletion was the trigger. These were the causes.</p>
       <ol class="causes">
-        <li><strong>One machine, one blast radius.</strong> The site, its runtime and its configuration all lived on the same VM.</li>
+        <li><strong>One machine, one point of failure.</strong> The site, its runtime and its configuration all lived on the same VM.</li>
         <li><strong>No backup.</strong> Not an old one, not a partial one. My only backup script, on another machine, wrote its copies to the same disk it was protecting.</li>
-        <li><strong>No infrastructure as code.</strong> Nothing described the machine well enough to recreate it.</li>
-        <li><strong>Hand-edited DNS.</strong> Records drifted away from reality, with no record of why each one existed.</li>
+        <li><strong>No infrastructure as code.</strong> Infrastructure as code means describing servers and settings in files that can rebuild them. I had none, so nothing could recreate the machine.</li>
+        <li><strong>Hand-edited DNS.</strong> Records stopped matching the systems that existed, and nothing recorded why each one was there.</li>
         <li><strong>No outside monitoring.</strong> Nothing that didn't run on that machine was checking the site.</li>
       </ol>
     </section>
