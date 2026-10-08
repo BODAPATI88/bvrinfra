@@ -3,6 +3,21 @@ import Base from "../layouts/Base.astro";
 import Rack from "../components/Rack.astro";
 ---
 <Base
+  jsonLd={{
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: "Ravi Kishore",
+    jobTitle: "Infrastructure engineer",
+    url: "https://bvrinfra.in/",
+    address: { "@type": "PostalAddress", addressLocality: "Hyderabad", addressCountry: "IN" },
+    knowsAbout: ["Windows Server", "Active Directory", "VMware vSphere", "Microsoft Azure", "Terraform", "Data-centre operations"],
+    hasCredential: {
+      "@type": "EducationalOccupationalCredential",
+      name: "Microsoft Certified: Windows Server Hybrid Administrator Associate",
+      credentialCategory: "certification",
+    },
+    sameAs: ["https://github.com/BODAPATI88", "https://www.linkedin.com/in/ravikishore-b-917b85226/"],
+  }}
   title="Ravi Kishore, infrastructure engineer"
   description="Infrastructure engineer in Hyderabad. Windows Server, Active Directory, VMware, hybrid Azure, and automation. This site is built and run as infrastructure as code."
 >
