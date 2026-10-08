@@ -18,7 +18,7 @@
 | DNS provider | Cloudflare (free plan) |
 | Nameservers | `carlane.ns.cloudflare.com`, `kanye.ns.cloudflare.com` |
 | Account access | MFA enabled. Recovery codes stored in a password manager. |
-| Managed by | Manually, until the Terraform import (ADR 0001, D2). After import, no manual edits. |
+| Managed by | Terraform, `infra/terraform/` (ADR 0001, D2). No dashboard edits; see [dns-terraform.md](dns-terraform.md). |
 
 ## Current records (2026-10-08)
 
@@ -41,6 +41,7 @@ The Pages project subdomain is `bvrinfra-5l8.pages.dev`, with a lowercase **L** 
   - 1 registrar leftover (`_domainconnect`)
 - **2026-10-08:** Deleted tunnel `bvr-vm200-v2` (down, no connectors).
 - **2026-10-08:** Site back online. Deleted the apex and `www` A records (dead host `9.205.154.113`), added proxied CNAMEs to `bvrinfra-5l8.pages.dev`, and attached both as Pages custom domains. Both are Active with SSL; verified externally.
+- **2026-10-08:** All three records adopted into Terraform (HCP run: 3 imported, 3 changed to add comments, 0 added, 0 destroyed). Site verified up afterwards.
 
 ## Rules
 

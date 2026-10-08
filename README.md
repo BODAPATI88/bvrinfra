@@ -11,7 +11,7 @@ laptop ──PR──▶ GitHub (this repo, main protected)
                  │
                  ├─ GitHub Actions ─── build check on every PR
                  ├─ Cloudflare Pages ─ builds site/ on merge → bvrinfra.in
-                 └─ Terraform ──────── Cloudflare DNS (planned)
+                 └─ HCP Terraform ──── Cloudflare DNS (manual apply)
 
 homelab (separate repo: infra-homelab)
   K3s + ArgoCD, reached only via Cloudflare Tunnel + Access
@@ -22,7 +22,7 @@ homelab (separate repo: infra-homelab)
 |---|---|---|
 | Site | Astro (static) on Cloudflare Pages | Live |
 | CI | GitHub Actions build check | Live |
-| DNS as code | Terraform, Cloudflare provider, HCP Terraform state | In progress |
+| DNS as code | Terraform, Cloudflare provider, HCP Terraform state | Live |
 | Monitoring | Uptime Kuma + public status page | Planned |
 | Backups | restic, with a tested restore | Planned |
 
@@ -55,7 +55,7 @@ npm run build    # output in site/dist
 
 - [x] Phase 1: audit of existing repos, ADR 0001 accepted
 - [x] Site live on Cloudflare Pages at bvrinfra.in
-- [ ] DNS imported into Terraform
+- [x] DNS imported into Terraform
 - [ ] Monitoring and public status page
 - [ ] Off-site backups with a passed restore test
 - [ ] Write-ups, starting with the September 2026 post-mortem
