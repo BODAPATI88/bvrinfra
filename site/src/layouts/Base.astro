@@ -1,5 +1,6 @@
 ---
 import "@fontsource-variable/archivo/wdth.css";
+import archivoLatin from "@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2?url";
 import ThemeSwitch from "../components/ThemeSwitch.astro";
 
 interface Props {
@@ -28,6 +29,8 @@ const nav = [
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    <!-- Preload the Latin font subset so the big headline doesn't reflow when it arrives. -->
+    <link rel="preload" href={archivoLatin} as="font" type="font/woff2" crossorigin />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
     <!-- Link previews (WhatsApp, LinkedIn, Slack, search) -->
@@ -180,6 +183,13 @@ const nav = [
     padding-block: 0.6rem;
   }
   .masthead nav { display: flex; gap: 0.25rem 1.25rem; flex-wrap: wrap; }
+
+  /* Phones: row 1 is the wordmark and the theme button, row 2 is the nav on one line. */
+  @media (max-width: 30rem) {
+    .masthead { gap: 0 0.75rem; }
+    .masthead nav { order: 3; flex-basis: 100%; justify-content: space-between; gap: 0 0.5rem; flex-wrap: nowrap; }
+    .masthead nav a { font-size: 0.95rem; }
+  }
   .masthead nav a {
     color: var(--muted); text-decoration: none;
     display: inline-flex; align-items: center; min-height: 44px;
