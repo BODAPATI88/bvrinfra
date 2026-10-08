@@ -1,0 +1,134 @@
+---
+import "@fontsource-variable/archivo/wdth.css";
+
+interface Props {
+  title: string;
+  description: string;
+}
+const { title, description } = Astro.props;
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+const nav = [
+  { href: "/projects", label: "Projects" },
+  { href: "/contact", label: "Contact" },
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="masthead">
+      <a class="wordmark" href="/" aria-current={path === "/" ? "page" : undefined}>bvrinfra.in</a>
+      <nav aria-label="Main">
+        {nav.map((item) => (
+          <a href={item.href} aria-current={path === item.href ? "page" : undefined}>{item.label}</a>
+        ))}
+      </nav>
+    </header>
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="foot">
+      <p>© 2026 Ravi Kishore</p>
+      <p><a href="https://github.com/BODAPATI88/bvrinfra">Source for this site</a></p>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --aisle: #e7ecf0;
+    --panel: #f6f8fa;
+    --ink: #16202a;
+    --muted: #4f5d69;
+    --steel: #2a333d;
+    --steel-line: #48525d;
+    --cable: #1d5da4;
+    --led-live: #2fb36b;
+    --led-build: #e0a526;
+    --led-off: #6b7680;
+    --rule: #c7d0d8;
+    --font: "Archivo Variable", "Helvetica Neue", Arial, sans-serif;
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --aisle: #141a20;
+      --panel: #1b232b;
+      --ink: #e4e9ee;
+      --muted: #9aa6b1;
+      --steel: #0c1116;
+      --steel-line: #36414c;
+      --cable: #7fb0e8;
+      --rule: #2c3640;
+    }
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { font-size: 106.25%; }
+  body {
+    margin: 0;
+    background: var(--aisle);
+    color: var(--ink);
+    font-family: var(--font);
+    font-variation-settings: "wdth" 100;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--cable); text-underline-offset: 0.18em; text-decoration-thickness: 1px; }
+  a:hover { text-decoration-thickness: 2px; }
+  :focus-visible { outline: 3px solid var(--cable); outline-offset: 3px; border-radius: 2px; }
+  h1, h2, h3 { line-height: 1.1; margin: 0; font-weight: 650; }
+  p { margin: 0 0 1em; }
+
+  .skip {
+    position: absolute; left: -9999px; top: 0;
+    background: var(--ink); color: var(--aisle); padding: 0.5rem 1rem;
+  }
+  .skip:focus { left: 1rem; top: 1rem; }
+
+  .masthead, main, .foot {
+    width: min(100% - 2rem, 70rem);
+    margin-inline: auto;
+  }
+  .masthead {
+    display: flex; justify-content: space-between; align-items: baseline;
+    gap: 1rem; flex-wrap: wrap;
+    padding-block: 1.5rem 0;
+  }
+  .wordmark {
+    color: var(--ink); text-decoration: none;
+    font-weight: 700; font-size: 1.05rem;
+    font-variation-settings: "wdth" 75;
+    letter-spacing: 0.01em;
+  }
+  .masthead nav { display: flex; gap: 1.5rem; }
+  .masthead nav a { color: var(--muted); text-decoration: none; }
+  .masthead nav a:hover, .masthead nav a[aria-current="page"] { color: var(--ink); }
+  .masthead nav a[aria-current="page"] { text-decoration: underline; text-decoration-thickness: 2px; }
+
+  main { padding-block: 3.5rem 4rem; }
+
+  .foot {
+    border-top: 1px solid var(--rule);
+    padding-block: 1.25rem 2rem;
+    display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+    color: var(--muted); font-size: 0.9rem;
+  }
+  .foot p { margin: 0; }
+
+  .page-title {
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    font-variation-settings: "wdth" 112;
+    letter-spacing: -0.015em;
+    margin-bottom: 1.25rem;
+  }
+  .lede { font-size: 1.15rem; color: var(--muted); max-width: 38em; }
+  .prose { max-width: 38em; }
+</style>

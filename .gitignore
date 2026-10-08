@@ -1,0 +1,22 @@
+# Node / Astro
+node_modules/
+site/dist/
+site/.astro/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+crash.log
+
+# Secrets and local env
+.env
+.env.*
+*.pem
+*.key
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/

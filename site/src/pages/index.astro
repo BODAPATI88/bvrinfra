@@ -1,0 +1,90 @@
+---
+import Base from "../layouts/Base.astro";
+import Rack from "../components/Rack.astro";
+---
+<Base
+  title="Ravi Kishore, infrastructure engineer"
+  description="Infrastructure engineer in Hyderabad. Windows Server, Active Directory, VMware, hybrid Azure, and automation. This site is built and run as infrastructure as code."
+>
+  <section class="hero">
+    <div class="intro">
+      <p class="who">Ravi Kishore, Hyderabad</p>
+      <h1 class="headline">I build infrastructure that can be rebuilt.</h1>
+
+      <!-- PLACEHOLDER: replace this block with your own 2–3 sentences. Delete the class="placeholder" wrapper when done. -->
+      <div class="placeholder" role="note">
+        <p><strong>Your intro goes here.</strong> Two or three sentences in your own words: what you run day to day, and what you want to work on next. Edit <code>site/src/pages/index.astro</code>.</p>
+      </div>
+
+      <p class="facts">
+        About 9.5 years across Windows Server, Active Directory, VMware vSphere, hybrid Azure and automation.
+        Microsoft Certified: Windows Server Hybrid Administrator Associate.
+      </p>
+    </div>
+    <Rack />
+  </section>
+
+  <section class="story" aria-labelledby="why">
+    <h2 id="why">Why this site is built like this</h2>
+    <div class="prose">
+      <p>
+        In September 2026 the previous version of bvrinfra.in disappeared with the machine it ran on.
+        The backups lived on that same machine, and the restore steps had never been written down.
+      </p>
+      <p>
+        This version is the fix. Everything is in one repository, every change goes through a pull request,
+        and the rack above only lights a unit once it is actually running.
+        The decisions are written up in <a href="https://github.com/BODAPATI88/bvrinfra/blob/main/docs/adr/0001-bvrinfra-architecture.md">ADR 0001</a>.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: start;
+  }
+  .who { color: var(--muted); font-variation-settings: "wdth" 85; margin-bottom: 0.75rem; }
+  .headline {
+    font-size: clamp(2.6rem, 6.4vw, 4.6rem);
+    font-variation-settings: "wdth" 118;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.02;
+    margin-bottom: 1.75rem;
+    max-width: 12ch;
+    text-wrap: balance;
+  }
+  .placeholder {
+    border: 2px dashed var(--led-build);
+    background: color-mix(in srgb, var(--led-build) 9%, transparent);
+    padding: 0.9rem 1.1rem;
+    border-radius: 4px;
+    margin-bottom: 1.25rem;
+    max-width: 34em;
+  }
+  .placeholder p { margin: 0; }
+  .placeholder code { font-size: 0.9em; }
+  .facts { color: var(--muted); max-width: 34em; }
+
+  .story {
+    margin-top: clamp(3.5rem, 8vw, 6rem);
+    padding-top: 2rem;
+    border-top: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: 2rem;
+  }
+  .story h2 {
+    font-size: 1.35rem;
+    font-variation-settings: "wdth" 85;
+    max-width: 14ch;
+  }
+
+  @media (max-width: 52rem) {
+    .hero, .story { grid-template-columns: 1fr; }
+  }
+</style>
