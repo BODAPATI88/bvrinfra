@@ -49,6 +49,22 @@ Every agent works in a **lane**, a set of folders it may change, defined in [AGE
 
 Nothing merges itself. Steps 4 and 5 make step 6 a two-minute decision, not a re-review.
 
+## Assignment policy
+
+Assignment is automatic inside these limits. Change a limit with a PR to this file.
+
+| Rule | How it works | Enforced by |
+|---|---|---|
+| **Author gate** | Only issues opened by Ravi (BODAPATI88) are eligible. Any other author's issue gets `untrusted` and agents ignore it. | `issue-gate` workflow, no AI |
+| **Approval gate** | `P0`, `P1`, `size:L`, `type:infra` and `type:security` tickets get `needs-approval`. They start only after Ravi adds `approved`. | `issue-gate` workflow, no AI |
+| **Shape gate** | The issue needs a **Done when** list. Without it the dispatcher asks for one and does not assign. | Dispatcher |
+| **Owner by rule** | New article → `owner:gemini`. Wording change in an existing page → `owner:chatgpt`. Code, CI, design → `owner:claude`. Dashboards, credentials, facts → `owner:ravi`. | Dispatcher |
+| **Auto-approve band** | Eligible `P2`/`P3`, `size:S`/`size:M`, `type:site`/`type:content` tickets are added to the current sprint and labelled `auto-approved`. | Dispatcher |
+| **Never automatic** | Terraform, DNS, secrets, `.github/**`, rack status in `stack.ts`. These are always `owner:claude` or `owner:ravi` with `needs-approval`. | Dispatcher + `guard` |
+| **Limits** | One open PR per agent. At most 3 `auto-approved` tickets per agent per sprint. | Dispatcher |
+
+Only people with write access can add the `jules` label that starts Jules. Keep write access to Ravi alone.
+
 ## Rules
 
 1. **No ticket, no PR.** Every PR description starts with `Closes #N`, which closes the ticket on merge.
