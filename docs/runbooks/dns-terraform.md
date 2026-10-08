@@ -19,6 +19,12 @@ DNS for `bvrinfra.in` is managed in `infra/terraform/` (ADR 0001, D2). The dashb
 | Cloudflare token | Workspace env var `CLOUDFLARE_API_TOKEN`, sensitive. Scope: Zone DNS Edit + Zone Read on `bvrinfra.in` only |
 | Token expiry | One year from 2026-10-08. Roll it a week before. |
 
+## Other tokens to roll yearly
+
+| Token | Where it's stored | Scope | Expires |
+|---|---|---|---|
+| GitHub fine-grained PAT for Upptime | `BODAPATI88/status` → Actions secret `GH_PAT` | `status` repo only: Actions, Contents, Issues, Pages, Workflows (read and write) | One year from 2026-10-08 |
+
 ## Guardrails
 
 - `prevent_destroy` is set on every record. Removing a record needs a PR that first deletes that guard, so it can't happen by accident.

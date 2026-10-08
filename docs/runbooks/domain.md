@@ -26,6 +26,7 @@
 |---|---|---|---|---|
 | `bvrinfra.in` | CNAME (flattened) | `bvrinfra-5l8.pages.dev` | On | Site, via Pages custom domain |
 | `www` | CNAME | `bvrinfra-5l8.pages.dev` | On | Site, via Pages custom domain |
+| `status` | CNAME | `bodapati88.github.io` | **Off** | Upptime status page (GitHub Pages needs it unproxied for HTTPS) |
 | `_dmarc` | TXT | `v=DMARC1; p=quarantine; …` | n/a | Email policy |
 
 The Pages project subdomain is `bvrinfra-5l8.pages.dev`, with a lowercase **L** in `5l8`. `bvrinfra.pages.dev` belongs to an unrelated business; never link to it.

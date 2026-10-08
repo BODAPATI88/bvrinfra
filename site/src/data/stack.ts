@@ -14,7 +14,7 @@ export const stack: Unit[] = [
   { name: "Site", detail: "Static Astro on Cloudflare Pages", status: "live" },
   { name: "CI", detail: "Build check on every pull request", status: "live" },
   { name: "DNS as code", detail: "Terraform, Cloudflare provider", status: "live" },
-  { name: "Monitoring", detail: "Uptime Kuma, public status page", status: "planned" },
+  { name: "Monitoring", detail: "Upptime on GitHub Actions, status.bvrinfra.in", status: "building" },
   { name: "Backups", detail: "restic, with a tested restore", status: "planned" },
 ];
 
