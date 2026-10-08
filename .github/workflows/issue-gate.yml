@@ -1,0 +1,60 @@
+name: Issue gate
+
+# Deterministic rules for which issues AI agents may act on. No AI in this file.
+# 1. Author gate: only issues opened by the repo owner are eligible. Anyone else's
+#    issue is labelled `untrusted`, and the `jules` trigger label is stripped from it.
+# 2. Approval gate: P0, P1, size:L, type:infra and type:security tickets get
+#    `needs-approval` until Ravi adds `approved`.
+# See "Assignment policy" in docs/working-agreement.md.
+on:
+  issues:
+    types: [opened, reopened, edited, labeled, unlabeled]
+
+permissions:
+  issues: write
+
+concurrency:
+  group: issue-gate-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const OWNER_LOGIN = "BODAPATI88";
+            const HIGH_STAKES = ["P0", "P1", "size:L", "type:infra", "type:security"];
+            const issue = context.payload.issue;
+            const { owner, repo } = context.repo;
+            const n = issue.number;
+            const names = new Set(issue.labels.map((l) => l.name));
+            const add = async (label) => {
+              if (!names.has(label)) { await github.rest.issues.addLabels({ owner, repo, issue_number: n, labels: [label] }); names.add(label); core.info(`+ ${label}`); }
+            };
+            const remove = async (label) => {
+              if (names.has(label)) {
+                try { await github.rest.issues.removeLabel({ owner, repo, issue_number: n, name: label }); } catch (e) { if (e.status !== 404) throw e; }
+                names.delete(label); core.info(`- ${label}`);
+              }
+            };
+
+            // 1. Author gate
+            if (issue.user.login !== OWNER_LOGIN) {
+              await add("untrusted");
+              await remove("jules");
+              await remove("auto-approved");
+              core.notice(`#${n} was opened by ${issue.user.login}; agents will ignore it.`);
+              return;
+            }
+
+            // 2. Approval gate
+            const highStakes = HIGH_STAKES.some((l) => names.has(l));
+            if (highStakes && !names.has("approved")) {
+              await add("needs-approval");
+              await remove("jules");
+            } else {
+              await remove("needs-approval");
+            }
