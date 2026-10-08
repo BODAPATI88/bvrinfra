@@ -16,9 +16,9 @@ laptop ──PR──▶ GitHub (this repo, main protected)
 BODAPATI88/status (Upptime)
   GitHub Actions checks bvrinfra.in every 5 min → status.bvrinfra.in
 
-homelab (separate repo: infra-homelab)
-  K3s + ArgoCD, reached only via Cloudflare Tunnel + Access
-  backups: restic → home HDD + one cloud copy (planned)
+homelab (separate repo: infra-homelab, private while hardened)
+  Proxmox host, services on Docker Compose (K3s decommissioned Sep 2026)
+  planned: admin access via Cloudflare Access, restic → home HDD + one cloud copy
 ```
 
 | Layer | Tool | Status |
@@ -61,4 +61,6 @@ npm run build    # output in site/dist
 - [x] DNS imported into Terraform
 - [x] Monitoring and public status page ([status.bvrinfra.in](https://status.bvrinfra.in))
 - [ ] Off-site backups with a passed restore test
-- [ ] Write-ups, starting with the September 2026 post-mortem
+- [x] [September 2026 post-mortem](https://bvrinfra.in/writing/september-2026-outage/)
+- [ ] More write-ups (tracked as issues)
+- [x] Security headers, link previews, sitemap
