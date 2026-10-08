@@ -30,14 +30,41 @@ import Rack from "../components/Rack.astro";
     <div class="prose">
       <p>
         In September 2026 the previous version of bvrinfra.in disappeared with the machine it ran on.
-        The backups lived on that same machine, and the restore steps had never been written down.
+        There was no backup, and nothing described the setup well enough to rebuild it.
       </p>
       <p>
         This version is the fix. Everything is in one repository, every change goes through a pull request,
-        and the rack above only lights a unit once it is actually running. Each live unit links to the proof.
+        and the rack above only lights a unit once it is actually running. Open any unit to see how it works.
         The decisions are written up in <a href="https://github.com/BODAPATI88/bvrinfra/blob/main/docs/adr/0001-bvrinfra-architecture.md">ADR 0001</a>.
       </p>
     </div>
+  </section>
+
+  <section class="next-reads" aria-labelledby="read-next">
+    <h2 id="read-next">Read next</h2>
+    <ul>
+      <li>
+        <a href="/writing/september-2026-outage/">
+          <span class="nr-kind">Post-mortem</span>
+          <span class="nr-title">The September 2026 outage</span>
+          <span class="nr-desc">What failed, why nothing could be restored, and what changed.</span>
+        </a>
+      </li>
+      <li>
+        <a href="/experience/">
+          <span class="nr-kind">Experience</span>
+          <span class="nr-title">Roles, skills and credentials</span>
+          <span class="nr-desc">About 9.5 years, from Windows and VMware to data-centre operations.</span>
+        </a>
+      </li>
+      <li>
+        <a href="/log/">
+          <span class="nr-kind">Build log</span>
+          <span class="nr-title">Done, next and later</span>
+          <span class="nr-desc">Every step of the rebuild with dates, and what comes after backups.</span>
+        </a>
+      </li>
+    </ul>
   </section>
 </Base>
 
@@ -87,6 +114,24 @@ import Rack from "../components/Rack.astro";
     font-stretch: 90%;
     max-width: 14ch;
   }
+
+  .next-reads { margin-top: clamp(3rem, 7vw, 5rem); }
+  .next-reads h2 { font-size: clamp(1.35rem, 1.1rem + 0.8vw, 1.8rem); font-stretch: 90%; margin-bottom: 1.25rem; }
+  .next-reads ul {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); gap: 1rem;
+  }
+  .next-reads a {
+    display: flex; flex-direction: column; gap: 0.35rem; height: 100%;
+    padding: 1.2rem 1.25rem 1.3rem;
+    background: var(--panel); border: 1px solid var(--rule); border-radius: 8px;
+    color: var(--ink); text-decoration: none;
+  }
+  .next-reads a:hover { border-color: var(--ink); }
+  .next-reads a:hover .nr-title { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.2em; }
+  .nr-kind { color: var(--muted); font-size: 0.85rem; font-stretch: 85%; }
+  .nr-title { font-weight: 750; font-size: 1.2rem; font-stretch: 92%; line-height: 1.2; }
+  .nr-desc { color: var(--muted); font-size: 0.95rem; }
 
   @media (max-width: 52rem) {
     .intro, .story { grid-template-columns: 1fr; }

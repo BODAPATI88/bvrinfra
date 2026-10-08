@@ -1,0 +1,76 @@
+---
+import Base from "../../layouts/Base.astro";
+import { done, next, later } from "../../data/log";
+import { stack } from "../../data/stack";
+const live = stack.filter((u) => u.status === "live").length;
+const groups = [
+  { id: "done", heading: "Done", sub: "What has happened, with dates.", items: done, kind: "done" },
+  { id: "next", heading: "Next", sub: "Committed, and in this order.", items: next, kind: "next" },
+  { id: "later", heading: "Later", sub: "Planned, not started.", items: later, kind: "later" },
+];
+---
+<Base
+  title="Build log, bvrinfra.in"
+  description="What has been built on bvrinfra.in since the September 2026 outage, what is live now, and what comes next."
+>
+  <h1 class="page-title">Build log</h1>
+  <p class="lede">
+    How this site got from offline to where it is now, and where it goes next.
+    Today <strong>{live} of {stack.length}</strong> units in the <a href="/">rack</a> are live.
+  </p>
+
+  <div class="groups">
+    {groups.map((g) => (
+      <section class:list={["group", g.kind]} aria-labelledby={g.id}>
+        <header>
+          <h2 id={g.id}>{g.heading}</h2>
+          <p>{g.sub}</p>
+        </header>
+        <ol class="entries">
+          {g.items.map((e) => (
+            <li>
+              <span class="dot" aria-hidden="true"></span>
+              {e.date && <p class="date">{e.date}</p>}
+              <h3>{e.title}</h3>
+              <p class="body">{e.body}</p>
+              {e.link && <p class="link"><a href={e.link.href}>{e.link.label}</a></p>}
+            </li>
+          ))}
+        </ol>
+      </section>
+    ))}
+  </div>
+</Base>
+
+<style>
+  .lede strong { color: var(--ink); }
+  .groups { margin-top: clamp(2rem, 5vw, 3.5rem); display: grid; gap: clamp(2.5rem, 6vw, 4rem); max-width: 52rem; }
+  .group header { display: flex; align-items: baseline; gap: 0.5rem 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .group h2 { font-size: clamp(1.5rem, 1.2rem + 1vw, 2.1rem); font-stretch: 105%; }
+  .group header p { margin: 0; color: var(--muted); }
+
+  .entries {
+    list-style: none; margin: 0; padding: 0 0 0 1.75rem;
+    border-left: 2px solid var(--rule);
+  }
+  .done .entries { border-left-color: var(--led-live); }
+  .entries li { position: relative; padding-bottom: 1.5rem; }
+  .entries li:last-child { padding-bottom: 0; }
+  .dot {
+    position: absolute; left: calc(-1.75rem - 7px); top: 0.3rem;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--aisle); border: 2px solid var(--muted);
+  }
+  .done .dot { background: var(--led-live); border-color: var(--led-live); }
+  .next .dot { border-color: var(--led-build); }
+  .date { margin: 0 0 0.15rem; color: var(--muted); font-stretch: 85%; font-size: 0.9rem; font-variant-numeric: tabular-nums; }
+  .entries h3 { font-size: 1.15rem; font-stretch: 92%; }
+  .body { margin: 0.35rem 0 0; max-width: 38em; }
+  .link { margin: 0.4rem 0 0; }
+  .later h3, .later .body { color: var(--muted); }
+
+  @media (forced-colors: active) {
+    .dot { border-color: CanvasText; }
+    .done .dot { background: CanvasText; forced-color-adjust: none; }
+  }
+</style>

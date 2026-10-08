@@ -9,7 +9,9 @@ interface Props {
 const { title, description } = Astro.props;
 const path = Astro.url.pathname.replace(/\/$/, "") || "/";
 const nav = [
+  { href: "/experience", label: "Experience" },
   { href: "/projects", label: "Projects" },
+  { href: "/log", label: "Log" },
   { href: "/contact", label: "Contact" },
   { href: "https://status.bvrinfra.in", label: "Status" },
 ];
@@ -50,7 +52,7 @@ const nav = [
       <a class="wordmark" href="/" aria-current={path === "/" ? "page" : undefined}>bvrinfra.in</a>
       <nav aria-label="Main">
         {nav.map((item) => (
-          <a href={item.href} aria-current={path === item.href ? "page" : undefined}>{item.label}</a>
+          <a href={item.href} aria-current={path === item.href || path.startsWith(item.href + "/") ? "page" : undefined}>{item.label}</a>
         ))}
       </nav>
       <ThemeSwitch />
