@@ -1,0 +1,81 @@
+---
+// Three-way switch: follow the system, or force light or dark.
+// The choice is stored per browser; if storage is blocked it still works for the visit.
+const options = [
+  { value: "auto", label: "Auto" },
+  { value: "light", label: "Light" },
+  { value: "dark", label: "Dark" },
+];
+---
+<fieldset class="theme-switch">
+  <legend class="visually-hidden">Colour theme</legend>
+  {options.map((o) => (
+    <label>
+      <input type="radio" name="theme" value={o.value} checked={o.value === "auto"} />
+      <span>{o.label}</span>
+    </label>
+  ))}
+</fieldset>
+
+<script is:inline>
+  (function () {
+    var root = document.documentElement;
+    var metas = document.querySelectorAll('meta[name="theme-color"]');
+    var LIGHT = "#e9eef2", DARK = "#11171d";
+    var mode = root.dataset.theme || "auto";
+
+    function apply(next) {
+      if (next === "auto") {
+        delete root.dataset.theme;
+        metas[0] && metas[0].setAttribute("content", LIGHT);
+        metas[1] && metas[1].setAttribute("content", DARK);
+      } else {
+        root.dataset.theme = next;
+        metas.forEach(function (m) { m.setAttribute("content", next === "dark" ? DARK : LIGHT); });
+      }
+      try {
+        if (next === "auto") localStorage.removeItem("theme");
+        else localStorage.setItem("theme", next);
+      } catch (e) {}
+    }
+
+    document.querySelectorAll('.theme-switch input[name="theme"]').forEach(function (input) {
+      input.checked = input.value === mode;
+      input.addEventListener("change", function () { if (input.checked) apply(input.value); });
+    });
+  })();
+</script>
+
+<style>
+  .theme-switch {
+    display: inline-flex;
+    margin: 0;
+    padding: 3px;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    background: var(--panel);
+  }
+  .theme-switch label { position: relative; display: inline-flex; }
+  .theme-switch input {
+    position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer;
+  }
+  .theme-switch span {
+    display: inline-flex; align-items: center;
+    min-height: 38px; padding: 0 0.85rem;
+    border-radius: 999px;
+    font-size: 0.85rem; font-stretch: 85%;
+    color: var(--muted);
+  }
+  .theme-switch input:checked + span { background: var(--ink); color: var(--aisle); }
+  .theme-switch input:focus-visible + span { outline: 3px solid var(--cable); outline-offset: 2px; }
+  .theme-switch input:hover:not(:checked) + span { color: var(--ink); }
+
+  @media (forced-colors: active) {
+    .theme-switch input:checked + span { background: Highlight; color: HighlightText; forced-color-adjust: none; }
+  }
+
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+  }
+</style>

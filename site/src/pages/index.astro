@@ -6,22 +6,22 @@ import Rack from "../components/Rack.astro";
   title="Ravi Kishore, infrastructure engineer"
   description="Infrastructure engineer in Hyderabad. Windows Server, Active Directory, VMware, hybrid Azure, and automation. This site is built and run as infrastructure as code."
 >
-  <section class="hero">
-    <div class="intro">
-      <p class="who">Ravi Kishore, Hyderabad</p>
-      <h1 class="headline">I build infrastructure that can be rebuilt.</h1>
+  <section class="hero" aria-labelledby="headline">
+    <p class="who">Ravi Kishore, Hyderabad</p>
+    <h1 id="headline" class="headline">I build infrastructure that can be rebuilt.</h1>
 
+    <div class="intro">
       <p class="intro-text">
         I work in infrastructure operations across eight data centre sites in the US and Japan,
         provisioning VMs, qualifying releases and handling incidents as part of a five-engineer rotation.
         Next, I want to take that production experience into platform engineering and SRE.
       </p>
-
       <p class="facts">
         About 9.5 years across Windows Server, Active Directory, VMware vSphere, hybrid Azure and automation.
         Microsoft Certified: Windows Server Hybrid Administrator Associate.
       </p>
     </div>
+
     <Rack />
   </section>
 
@@ -34,7 +34,7 @@ import Rack from "../components/Rack.astro";
       </p>
       <p>
         This version is the fix. Everything is in one repository, every change goes through a pull request,
-        and the rack above only lights a unit once it is actually running.
+        and the rack above only lights a unit once it is actually running. Each live unit links to the proof.
         The decisions are written up in <a href="https://github.com/BODAPATI88/bvrinfra/blob/main/docs/adr/0001-bvrinfra-architecture.md">ADR 0001</a>.
       </p>
     </div>
@@ -42,30 +42,37 @@ import Rack from "../components/Rack.astro";
 </Base>
 
 <style>
-  .hero {
-    display: grid;
-    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-    gap: clamp(2rem, 5vw, 4.5rem);
-    align-items: start;
+  .who {
+    color: var(--muted); font-stretch: 85%;
+    margin-bottom: 0.9rem;
   }
-  .who { color: var(--muted); font-variation-settings: "wdth" 85; margin-bottom: 0.75rem; }
   .headline {
-    font-size: clamp(2.6rem, 6.4vw, 4.6rem);
-    font-variation-settings: "wdth" 118;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.02;
-    margin-bottom: 1.75rem;
-    max-width: 12ch;
+    /* Sized to the viewport so the longest word, "infrastructure", always fits on one line. */
+    font-size: clamp(1.9rem, 8.4vw, 7.5rem);
+    font-stretch: 125%;
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 0.95;
+    margin-bottom: clamp(1.5rem, 4vw, 2.75rem);
+    max-width: 14ch;
     text-wrap: balance;
+    overflow-wrap: break-word;
+    hyphens: manual;
+  }
+  .intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    gap: clamp(1rem, 4vw, 4rem);
+    align-items: start;
+    margin-bottom: clamp(2rem, 5vw, 3.5rem);
   }
   .intro-text {
-    font-size: 1.15rem;
-    line-height: 1.55;
-    max-width: 32em;
-    margin-bottom: 1.25rem;
+    font-size: clamp(1.1rem, 1rem + 0.45vw, 1.35rem);
+    line-height: 1.5;
+    max-width: 34em;
+    margin: 0;
   }
-  .facts { color: var(--muted); max-width: 34em; }
+  .facts { color: var(--muted); max-width: 30em; margin: 0; }
 
   .story {
     margin-top: clamp(3.5rem, 8vw, 6rem);
@@ -76,12 +83,12 @@ import Rack from "../components/Rack.astro";
     gap: 2rem;
   }
   .story h2 {
-    font-size: 1.35rem;
-    font-variation-settings: "wdth" 85;
+    font-size: clamp(1.35rem, 1.1rem + 0.8vw, 1.8rem);
+    font-stretch: 90%;
     max-width: 14ch;
   }
 
   @media (max-width: 52rem) {
-    .hero, .story { grid-template-columns: 1fr; }
+    .intro, .story { grid-template-columns: 1fr; }
   }
 </style>
