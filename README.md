@@ -22,7 +22,7 @@ homelab (separate repo: infra-homelab)
 |---|---|---|
 | Site | Astro (static) on Cloudflare Pages | Live |
 | CI | GitHub Actions build check | Live |
-| DNS as code | Terraform, Cloudflare provider, HCP Terraform state | Planned |
+| DNS as code | Terraform, Cloudflare provider, HCP Terraform state | In progress |
 | Monitoring | Uptime Kuma + public status page | Planned |
 | Backups | restic, with a tested restore | Planned |
 
@@ -30,7 +30,7 @@ homelab (separate repo: infra-homelab)
 
 ```
 site/            Astro site (Cloudflare Pages builds from here)
-infra/terraform/ DNS and Cloudflare config (planned)
+infra/terraform/ DNS as code (see docs/runbooks/dns-terraform.md)
 ansible/         Homelab mirror config (planned)
 docs/adr/        Architecture decision records
 docs/runbooks/   How to operate and recover each piece
