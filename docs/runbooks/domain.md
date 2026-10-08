@@ -22,11 +22,13 @@
 
 ## Current records (2026-10-08)
 
-| Name | Type | Target | Status |
-|---|---|---|---|
-| `bvrinfra.in` | A | `9.205.154.113` (old host, dead) | Replace with the Cloudflare Pages custom domain |
-| `www` | A | `9.205.154.113` (old host, dead) | Replace with the Cloudflare Pages custom domain |
-| `_dmarc` | TXT | `v=DMARC1; p=quarantine; …` | Keep |
+| Name | Type | Target | Proxy | Purpose |
+|---|---|---|---|---|
+| `bvrinfra.in` | CNAME (flattened) | `bvrinfra-5l8.pages.dev` | On | Site, via Pages custom domain |
+| `www` | CNAME | `bvrinfra-5l8.pages.dev` | On | Site, via Pages custom domain |
+| `_dmarc` | TXT | `v=DMARC1; p=quarantine; …` | n/a | Email policy |
+
+The Pages project subdomain is `bvrinfra-5l8.pages.dev`, with a lowercase **L** in `5l8`. `bvrinfra.pages.dev` belongs to an unrelated business; never link to it.
 
 ## Change log
 
@@ -38,6 +40,7 @@
   - 2 records for a discontinued project
   - 1 registrar leftover (`_domainconnect`)
 - **2026-10-08:** Deleted tunnel `bvr-vm200-v2` (down, no connectors).
+- **2026-10-08:** Site back online. Deleted the apex and `www` A records (dead host `9.205.154.113`), added proxied CNAMEs to `bvrinfra-5l8.pages.dev`, and attached both as Pages custom domains. Both are Active with SSL; verified externally.
 
 ## Rules
 
