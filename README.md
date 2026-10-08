@@ -26,7 +26,7 @@ homelab (separate repo: infra-homelab)
 | Site | Astro (static) on Cloudflare Pages | Live |
 | CI | GitHub Actions build check | Live |
 | DNS as code | Terraform, Cloudflare provider, HCP Terraform state | Live |
-| Monitoring | Upptime (GitHub Actions) + status page at status.bvrinfra.in | In progress |
+| Monitoring | Upptime (GitHub Actions) + status page at status.bvrinfra.in | Live |
 | Backups | restic, with a tested restore | Planned |
 
 ## Layout
@@ -59,6 +59,6 @@ npm run build    # output in site/dist
 - [x] Phase 1: audit of existing repos, ADR 0001 accepted
 - [x] Site live on Cloudflare Pages at bvrinfra.in
 - [x] DNS imported into Terraform
-- [ ] Monitoring and public status page
+- [x] Monitoring and public status page ([status.bvrinfra.in](https://status.bvrinfra.in))
 - [ ] Off-site backups with a passed restore test
 - [ ] Write-ups, starting with the September 2026 post-mortem
