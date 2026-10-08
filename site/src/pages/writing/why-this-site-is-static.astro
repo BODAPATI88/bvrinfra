@@ -20,28 +20,24 @@ import Base from "../../layouts/Base.astro";
       <h2 id="the-problem">The problem</h2>
       <p>
         The previous site ran on one Azure virtual machine. It used a Kubernetes stack to host what was mostly a static site.
-        While this approach functioned adequately while the machine was running, the complexity of using a container orchestration system to serve static content was unnecessary.
       </p>
       <p>
         In September 2026, I deleted that Azure virtual machine.
         Because I had no backup, the site went offline and stayed down until 8 October 2026.
-        The entire setup, including the configuration and the runtime environment, lived on that single machine.
-        When the machine was deleted, everything was lost with it.
-        This incident highlighted the danger of a single point of failure and the risks of maintaining infrastructure without adequate safeguards.
+        The entire setup lived on that single machine. When it was deleted, everything was lost with it.
       </p>
     </section>
 
     <section aria-labelledby="options-considered">
       <h2 id="options-considered">Options considered</h2>
       <p>
-        [CHECK] While deciding how to rebuild the site, I had to evaluate several different approaches to prevent a repeat of the September outage.
-        [CHECK] The most straightforward path would have been to recreate the virtual machine and install a simple web server, reducing the complexity of the previous Kubernetes setup.
-        [CHECK] Another option was to rebuild the cluster, but this time describing the cluster setup as code so it could be easily recreated if the machine was lost again.
+        [CHECK] To prevent a repeat of the September outage, I weighed two main options.
+        [CHECK] The first was to recreate the virtual machine with a simple web server, reducing the complexity of the previous setup.
+        [CHECK] The second was to rebuild the cluster as code so it could be easily recreated.
       </p>
       <p>
-        However, any solution that involved managing a server meant that I would still be responsible for the operating system and the software running on it.
-        I would have to patch it against vulnerabilities, secure it against unauthorized access, and ensure that backups were reliable and tested.
-        [CHECK] Given that the content itself rarely changes and does not require complex backend logic, managing a server felt like taking on unneeded risk and operational burden.
+        [CHECK] Both options meant managing a server, patching it, and securing it.
+        [CHECK] Given that the content itself rarely changes, managing a server felt like unneeded operational burden.
       </p>
     </section>
 
@@ -49,40 +45,35 @@ import Base from "../../layouts/Base.astro";
       <h2 id="the-decision">The decision</h2>
       <p>
         I decided to eliminate the server entirely.
-        The rebuild is static HTML built with Astro, and it is hosted on Cloudflare Pages.
-        There is no server of mine in the path, which means there is nothing for me to patch.
-        By shifting the hosting to a managed platform, I removed the operational burden of keeping a machine running, and I removed the single machine that failed that caused the previous outage.
+        The rebuild is static HTML built with Astro, hosted on Cloudflare Pages.
+        There is no server of mine in the path, which means there is nothing to patch.
+        By shifting the hosting, I removed the single machine that failed.
       </p>
       <p>
         Every change to the site now goes through a pull request and a build check.
-        This catches build errors before they reach the public site, providing a safety net for any updates.
-        The DNS is managed through Terraform with a manual apply step.
-        This approach treats the DNS configuration as code, allowing for version control and a reviewed plan before every change.
-        Monitoring is handled by Upptime, which runs on GitHub Actions. This places the monitoring outside my hardware, so it can report downtime even if my own network is disconnected or the hosting provider experiences an issue.
+        This catches build errors before they reach the public site.
+        The DNS is managed through Terraform with a manual apply step, allowing for version control and a reviewed plan before every change.
+        Monitoring is handled by Upptime, which runs on GitHub Actions. This places the monitoring outside my hardware, so it can report downtime even if my own network disconnects.
       </p>
     </section>
 
     <section aria-labelledby="trade-offs">
       <h2 id="trade-offs">Trade-offs</h2>
       <p>
-        Moving to a static architecture involves giving up certain capabilities.
         The primary trade-off I accepted is that there are no server-side features.
-        The site cannot process forms directly, and there are no user logins or dynamic content feeds that rely on a backend database.
+        The site cannot process forms directly, and there are no logins.
       </p>
       <p>
-        For a site like this, the limitation is acceptable.
-        The need to process user input is minimal, and the focus is entirely on publishing readable content.
-        The increase in reliability, the decrease in maintenance, and the simplified deployment process outweigh the loss of server-side processing capabilities.
+        [CHECK] For a site focused on readable content, the limitation is acceptable.
+        [CHECK] The increase in reliability and simplified deployment outweigh the loss of server-side capabilities.
       </p>
     </section>
 
     <section aria-labelledby="what-id-revisit">
       <h2 id="what-id-revisit">What I'd revisit</h2>
       <p>
-        The current setup is solid, but there is always room for adjustment as requirements change.
-        If I eventually need to add a feature that requires a backend, such as a contact form or a search function, I will have to evaluate serverless functions or external APIs to handle that logic without introducing a server.
-        I might also look into expanding the monitoring to cover more specific user journeys or performance metrics, rather than just simple uptime checks.
-        For now, the priority is to keep the site online, secure, and easy to update, and the static architecture achieves that goal.
+        [CHECK] If I eventually need a feature that requires a backend, such as a contact form, I will have to evaluate external APIs to handle that logic without introducing a server.
+        [CHECK] I might also look into expanding the monitoring to cover more specific metrics.
       </p>
     </section>
   </article>
