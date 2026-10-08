@@ -6,12 +6,11 @@ const projects = [
     name: "bvrinfra",
     href: "https://github.com/BODAPATI88/bvrinfra",
     state: "Active",
-    summary: "This site and the infrastructure behind it: static Astro on Cloudflare Pages, a protected main branch, and decision records for every architectural choice. DNS moves into Terraform next.",
+    summary: "This site and the infrastructure behind it: static Astro on Cloudflare Pages, a protected main branch, DNS managed in Terraform with manual apply, and decision records for every architectural choice.",
   },
   {
     name: "infra-homelab",
-    href: "https://github.com/BODAPATI88/infra-homelab",
-    state: "Being hardened",
+    state: "Private while being hardened",
     summary: "K3s homelab on Proxmox with ArgoCD, Traefik, MetalLB, Prometheus, Grafana and Loki. Resource quotas per namespace, ops scripts, and a written cluster recovery guide. Next: admin access behind Cloudflare Access, and off-site backups with a tested restore.",
   },
   {
@@ -27,13 +26,13 @@ const projects = [
   description="Infrastructure projects by Ravi Kishore: this site as code, a K3s homelab, and the archived previous site."
 >
   <h1 class="page-title">Projects</h1>
-  <p class="lede">Public repositories, with an honest status for each. A write-up of the September 2026 outage is in progress.</p>
+  <p class="lede">What I'm building, with an honest status for each. A write-up of the September 2026 outage is in progress.</p>
 
   <ul class="projects">
     {projects.map((p) => (
       <li>
         <div class="head">
-          <h2><a href={p.href}>{p.name}</a></h2>
+          <h2>{p.href ? <a href={p.href}>{p.name}</a> : p.name}</h2>
           <span class="state">{p.state}</span>
         </div>
         <p>{p.summary}</p>
