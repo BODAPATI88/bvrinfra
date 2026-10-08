@@ -1,0 +1,105 @@
+---
+import Base from "../../layouts/Base.astro";
+---
+<Base
+  type="article"
+  title="Why this site is static"
+  description="How a single point of failure took down my website, and why I chose a static architecture for the rebuild."
+>
+  <article class="post">
+    <header>
+      <p class="kind">Architecture · published 8 October 2026</p>
+      <h1 class="page-title">Why this site is static</h1>
+      <p class="lede">
+        The previous iteration of this site required a complex stack to serve what was essentially a collection of static files.
+        When a mistake erased the host machine, the resulting downtime forced a complete rethinking of how the site is built and served.
+      </p>
+    </header>
+
+    <section aria-labelledby="the-problem">
+      <h2 id="the-problem">The problem</h2>
+      <p>
+        The previous site ran on one Azure virtual machine. It used a Kubernetes stack to host what was mostly a static site.
+        While this approach functioned adequately while the machine was running, the complexity of using a container orchestration system to serve static content was unnecessary.
+        Managing that single node meant taking on the maintenance overhead of keeping the operating system updated, securing the network, and managing the container runtime.
+        This took time away from writing and building, which was the primary goal of the site.
+      </p>
+      <p>
+        In September 2026, I deleted that Azure virtual machine.
+        Because I had no backup, the site went offline and stayed down until 8 October 2026.
+        The entire setup, including the configuration and the runtime environment, lived on that single machine.
+        When the machine was deleted, everything was lost with it.
+        This incident highlighted the danger of a single point of failure and the risks of maintaining infrastructure without adequate safeguards.
+      </p>
+    </section>
+
+    <section aria-labelledby="options-considered">
+      <h2 id="options-considered">Options considered</h2>
+      <p>
+        While deciding how to rebuild the site, I had to evaluate several different approaches to prevent a repeat of the September outage.
+        The most straightforward path would have been to recreate the virtual machine and install a simple web server, reducing the complexity of the previous Kubernetes setup.
+        Another option was to rebuild the cluster, but this time describing the cluster setup as code so it could be easily recreated if the machine was lost again.
+      </p>
+      <p>
+        However, any solution that involved managing a server meant that I would still be responsible for the operating system and the software running on it.
+        I would have to patch it against vulnerabilities, secure it against unauthorized access, and ensure that backups were reliable and tested.
+        Given that the content itself rarely changes and does not require complex backend logic, managing a server felt like taking on unneeded risk and operational burden.
+      </p>
+    </section>
+
+    <section aria-labelledby="the-decision">
+      <h2 id="the-decision">The decision</h2>
+      <p>
+        I decided to eliminate the server entirely.
+        The rebuild is static HTML built with Astro, and it is hosted on Cloudflare Pages.
+        There is no server of mine in the path, which means there is nothing for me to patch.
+        By shifting the hosting to a managed platform, I removed the operational burden of keeping a machine running, and I eliminated the single point of failure that caused the previous outage.
+      </p>
+      <p>
+        Every change to the site now goes through a pull request and a build check.
+        This ensures that errors are caught before they reach the public site, providing a safety net for any updates.
+        The DNS is managed through Terraform with a manual apply step.
+        This approach treats the DNS configuration as code, allowing for version control and peer review.
+        Monitoring is handled by Upptime, which runs on GitHub Actions. This places the monitoring outside my hardware, so it can reliably report downtime even if my own network is disconnected or the hosting provider experiences an issue.
+      </p>
+    </section>
+
+    <section aria-labelledby="trade-offs">
+      <h2 id="trade-offs">Trade-offs</h2>
+      <p>
+        Moving to a static architecture involves giving up certain capabilities.
+        The primary trade-off I accepted is that there are no server-side features.
+        The site cannot process forms directly, and there are no user logins or dynamic content feeds that rely on a backend database.
+      </p>
+      <p>
+        For a site like this, the limitation is acceptable.
+        The need to process user input is minimal, and the focus is entirely on publishing readable content.
+        The increase in reliability, the decrease in maintenance, and the simplified deployment process far outweigh the loss of server-side processing capabilities.
+      </p>
+    </section>
+
+    <section aria-labelledby="what-id-revisit">
+      <h2 id="what-id-revisit">What I'd revisit</h2>
+      <p>
+        The current setup is robust, but there is always room for adjustment as requirements change.
+        If I eventually need to add a feature that requires a backend, such as a contact form or a search function, I will have to evaluate serverless functions or external APIs to handle that logic without introducing a server.
+        I might also look into expanding the monitoring to cover more specific user journeys or performance metrics, rather than just simple uptime checks.
+        For now, the priority is to keep the site online, secure, and easy to update, and the static architecture achieves that goal perfectly.
+      </p>
+    </section>
+  </article>
+</Base>
+
+<style>
+  .post { max-width: 46rem; }
+  .post header { margin-bottom: 2.5rem; }
+  .kind { color: var(--muted); font-stretch: 85%; margin-bottom: 0.75rem; }
+  .post section { margin-top: 2.5rem; }
+  .post h2 {
+    font-size: clamp(1.35rem, 1.1rem + 0.8vw, 1.75rem);
+    font-stretch: 92%;
+    margin-bottom: 0.9rem;
+  }
+  .post p, .post li { line-height: 1.65; }
+  .post p { margin-bottom: 1.25rem; }
+</style>

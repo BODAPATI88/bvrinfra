@@ -11,6 +11,12 @@ export interface Entry {
 
 export const done: Entry[] = [
   {
+    date: "8 Oct 2026",
+    title: "Why this site is static",
+    body: "A write-up explaining the decision to move to a static architecture after the September 2026 outage.",
+    link: { href: "/writing/why-this-site-is-static/", label: "Read the article" },
+  },
+  {
     date: "Sep 2026",
     title: "The old site is lost",
     body: "The Azure VM that ran bvrinfra.in is deleted with no backup. The site goes offline.",
