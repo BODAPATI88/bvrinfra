@@ -40,14 +40,28 @@ Every agent works in a **lane**, a set of folders it may change, defined in [AGE
 
 | Step | Who | What happens | Board column |
 |---|---|---|---|
-| 1. Pick | Ravi | Moves a ticket to **This sprint** and sets one `owner:` label | This sprint |
-| 2. Start | Agent | Ravi hands the issue link to the agent (Jules: add the `jules` label or paste the link; Codex: paste the link) | In progress |
-| 3. PR | Agent | Branch `<agent>/<issue>-<name>`, PR starting `Closes #N` | In review |
-| 4. Guard | CI | `build` and `guard` must pass: lane, `Closes #N`, no open `[CHECK]`, no private IPs | In review |
-| 5. Review | Claude | Reads the diff against the issue's **Done when** list, posts approve or change requests | In review |
-| 6. Merge | Ravi | Merges only when both checks are green **and** Claude's latest review has no open items | Done |
+| 1. Pick | Ravi or dispatcher | Ticket enters **This sprint** with one `owner:` label (Ravi, or the dispatcher inside the auto-approve band) | This sprint |
+| 2. Brief | Dispatcher | Posts an `agent-brief` comment: the exact prompt and steps for the owning agent | This sprint |
+| 3. Start | Dispatcher | On its hourly weekday run, hands the ticket to the agent with the brief's prompt (Jules: `jules` label; Codex: a mention; Claude: works it directly) | In progress |
+| 4. PR | Agent | Branch `<agent>/<issue>-<name>`, PR starting `Closes #N` | In review |
+| 5. Guard | CI | `build` and `guard` must pass: lane, `Closes #N`, no open `[CHECK]`, no private IPs | In review |
+| 6. Review | Claude | Reads the diff against the issue's **Done when** list, posts approve or change requests | In review |
+| 7. Merge | Ravi | Merges only when both checks are green **and** Claude's latest review has no open items | Done |
 
-Nothing merges itself. Steps 4 and 5 make step 6 a two-minute decision, not a re-review.
+Nothing merges itself. Steps 5 and 6 make step 7 a two-minute decision, not a re-review.
+
+### Merge standard
+
+Ravi merges a PR only when all of these hold:
+
+- [ ] `build`, `guard` and the Cloudflare Pages preview are green
+- [ ] Claude's latest review on the current commit says **ready for Ravi to merge**
+- [ ] Every item in the issue's **Done when** list is met
+- [ ] No open `[CHECK]`, no invented facts, no employer or client names, IPs or costs
+- [ ] The agent posted a **done** update on the issue
+- [ ] Ravi opened the preview and read the changed text
+
+If any box is empty, comment what is missing and leave it open.
 
 ## Assignment policy
 
@@ -74,3 +88,4 @@ Only people with write access can add the `jules` label that starts Jules. Keep 
 5. **Facts before publishing.** AI-drafted text marks assumptions with `[CHECK]`; nothing with an open `[CHECK]` is merged.
 6. **The rack stays honest.** A rack unit changes status in the same PR that ships the work, never ahead of it.
 7. **Sprint review, each Monday:** close what's done, move what isn't, size anything new.
+8. **Progress lives on the ticket.** Every agent comments on its issue when it starts, opens a PR, gets blocked and finishes, in the format in [AGENTS.md](../AGENTS.md#report-on-the-ticket). An agent that can't comment puts the same block in its chat reply for Ravi to paste. The dispatcher flags any dispatched ticket with no update after 24 hours.
