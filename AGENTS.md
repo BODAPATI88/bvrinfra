@@ -46,6 +46,28 @@ Use this format, so updates from every agent read the same:
 ```
 If you cannot comment on GitHub (for example a 403 or no network), end your chat reply with the same block. Ravi pastes it into the issue. Never report work as done unless the build ran and passed.
 
+## Schedule and checks
+You do not start yourself. The dispatcher (Claude, on a schedule) hands you work and checks on it. This file tells you what it will check.
+
+**When the dispatcher runs:** every hour from 10:00 to 18:00 IST, Monday to Friday.
+
+**Each run it:**
+1. Writes an `agent-brief` on any owned ticket that has none.
+2. Hands each agent at most one ticket from the current sprint, highest priority first (Jules: `jules` label; Codex: a mention with the brief's prompt; Claude: works it directly).
+3. Reviews every new PR commit against the Merge standard in [docs/working-agreement.md](docs/working-agreement.md#merge-standard).
+4. Posts a daily status at 18:00 IST on the `Daily status` issue.
+
+**What you must do after you are handed a ticket:**
+
+| By | You post | If you don't |
+|---|---|---|
+| Your first response | A **started** update on the issue | — |
+| 24 hours | A PR (and a **PR opened** update), or a **blocked** update with the exact error | The dispatcher posts a stale-check and hands you the ticket again |
+| 48 hours | Same | Handed over once more |
+| After two hand-overs with no reply | — | The ticket is listed for Ravi, who may reassign it |
+
+**On review:** answer every numbered item from Claude's review on the same branch, then post a **done** update. Ravi merges only when every box in the Merge standard is ticked.
+
 ## Check your work before opening the PR
 ```bash
 cd site
