@@ -1,0 +1,106 @@
+---
+import Base from "../../layouts/Base.astro";
+---
+<Base
+  type="article"
+  title="Why the monitor runs off my hardware"
+  description="How this site is monitored from the outside, why a monitor needs to survive the system it watches, and what happens when a check fails."
+>
+  <article class="post">
+    <header>
+      <p class="kind">Article · published 9 October 2026</p>
+      <h1 class="page-title">Why the monitor runs off my hardware</h1>
+      <p class="lede">
+        A monitor that runs on the same machine it watches is useless when that machine fails.
+        When the server goes down, the monitor goes down with it, and nobody gets an alert.
+        This is why the system that watches this site runs somewhere else entirely.
+      </p>
+    </header>
+
+    <section aria-labelledby="the-problem">
+      <h2 id="the-problem">The problem with internal monitors</h2>
+      <p>
+        In September 2026, the old site's Azure VM was deleted with no backup and the site went offline.
+        Because the entire setup lived on that one machine, anything that could have told me the site was down died at the exact same moment.
+        You can read the full context in the <a href="/writing/september-2026-outage/">post-mortem for the September 2026 outage</a>.
+      </p>
+      <p>
+        If I had installed a monitoring tool on that server, it would have been deleted along with the site.
+        A monitor only works if it survives the incident it reports.
+        If a server loses power, loses its network connection, or gets deleted, a monitor living on that server cannot send an alert.
+        To know if a system is accessible to the outside world, you have to look at it from the outside world.
+        That means the monitor must run off my hardware.
+        Outages get noticed and recorded even when the homelab is switched off.
+        A monitor on the machine it watches can't do that.
+      </p>
+    </section>
+
+    <section aria-labelledby="what-runs-now">
+      <h2 id="what-runs-now">What runs now</h2>
+      <p>
+        Monitoring is Upptime running on GitHub Actions.
+        It runs on GitHub, not my hardware.
+        This physical separation ensures that the monitoring stays alive regardless of what happens to the site or my local machines.
+      </p>
+      <p>
+        Every five minutes a scheduled job requests three pages: Home, www, Projects.
+        Because the job runs on shared runners, GitHub may delay the schedule based on their own system load.
+        The interval is not always exactly five minutes, but it is frequent enough to catch any downtime.
+      </p>
+    </section>
+
+    <section aria-labelledby="when-a-check-fails">
+      <h2 id="when-a-check-fails">What happens when a check fails</h2>
+      <p>
+        The system records each result every time it checks those three pages.
+        As long as the pages load correctly, the system logs the success and waits for the next cycle.
+      </p>
+      <p>
+        If a check fails it opens a GitHub issue, which emails me.
+        I receive an alert from a system that is still running, telling me about a system that is not.
+      </p>
+      <p>
+        The monitor continues checking every five minutes while the site is down.
+        When the site recovers the issue closes.
+        This creates a clean, permanent record of exactly when the outage started and ended.
+      </p>
+    </section>
+
+    <section aria-labelledby="what-it-does-not-cover">
+      <h2 id="what-it-does-not-cover">What it does not cover yet</h2>
+      <p>
+        Right now, this external setup only watches the public site.
+        It makes sure the pages that anyone on the internet can visit are actually loading.
+      </p>
+      <p>
+        It does not cover the services running inside the homelab that are not exposed to the public internet.
+        For those private services, an external monitor would not be able to reach them anyway.
+        The plan for internal monitoring is to run Uptime Kuma inside the homelab for internal services.
+        That tool will watch the internal systems from within the network, running alongside the external checks that already watch the public site.
+      </p>
+    </section>
+
+    <section aria-labelledby="status-page">
+      <h2 id="status-page">The public status page</h2>
+      <p>
+        Every test result, every open issue, and the overall uptime percentage are published automatically.
+        Results publish to a public status page at <a href="https://status.bvrinfra.in">status.bvrinfra.in</a>.
+        This page serves as the official record of the site reliability.
+      </p>
+    </section>
+  </article>
+</Base>
+
+<style>
+  .post { max-width: 46rem; }
+  .post header { margin-bottom: 2.5rem; }
+  .kind { color: var(--muted); font-stretch: 85%; margin-bottom: 0.75rem; }
+  .post section { margin-top: 2.5rem; }
+  .post h2 {
+    font-size: clamp(1.35rem, 1.1rem + 0.8vw, 1.75rem);
+    font-stretch: 92%;
+    margin-bottom: 0.9rem;
+  }
+  .post p { line-height: 1.65; margin-bottom: 1rem; }
+  .post p:last-child { margin-bottom: 0; }
+</style>
