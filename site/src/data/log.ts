@@ -55,6 +55,12 @@ export const done: Entry[] = [
     body: "How 22 stale records led to DNS as code, speculative plans on PRs, and a manual apply gate.",
     link: { href: "/writing/why-dns-changes-need-a-manual-apply/", label: "Read the article" },
   },
+  {
+    date: "9 Oct 2026",
+    title: "Why the monitor runs off my hardware",
+    body: "How this site is monitored from the outside, why a monitor needs to survive the system it watches, and what happens when a check fails.",
+    link: { href: "/writing/why-the-monitor-runs-off-my-hardware/", label: "Read the article" },
+  },
 ];
 
 export const next: Entry[] = [
