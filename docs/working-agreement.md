@@ -74,3 +74,4 @@ Only people with write access can add the `jules` label that starts Jules. Keep 
 5. **Facts before publishing.** AI-drafted text marks assumptions with `[CHECK]`; nothing with an open `[CHECK]` is merged.
 6. **The rack stays honest.** A rack unit changes status in the same PR that ships the work, never ahead of it.
 7. **Sprint review, each Monday:** close what's done, move what isn't, size anything new.
+8. **Progress lives on the ticket.** Every agent comments on its issue when it starts, opens a PR, gets blocked and finishes, in the format in [AGENTS.md](../AGENTS.md#report-on-the-ticket). An agent that can't comment puts the same block in its chat reply for Ravi to paste. The dispatcher flags any dispatched ticket with no update after 24 hours.

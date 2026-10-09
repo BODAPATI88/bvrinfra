@@ -27,6 +27,24 @@ If the issue needs a change outside your lane, say so in the PR and stop.
 - **Style:** plain English, sentence case, no buzzwords, no exclamation marks. Match the tone of existing pages.
 - **Rack honesty:** never change a unit's status in `site/src/data/stack.ts`.
 
+## Report on the ticket
+Post an update as a comment on the issue (not only on the PR) at each of these moments:
+- **Started:** when you begin work.
+- **PR opened:** with the PR link.
+- **Blocked:** as soon as you cannot continue, with the exact error and what you need.
+- **Done:** when the PR is ready for review.
+
+Use this format, so updates from every agent read the same:
+```
+<!-- agent-update -->
+**Update: <agent>, <status: started | PR opened | blocked | done>**
+- Did: <one or two lines>
+- Next: <one line>
+- Needs from Ravi: <one line, or "nothing">
+- PR: <link, or "none">
+```
+If you cannot comment on GitHub (for example a 403 or no network), end your chat reply with the same block. Ravi pastes it into the issue. Never report work as done unless the build ran and passed.
+
 ## Check your work before opening the PR
 ```bash
 cd site
