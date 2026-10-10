@@ -23,34 +23,53 @@ import Rack from "../components/Rack.astro";
   description="Infrastructure engineer in Hyderabad. Windows Server, Active Directory, VMware, hybrid Azure, and automation. This site is built and run as infrastructure as code."
 >
   <section class="hero" aria-labelledby="headline">
-    <p class="who">Ravi Kishore, Hyderabad</p>
-    <h1 id="headline" class="headline">I build infrastructure that can be rebuilt.</h1>
+    <p class="who">Ravi Kishore · Hyderabad, India</p>
+    <h1 id="headline" class="headline">Infrastructure engineer</h1>
+    <p class="stack-line">Windows Server · VMware · hybrid Azure</p>
 
-    <div class="intro">
-      <p class="intro-text">
-        I work in infrastructure operations across eight data centre sites in the US and Japan,
-        provisioning VMs, qualifying releases and handling incidents as part of a five-engineer rotation.
-        Next, I want to take that production experience into platform engineering and SRE.
-      </p>
-      <p class="facts">
-        About 9.5 years across Windows Server, Active Directory, VMware vSphere, hybrid Azure and automation.
-        Microsoft Certified: Windows Server Hybrid Administrator Associate.
-      </p>
-    </div>
+    <p class="lede-home">
+      Infrastructure operations across eight data centre sites in the US and Japan: provisioning VMs,
+      qualifying releases and handling incidents. Next: platform engineering and SRE.
+    </p>
+
+    <dl class="stats" aria-label="At a glance">
+      <div class="stat"><dt>Years in infrastructure</dt><dd class="num">9.5</dd></div>
+      <div class="stat"><dt>Data centre sites, US and Japan</dt><dd class="num">8</dd></div>
+      <div class="stat"><dt>Engineers in my on-call rotation</dt><dd class="num">5</dd></div>
+    </dl>
+
+    <a class="cert" href="https://learn.microsoft.com/api/credentials/share/en-gb/ravikishorebodapati-6050/D47F6B39F21E097C?sharingId=E66A053EF999F415" rel="noopener">
+      <svg class="cert-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8 4.5 5.6v5.8c0 4.6 3.1 8.6 7.5 9.8 4.4-1.2 7.5-5.2 7.5-9.8V5.6z"/><path d="m8.5 12 2.5 2.5 4.6-5"/></svg>
+      <span class="cert-text">
+        <span class="cert-kind">Microsoft Certified</span>
+        <span class="cert-name">Windows Server Hybrid Administrator Associate</span>
+        <span class="cert-meta">AZ-800 · AZ-801 · Verify on Microsoft Learn</span>
+      </span>
+    </a>
+
+    <ul class="chips" aria-label="Core skills">
+      <li>Windows Server</li>
+      <li>Active Directory</li>
+      <li>VMware vSphere</li>
+      <li>Hybrid Azure</li>
+      <li>Terraform</li>
+    </ul>
+
+    <p class="actions">
+      <a class="btn btn-primary" href="/contact/">Contact</a>
+      <a class="btn" href="https://www.linkedin.com/in/ravikishore-b-917b85226/" rel="noopener">LinkedIn</a>
+      <a class="btn btn-quiet" href="/skills/">All skills</a>
+    </p>
 
     <Rack />
   </section>
 
   <section class="story" aria-labelledby="why">
-    <h2 id="why">Why this site is built like this</h2>
+    <h2 id="why">How this site runs</h2>
     <div class="prose">
       <p>
-        In September 2026 the previous version of bvrinfra.in disappeared with the machine it ran on.
-        There was no backup, and nothing described the setup well enough to rebuild it.
-      </p>
-      <p>
-        This version is the fix. Everything is in one repository, every change goes through a pull request,
-        and the rack above only lights a unit once it is actually running. Open any unit to see how it works.
+        Built and run as infrastructure as code: one repository, every change through a pull request,
+        DNS in Terraform and monitoring from outside. Open any unit in the rack to see how it works.
         The decisions are written up in <a href="https://github.com/BODAPATI88/bvrinfra/blob/main/docs/adr/0001-bvrinfra-architecture.md">ADR 0001</a>.
       </p>
     </div>
@@ -59,13 +78,6 @@ import Rack from "../components/Rack.astro";
   <section class="next-reads" aria-labelledby="read-next">
     <h2 id="read-next">Read next</h2>
     <ul>
-      <li>
-        <a href="/writing/september-2026-outage/">
-          <span class="nr-kind">Post-mortem</span>
-          <span class="nr-title">The September 2026 outage</span>
-          <span class="nr-desc">What failed, why nothing could be restored, and what changed.</span>
-        </a>
-      </li>
       <li>
         <a href="/skills/">
           <span class="nr-kind">Skills</span>
@@ -80,6 +92,13 @@ import Rack from "../components/Rack.astro";
           <span class="nr-desc">Every step of the rebuild with dates, and what comes after backups.</span>
         </a>
       </li>
+      <li>
+        <a href="/writing/september-2026-outage/">
+          <span class="nr-kind">Post-mortem</span>
+          <span class="nr-title">The September 2026 outage</span>
+          <span class="nr-desc">What failed, why nothing could be restored, and what changed.</span>
+        </a>
+      </li>
     </ul>
   </section>
 </Base>
@@ -91,7 +110,7 @@ import Rack from "../components/Rack.astro";
   }
   .headline {
     /* Sized to the viewport so the longest word, "infrastructure", always fits on one line. */
-    font-size: clamp(1.9rem, 8.4vw, 7.5rem);
+    font-size: clamp(2.2rem, 7vw, 4.75rem);
     font-stretch: 125%;
     font-weight: 800;
     letter-spacing: -0.035em;
@@ -102,20 +121,103 @@ import Rack from "../components/Rack.astro";
     overflow-wrap: break-word;
     hyphens: manual;
   }
-  .intro {
-    display: grid;
-    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-    gap: clamp(1rem, 4vw, 4rem);
-    align-items: start;
-    margin-bottom: clamp(2rem, 5vw, 3.5rem);
+  .stack-line {
+    font-size: clamp(1.15rem, 1rem + 0.8vw, 1.6rem);
+    font-weight: 650;
+    font-stretch: 90%;
+    color: var(--cable);
+    margin: -0.5rem 0 1.25rem;
   }
-  .intro-text {
-    font-size: clamp(1.1rem, 1rem + 0.45vw, 1.35rem);
+  .lede-home {
+    font-size: clamp(1.05rem, 1rem + 0.3vw, 1.25rem);
     line-height: 1.5;
-    max-width: 34em;
-    margin: 0;
+    max-width: 40em;
+    margin-bottom: 1.75rem;
   }
-  .facts { color: var(--muted); max-width: 30em; margin: 0; }
+
+  /* At a glance: the numbers a recruiter looks for, readable in seconds. */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(0.5rem, 1.5vw, 0.75rem);
+    margin: 0 0 1rem;
+    max-width: 52rem;
+  }
+  .stat {
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--cable);
+    border-radius: 8px;
+    padding: clamp(0.6rem, 2vw, 0.85rem) clamp(0.6rem, 2vw, 1rem);
+    display: flex; flex-direction: column-reverse; justify-content: flex-end; gap: 0.2rem;
+  }
+  .stat dt { color: var(--muted); font-size: clamp(0.78rem, 0.72rem + 0.3vw, 0.9rem); font-stretch: 85%; line-height: 1.25; }
+  .stat dd { margin: 0; }
+  .num {
+    font-size: clamp(1.8rem, 1.4rem + 1.8vw, 2.6rem);
+    font-weight: 800;
+    font-stretch: 110%;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  .cert {
+    display: inline-flex; align-items: center; gap: 0.85rem;
+    max-width: 52rem;
+    margin: 0 0 1rem;
+    padding: 0.8rem 1.1rem 0.8rem 0.9rem;
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .cert:hover { border-color: var(--ink); }
+  .cert:hover .cert-meta { text-decoration: underline; text-decoration-thickness: 2px; }
+  .cert-icon {
+    flex: none; width: 2.4rem; height: 2.4rem;
+    fill: none; stroke: var(--led-live); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+  }
+  .cert-text { display: flex; flex-direction: column; gap: 0.1rem; }
+  .cert-kind { font-size: 0.85rem; color: var(--muted); font-stretch: 85%; }
+  .cert-name { font-weight: 750; font-stretch: 92%; line-height: 1.2; }
+  .cert-meta { font-size: 0.9rem; color: var(--cable); }
+
+  .chips {
+    list-style: none; margin: 0 0 1.5rem; padding: 0;
+    display: flex; flex-wrap: wrap; gap: 0.5rem;
+    max-width: 52rem;
+  }
+  .chips li {
+    padding: 0.3rem 0.75rem;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    background: var(--panel);
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-stretch: 92%;
+  }
+
+  .actions { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0 0 clamp(2rem, 5vw, 3.5rem); }
+  .btn {
+    display: inline-flex; align-items: center; min-height: 2.75rem;
+    padding: 0.5rem 1.2rem;
+    border: 1px solid var(--cable);
+    border-radius: 8px;
+    color: var(--cable);
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .btn:hover { text-decoration: underline; text-decoration-thickness: 2px; }
+  .btn-primary { background: var(--cable); color: var(--aisle); }
+  .btn-quiet { border-color: var(--rule); color: var(--ink); }
+
+  @media (forced-colors: active) {
+    .stat, .cert, .chips li, .btn { border-color: CanvasText; }
+    .stat { border-left-width: 4px; }
+    .cert-icon { stroke: CanvasText; }
+    .btn-primary { background: ButtonText; color: ButtonFace; forced-color-adjust: none; }
+  }
 
   .story {
     margin-top: clamp(3.5rem, 8vw, 6rem);
@@ -150,6 +252,6 @@ import Rack from "../components/Rack.astro";
   .nr-desc { color: var(--muted); font-size: 0.95rem; }
 
   @media (max-width: 52rem) {
-    .intro, .story { grid-template-columns: 1fr; }
+    .story { grid-template-columns: 1fr; }
   }
 </style>
