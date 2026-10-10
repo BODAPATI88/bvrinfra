@@ -2,7 +2,7 @@
 (function () {
     var root = document.documentElement;
     var metas = document.querySelectorAll('meta[name="theme-color"]');
-    var LIGHT = "#e9eef2", DARK = "#11171d";
+    var LIGHT = "#e9eef2", DARK = "#0a0f14";
     var mode = root.dataset.theme || "auto";
 
     function apply(next) {
@@ -15,8 +15,8 @@
         metas.forEach(function (m) { m.setAttribute("content", next === "dark" ? DARK : LIGHT); });
       }
       try {
-        if (next === "auto") localStorage.removeItem("theme");
-        else localStorage.setItem("theme", next);
+        // Store "auto" too: an empty store now means "first visit", which defaults to dark.
+        localStorage.setItem("theme", next);
       } catch (e) {}
     }
 

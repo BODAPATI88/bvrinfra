@@ -73,7 +73,7 @@ const nav = [
 
     <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#e9eef2" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#11171d" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#0a0f14" media="(prefers-color-scheme: dark)" />
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -112,7 +112,8 @@ const nav = [
     --ink: #111a22;
     --muted: #46535f;
     --rule: #c3cdd6;
-    --cable: #1559a8;
+    --cable: #0f766e;
+    --glow: 0 1px 2px rgb(17 26 34 / 0.06), 0 10px 24px -16px rgb(15 118 110 / 0.35);
     --steel: #1e262e;
     --steel-2: #29323b;
     --steel-3: #343e48;
@@ -129,30 +130,32 @@ const nav = [
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --aisle: #11171d;
-      --panel: #182028;
-      --ink: #e8edf2;
-      --muted: #9eabb7;
-      --rule: #2a343e;
-      --cable: #7db3ef;
-      --steel: #0b1015;
-      --steel-2: #161e26;
-      --steel-3: #1e2731;
-      --steel-line: #34404c;
+      --aisle: #0a0f14;
+      --panel: #111922;
+      --ink: #e6edf3;
+      --muted: #9aa8b5;
+      --rule: #22303c;
+      --cable: #2dd4bf;
+      --glow: 0 0 0 1px rgb(45 212 191 / 0.06), 0 12px 32px -18px rgb(45 212 191 / 0.45);
+      --steel: #070b0f;
+      --steel-2: #10171e;
+      --steel-3: #18212a;
+      --steel-line: #2a3744;
       color-scheme: dark;
     }
   }
   :root[data-theme="dark"] {
-    --aisle: #11171d;
-    --panel: #182028;
-    --ink: #e8edf2;
-    --muted: #9eabb7;
-    --rule: #2a343e;
-    --cable: #7db3ef;
-    --steel: #0b1015;
-    --steel-2: #161e26;
-    --steel-3: #1e2731;
-    --steel-line: #34404c;
+    --aisle: #0a0f14;
+    --panel: #111922;
+    --ink: #e6edf3;
+    --muted: #9aa8b5;
+    --rule: #22303c;
+    --cable: #2dd4bf;
+    --glow: 0 0 0 1px rgb(45 212 191 / 0.06), 0 12px 32px -18px rgb(45 212 191 / 0.45);
+    --steel: #070b0f;
+    --steel-2: #10171e;
+    --steel-3: #18212a;
+    --steel-line: #2a3744;
     color-scheme: dark;
   }
 
