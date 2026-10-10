@@ -1,6 +1,35 @@
 ---
 import Base from "../layouts/Base.astro";
 import Rack from "../components/Rack.astro";
+import LiveStatus from "../components/LiveStatus.astro";
+import { phoneTel, linkedin, whatsapp, mail, hello, icons } from "../data/contact";
+
+const actions = [
+  { label: "WhatsApp", icon: icons.chat, href: whatsapp(hello), cls: "btn btn-primary" },
+  { label: "Email", icon: icons.email, href: mail("Enquiry from bvrinfra.in"), cls: "btn" },
+  { label: "Call", icon: icons.phone, href: `tel:${phoneTel}`, cls: "btn" },
+  { label: "Request CV", icon: icons.doc, href: mail("CV request from bvrinfra.in"), cls: "btn" },
+  { label: "LinkedIn", icon: icons.profile, href: linkedin, cls: "btn btn-quiet" },
+];
+
+// Freelance services: the three already named on the Contact page.
+const services = [
+  {
+    title: "Active Directory and Windows Server",
+    body: "Domain, identity and Windows Server administration. The core of my enterprise work, and the scope of my Microsoft certification.",
+    topic: "Active Directory and Windows Server",
+  },
+  {
+    title: "VMware vSphere",
+    body: "VM provisioning and vSphere administration, from enterprise roles and an eight-site data-centre estate today.",
+    topic: "VMware vSphere",
+  },
+  {
+    title: "Azure and Microsoft 365",
+    body: "Hybrid Windows administration: on-premises servers and identity connected to Azure, Entra ID and Microsoft 365.",
+    topic: "Azure and Microsoft 365",
+  },
+];
 ---
 <Base
   jsonLd={{
@@ -64,12 +93,18 @@ import Rack from "../components/Rack.astro";
       <li>Terraform</li>
     </ul>
 
-    <p class="actions">
-      <a class="btn btn-primary" href="/contact/">Contact</a>
-      <a class="btn" href="mailto:hello@bvrinfra.in?subject=CV%20request%20from%20bvrinfra.in">Request CV</a>
-      <a class="btn" href="https://www.linkedin.com/in/ravikishore-b-917b85226/" rel="noopener">LinkedIn</a>
-      <a class="btn btn-quiet" href="/skills/">All skills</a>
-    </p>
+    <ul class="actions" aria-label="Get in touch">
+      {actions.map((a) => (
+        <li>
+          <a class={a.cls} href={a.href} rel={a.href.startsWith("http") ? "noopener" : undefined}>
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" set:html={a.icon} />
+            {a.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <LiveStatus />
 
     <section class="career" aria-labelledby="career">
       <h2 id="career">Career</h2>
@@ -83,6 +118,27 @@ import Rack from "../components/Rack.astro";
     </section>
 
     <Rack />
+  </section>
+
+  <section class="work" aria-labelledby="work">
+    <h2 id="work">Work with me</h2>
+    <p class="work-lede">Freelance infrastructure work, scoped as a defined piece of work. Message me with what you need and I'll reply with how I'd approach it.</p>
+    <ul class="services">
+      {services.map((s) => (
+        <li>
+          <h3>{s.title}</h3>
+          <p>{s.body}</p>
+          <p class="svc-actions">
+            <a class="btn btn-primary btn-sm" href={whatsapp(`Hi Ravi, I found you on bvrinfra.in. I'd like to ask about ${s.topic} work.`)} rel="noopener">
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" set:html={icons.chat} />Ask on WhatsApp
+            </a>
+            <a class="btn btn-sm" href={mail(`${s.topic} work, enquiry from bvrinfra.in`)}>
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" set:html={icons.email} />Email
+            </a>
+          </p>
+        </li>
+      ))}
+    </ul>
   </section>
 
   <section class="story" aria-labelledby="why">
@@ -275,9 +331,9 @@ import Rack from "../components/Rack.astro";
     font-stretch: 92%;
   }
 
-  .actions { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0 0 clamp(2rem, 5vw, 3.5rem); }
+  .actions { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0 0 1.5rem; max-width: 52rem; }
   .btn {
-    display: inline-flex; align-items: center; min-height: 2.75rem;
+    display: inline-flex; align-items: center; gap: 0.5rem; min-height: 2.75rem;
     padding: 0.5rem 1.2rem;
     border: 1px solid var(--cable);
     border-radius: 8px;
@@ -288,9 +344,34 @@ import Rack from "../components/Rack.astro";
   .btn:hover { text-decoration: underline; text-decoration-thickness: 2px; }
   .btn-primary { background: var(--cable); color: var(--aisle); }
   .btn-quiet { border-color: var(--rule); color: var(--ink); }
+  .btn svg { flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .btn-sm { min-height: 2.5rem; padding: 0.4rem 0.9rem; font-size: 0.95rem; }
+  @media (max-width: 30rem) {
+    .actions { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0.5rem; }
+    .actions li { grid-column: span 2; }
+    .actions li:nth-child(n + 4) { grid-column: span 3; }
+    .actions .btn { width: 100%; justify-content: center; padding-inline: 0.5rem; white-space: nowrap; }
+  }
+
+  .work { margin-top: clamp(3rem, 7vw, 5rem); }
+  .work h2 { font-size: clamp(1.35rem, 1.1rem + 0.8vw, 1.8rem); font-stretch: 90%; margin-bottom: 0.6rem; }
+  .work-lede { color: var(--muted); max-width: 40em; margin-bottom: 1.25rem; }
+  .services {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); gap: 1rem;
+  }
+  .services li {
+    display: flex; flex-direction: column;
+    padding: 1.2rem 1.25rem;
+    background: var(--panel); border: 1px solid var(--rule); border-top: 3px solid var(--cable);
+    border-radius: 8px; box-shadow: var(--glow);
+  }
+  .services h3 { font-size: 1.15rem; font-stretch: 92%; line-height: 1.2; margin-bottom: 0.5rem; }
+  .services p { color: var(--muted); font-size: 0.95rem; }
+  .svc-actions { margin: auto 0 0; padding-top: 0.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
 
   @media (forced-colors: active) {
-    .stat, .cert, .chips li, .btn { border-color: CanvasText; }
+    .stat, .cert, .chips li, .btn, .services li { border-color: CanvasText; }
     .stat { border-left-width: 4px; }
     .cert-icon { stroke: CanvasText; }
     .btn-primary { background: ButtonText; color: ButtonFace; forced-color-adjust: none; }

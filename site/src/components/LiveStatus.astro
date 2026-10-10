@@ -1,0 +1,131 @@
+---
+// "Live from my infrastructure": real figures only, each linked to where it comes from.
+// Status, uptime and response time come from the Upptime monitor (BODAPATI88/status).
+// They are fetched at build time as a fallback, then refreshed in the visitor's
+// browser by /js/live.js. DNS and deploy facts are read at build time.
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { execSync } from "node:child_process";
+
+const SUMMARY = "https://raw.githubusercontent.com/BODAPATI88/status/master/history/summary.json";
+const MONITOR_START = "8 Oct 2026"; // first check in history/bvrinfra-in.yml (startTime)
+
+interface Site { slug: string; status: string; uptime: string; time: number }
+let sites: Site[] = [];
+try {
+  const res = await fetch(SUMMARY, { signal: AbortSignal.timeout(5000) });
+  if (res.ok) sites = await res.json();
+} catch {
+  // Offline build: the browser fetch fills the panel in, or it shows dashes.
+}
+const apex = sites.find((s) => s.slug === "bvrinfra-in");
+const upCount = sites.filter((s) => s.status === "up").length;
+const statusText = sites.length ? (upCount === sites.length ? "Up" : `${sites.length - upCount} of ${sites.length} down`) : "—";
+const statusState = sites.length ? (upCount === sites.length ? "up" : "down") : "unknown";
+
+// Count the DNS records Terraform manages: one `type = "…"` line per record in main.tf.
+let dnsCount: number | null = null;
+try {
+  const tf = readFileSync(resolve(process.cwd(), "../infra/terraform/main.tf"), "utf8");
+  dnsCount = (tf.match(/^\s+type\s+=\s+"[A-Z]+"/gm) ?? []).length || null;
+} catch {}
+
+// Cloudflare Pages sets CF_PAGES_COMMIT_SHA; fall back to git for local builds.
+let sha = process.env.CF_PAGES_COMMIT_SHA ?? "";
+if (!sha) {
+  try { sha = execSync("git rev-parse HEAD", { stdio: ["ignore", "pipe", "ignore"] }).toString().trim(); } catch {}
+}
+const deployed = new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Kolkata" });
+---
+<section class="live" aria-labelledby="live-h" data-live-root data-src={SUMMARY}>
+  <div class="live-head">
+    <h2 id="live-h">Live from my infrastructure</h2>
+    <a class="live-src" href="https://status.bvrinfra.in">Status page</a>
+  </div>
+  <dl class="live-grid">
+    <div class="lv">
+      <dt>Site status</dt>
+      <dd class="lv-val"><span class="led" data-state={statusState} data-live="led" aria-hidden="true"></span><span data-live="status">{statusText}</span></dd>
+      <dd class="lv-sub">{sites.length || 3} pages checked every 5 minutes, from outside my network</dd>
+    </div>
+    <div class="lv">
+      <dt>Uptime</dt>
+      <dd class="lv-val" data-live="uptime">{apex?.uptime ?? "—"}</dd>
+      <dd class="lv-sub">Since monitoring began, {MONITOR_START}</dd>
+    </div>
+    <div class="lv">
+      <dt>Average response</dt>
+      <dd class="lv-val"><span data-live="time">{apex ? apex.time : "—"}</span> ms</dd>
+      <dd class="lv-sub">bvrinfra.in, measured from GitHub Actions</dd>
+    </div>
+    {dnsCount && (
+      <div class="lv">
+        <dt>DNS in Terraform</dt>
+        <dd class="lv-val">{dnsCount} records</dd>
+        <dd class="lv-sub"><a href="https://github.com/BODAPATI88/bvrinfra/blob/main/infra/terraform/main.tf">Every change planned in a pull request</a></dd>
+      </div>
+    )}
+    <div class="lv">
+      <dt>Last deploy</dt>
+      <dd class="lv-val">{deployed}</dd>
+      <dd class="lv-sub">{sha
+        ? <a href={`https://github.com/BODAPATI88/bvrinfra/commit/${sha}`}>Commit <code>{sha.slice(0, 7)}</code></a>
+        : "Built by Cloudflare Pages"}</dd>
+    </div>
+  </dl>
+  <p class="live-note" data-live="note">
+    Status figures from my <a href="https://github.com/BODAPATI88/status">Upptime monitor</a>.
+  </p>
+</section>
+<script is:inline src="/js/live.js" defer></script>
+
+<style>
+  .live {
+    max-width: 52rem;
+    margin: 0 0 clamp(2rem, 5vw, 3.5rem);
+    padding: clamp(0.9rem, 2.5vw, 1.25rem);
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    box-shadow: var(--glow);
+  }
+  .live-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: 0.9rem; }
+  .live-head h2 { font-size: clamp(1.1rem, 1rem + 0.5vw, 1.35rem); font-stretch: 90%; }
+  .live-src { font-size: 0.9rem; font-weight: 650; }
+  .live-grid {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr));
+    gap: 0.6rem;
+  }
+  .lv {
+    padding: 0.7rem 0.8rem;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    background: var(--aisle);
+    display: flex; flex-direction: column; gap: 0.15rem;
+  }
+  .lv dt { color: var(--muted); font-size: 0.82rem; font-stretch: 85%; }
+  .lv dd { margin: 0; }
+  .lv-val {
+    font-size: clamp(1.15rem, 1rem + 0.6vw, 1.45rem);
+    font-weight: 800; font-stretch: 105%; letter-spacing: -0.01em; line-height: 1.15;
+    display: flex; align-items: center; gap: 0.45rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .lv-sub { color: var(--muted); font-size: 0.8rem; line-height: 1.3; }
+  .lv-sub code { font-size: 0.95em; }
+  .led {
+    flex: none; width: 0.7rem; height: 0.7rem; border-radius: 50%;
+    background: var(--led-off);
+  }
+  .led[data-state="up"] { background: var(--led-live); box-shadow: 0 0 0 3px rgb(47 191 113 / 0.2); animation: pulse 2.4s ease-in-out infinite; }
+  .led[data-state="down"] { background: #e5484d; box-shadow: 0 0 0 3px rgb(229 72 77 / 0.25); }
+  @keyframes pulse { 50% { box-shadow: 0 0 0 6px rgb(47 191 113 / 0.05); } }
+  .live-note { margin: 0.8rem 0 0; color: var(--muted); font-size: 0.85rem; }
+
+  @media (forced-colors: active) {
+    .live, .lv { border-color: CanvasText; }
+    .led { forced-color-adjust: none; }
+  }
+</style>

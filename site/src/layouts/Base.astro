@@ -22,6 +22,7 @@ const fontFaces = [
   archivoFace(archivoLatin, "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"),
 ].join("\n");
 import ThemeSwitch from "../components/ThemeSwitch.astro";
+import { phoneTel, whatsapp, mail, hello, icons } from "../data/contact";
 
 interface Props {
   title: string;
@@ -33,6 +34,13 @@ const { title, description, type = "website", jsonLd } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 const ogImage = new URL("/og.png", Astro.site).toString();
 const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+// Phone contact bar: on every page except Contact, which already is one.
+const showDock = !path.startsWith("/contact");
+const dock = [
+  { label: "WhatsApp", icon: icons.chat, href: whatsapp(hello), primary: true },
+  { label: "Call", icon: icons.phone, href: `tel:${phoneTel}` },
+  { label: "Email", icon: icons.email, href: mail("Enquiry from bvrinfra.in") },
+];
 const nav = [
   { href: "/skills", label: "Skills" },
   { href: "/projects", label: "Projects" },
@@ -100,6 +108,16 @@ const nav = [
       <p>© 2026 Ravi Kishore</p>
       <p><a href="https://github.com/BODAPATI88/bvrinfra">Source for this site</a></p>
     </footer>
+    {showDock && (
+      <nav class="dock" aria-label="Contact Ravi">
+        {dock.map((d) => (
+          <a href={d.href} class:list={[d.primary && "dock-primary"]} rel={d.href.startsWith("http") ? "noopener" : undefined}>
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" set:html={d.icon} />
+            <span>{d.label}</span>
+          </a>
+        ))}
+      </nav>
+    )}
   </body>
 </html>
 
@@ -244,6 +262,34 @@ const nav = [
      but keep the rack's structure visible. */
   @media (forced-colors: active) {
     .masthead nav a[aria-current="page"] { text-decoration: underline; }
+  }
+
+  /* Phone contact bar: fixed to the bottom on small screens only. */
+  .dock { display: none; }
+  @media (max-width: 40rem) {
+    .dock {
+      position: fixed; inset: auto 0 0 0; z-index: 20;
+      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.4rem;
+      padding: 0.45rem max(0.6rem, env(safe-area-inset-left)) max(0.45rem, env(safe-area-inset-bottom)) max(0.6rem, env(safe-area-inset-right));
+      background: color-mix(in srgb, var(--aisle) 88%, transparent);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-top: 1px solid var(--rule);
+    }
+    .dock a {
+      display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+      min-height: 2.75rem; border-radius: 8px;
+      border: 1px solid var(--cable); color: var(--cable);
+      font-weight: 700; font-size: 0.92rem; text-decoration: none;
+    }
+    .dock a.dock-primary { background: var(--cable); color: var(--aisle); }
+    .dock svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    body:has(.dock) .foot { padding-bottom: calc(5rem + env(safe-area-inset-bottom)); }
+  }
+  @media print { .dock { display: none !important; } }
+  @media (forced-colors: active) {
+    .dock { border-top-color: CanvasText; }
+    .dock a { border-color: CanvasText; }
   }
 
   @media (prefers-reduced-motion: reduce) {

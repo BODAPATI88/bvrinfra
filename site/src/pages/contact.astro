@@ -1,27 +1,13 @@
 ---
 import Base from "../layouts/Base.astro";
-
-const email = "hello@bvrinfra.in";
-const phoneDisplay = "+91 95992 29585";
-const phoneTel = "+919599229585";
-const whatsapp = "https://wa.me/919599229585";
-const linkedin = "https://www.linkedin.com/in/ravikishore-b-917b85226/";
-
-// Generic drawn icons, not brand logos.
-const icons = {
-  email: '<path d="M3.5 6.5h17v11h-17z"/><path d="m3.5 7 8.5 6.5L20.5 7"/>',
-  chat: '<path d="M4 5.5h16v10H9.5L5.5 19v-3.5H4z"/><path d="M8 9.5h8M8 12.5h5"/>',
-  phone: '<path d="M7.2 3.8 9.7 4.4l1 4.1-2 1.4a12 12 0 0 0 5.4 5.4l1.4-2 4.1 1-.1 2.6c-.1 1.2-1.1 2.1-2.3 2A16.5 16.5 0 0 1 3.6 7c-.1-1.2.8-2.2 2-2.3z"/>',
-  profile: '<rect x="3.5" y="5" width="17" height="14" rx="2"/><circle cx="9" cy="11" r="2.2"/><path d="M5.8 16.2c.6-1.6 1.8-2.4 3.2-2.4s2.6.8 3.2 2.4M14.5 10h3.5M14.5 13h3.5"/>',
-  code: '<path d="m8.5 7-5 5 5 5M15.5 7l5 5-5 5M13.5 5l-3 14"/>',
-};
+import { email, phoneDisplay, phoneTel, linkedin, github, whatsapp, mail, hello, icons } from "../data/contact";
 
 const channels = [
-  { label: "Email", icon: icons.email, href: `mailto:${email}`, primary: true },
-  { label: "WhatsApp", icon: icons.chat, href: whatsapp },
+  { label: "Email", icon: icons.email, href: mail(), primary: true },
+  { label: "WhatsApp", icon: icons.chat, href: whatsapp(hello) },
   { label: "Call", icon: icons.phone, href: `tel:${phoneTel}` },
   { label: "LinkedIn", icon: icons.profile, href: linkedin },
-  { label: "GitHub", icon: icons.code, href: "https://github.com/BODAPATI88" },
+  { label: "GitHub", icon: icons.code, href: github },
 ];
 
 const reasons = [
