@@ -260,8 +260,9 @@ const services = [
     margin: -0.5rem 0 1.25rem;
   }
   .lede-home {
-    font-size: clamp(1.05rem, 1rem + 0.3vw, 1.25rem);
-    line-height: 1.5;
+    font-size: clamp(1.1rem, 1rem + 0.45vw, 1.35rem);
+    line-height: 1.6;
+    font-weight: 450;
     max-width: 40em;
     margin-bottom: 1.75rem;
   }
@@ -404,7 +405,13 @@ const services = [
     box-shadow: var(--glow);
     color: var(--ink); text-decoration: none;
   }
-  .next-reads a:hover { border-color: var(--cable); }
+  .next-reads a { transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease; }
+  .next-reads a:hover {
+    border-color: var(--cable);
+    transform: translateY(-3px);
+    /* The theme's own glow, doubled: follows light, system-dark and manual-dark alike. */
+    box-shadow: var(--glow), var(--glow);
+  }
   .next-reads a:hover .nr-title { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.2em; }
   .nr-kind { color: var(--muted); font-size: 0.85rem; font-stretch: 85%; }
   .nr-title { font-weight: 750; font-size: 1.2rem; font-stretch: 92%; line-height: 1.2; }
