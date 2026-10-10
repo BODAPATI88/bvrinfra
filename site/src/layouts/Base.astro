@@ -143,7 +143,7 @@ const nav = [
     --led-off: #66717c;
     --font: "Archivo Variable", "Helvetica Neue", Arial, sans-serif;
     --gutter: max(1rem, env(safe-area-inset-left), env(safe-area-inset-right));
-    --page: min(100% - 2 * var(--gutter), 78rem);
+    --page: min(100% - 2 * var(--gutter), 90rem);
     color-scheme: light;
   }
   @media (prefers-color-scheme: dark) {
@@ -187,6 +187,7 @@ const nav = [
     font-size: clamp(100%, 0.94rem + 0.25vw, 118.75%);
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
+    scroll-behavior: smooth;
   }
   body {
     margin: 0;
@@ -198,8 +199,11 @@ const nav = [
     -webkit-font-smoothing: antialiased;
     -webkit-tap-highlight-color: transparent;
   }
-  a { color: var(--cable); text-underline-offset: 0.18em; text-decoration-thickness: 1px; }
-  a:hover { text-decoration-thickness: 2px; }
+  a {
+    color: var(--cable); text-underline-offset: 0.18em; text-decoration-thickness: 1px;
+    transition: text-decoration-thickness 0.2s ease, text-underline-offset 0.2s ease, color 0.2s ease;
+  }
+  a:hover { text-decoration-thickness: 2px; text-underline-offset: 0.25em; }
   :focus-visible { outline: 3px solid var(--cable); outline-offset: 3px; border-radius: 2px; }
   h1, h2, h3 { line-height: 1.05; margin: 0; font-weight: 700; }
   p { margin: 0 0 1em; }
@@ -235,6 +239,7 @@ const nav = [
   .masthead nav a {
     color: var(--muted); text-decoration: none;
     display: inline-flex; align-items: center; min-height: 44px;
+    transition: color 0.2s ease-in-out;
   }
   .masthead nav a:hover, .masthead nav a[aria-current="page"] { color: var(--ink); }
   .masthead nav a[aria-current="page"] { text-decoration: underline; text-decoration-thickness: 2px; }
@@ -293,6 +298,7 @@ const nav = [
   }
 
   @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
     *, *::before, *::after { animation: none !important; transition: none !important; }
   }
 </style>
