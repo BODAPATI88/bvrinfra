@@ -23,9 +23,18 @@ import Rack from "../components/Rack.astro";
   description="Infrastructure engineer in Hyderabad. Windows Server, Active Directory, VMware, hybrid Azure, and automation. This site is built and run as infrastructure as code."
 >
   <section class="hero" aria-labelledby="headline">
-    <p class="who">Ravi Kishore · Hyderabad, India</p>
-    <h1 id="headline" class="headline">Infrastructure engineer</h1>
-    <p class="stack-line">Windows Server · VMware · hybrid Azure</p>
+    <div class="id-row">
+      <picture>
+        <source type="image/webp" srcset="/img/ravi-192.webp 1x, /img/ravi-384.webp 2x" />
+        <img class="photo" src="/img/ravi-192.jpg" srcset="/img/ravi-192.jpg 1x, /img/ravi-384.jpg 2x"
+          width="192" height="192" alt="Ravi Kishore" fetchpriority="high" decoding="async" />
+      </picture>
+      <div class="id-text">
+        <p class="who">Ravi Kishore · Hyderabad, India</p>
+        <h1 id="headline" class="headline">Infrastructure engineer</h1>
+        <p class="stack-line">Windows Server · VMware · hybrid Azure</p>
+      </div>
+    </div>
 
     <p class="lede-home">
       Infrastructure operations across eight data centre sites in the US and Japan: provisioning VMs,
@@ -57,9 +66,21 @@ import Rack from "../components/Rack.astro";
 
     <p class="actions">
       <a class="btn btn-primary" href="/contact/">Contact</a>
+      <a class="btn" href="mailto:hello@bvrinfra.in?subject=CV%20request%20from%20bvrinfra.in">Request CV</a>
       <a class="btn" href="https://www.linkedin.com/in/ravikishore-b-917b85226/" rel="noopener">LinkedIn</a>
       <a class="btn btn-quiet" href="/skills/">All skills</a>
     </p>
+
+    <section class="career" aria-labelledby="career">
+      <h2 id="career">Career</h2>
+      <ol class="timeline">
+        <li><span class="t-years">2025 – now</span><span class="t-role">System Administrator III</span><span class="t-what">Data centre operations across 8 sites in the US and Japan</span></li>
+        <li><span class="t-years">2023 – 2025</span><span class="t-role">Senior Systems Engineer</span><span class="t-what">Windows Server, Active Directory, VMware and hybrid identity (Entra ID)</span></li>
+        <li><span class="t-years">2020 – 2023</span><span class="t-role">Systems Engineer</span><span class="t-what">Windows Server, Active Directory and virtualization at enterprise client sites</span></li>
+        <li><span class="t-years">2013 – 2017</span><span class="t-role">Systems / IT Support Engineer</span><span class="t-what">Windows Server, Active Directory and infrastructure support</span></li>
+      </ol>
+      <p class="t-note">Full history with employers on request.</p>
+    </section>
 
     <Rack />
   </section>
@@ -121,6 +142,60 @@ import Rack from "../components/Rack.astro";
     overflow-wrap: break-word;
     hyphens: manual;
   }
+  .id-row {
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 3vw, 2rem);
+    margin-bottom: 1.25rem;
+  }
+  .id-text { min-width: 0; }
+  .id-text .stack-line { margin-bottom: 0; }
+  .id-text .headline { margin-bottom: 0.75rem; }
+  .photo {
+    display: block;
+    width: clamp(5.5rem, 18vw, 9rem);
+    height: auto;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 3px solid var(--cable);
+    box-shadow: var(--glow);
+    object-fit: cover;
+  }
+  @media (max-width: 30rem) {
+    .id-row { flex-direction: column; align-items: flex-start; gap: 0.9rem; }
+  }
+
+  .career { margin: 0 0 clamp(2rem, 5vw, 3.5rem); max-width: 52rem; }
+  .career h2 { font-size: clamp(1.2rem, 1.05rem + 0.6vw, 1.5rem); font-stretch: 90%; margin-bottom: 0.9rem; }
+  .timeline { list-style: none; margin: 0; padding: 0 0 0 1.25rem; border-left: 2px solid var(--rule); }
+  .timeline li {
+    position: relative;
+    display: grid;
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+    column-gap: 1rem;
+    padding: 0 0 1rem;
+  }
+  .timeline li::before {
+    content: "";
+    position: absolute; left: calc(-1.25rem - 7px); top: 0.35rem;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--aisle); border: 2px solid var(--cable);
+  }
+  .timeline li:first-child::before { background: var(--cable); }
+  .t-years { color: var(--muted); font-size: 0.9rem; font-stretch: 88%; grid-row: span 2; padding-top: 0.1rem; }
+  .t-role { font-weight: 750; font-stretch: 94%; }
+  .t-what { color: var(--muted); font-size: 0.95rem; }
+  .t-note { color: var(--muted); font-size: 0.9rem; margin: 0; }
+  @media (max-width: 30rem) {
+    .timeline li { grid-template-columns: 1fr; }
+    .t-years { grid-row: auto; }
+  }
+  @media (forced-colors: active) {
+    .photo { border-color: CanvasText; }
+    .timeline li::before { border-color: CanvasText; background: Canvas; forced-color-adjust: none; }
+    .timeline li:first-child::before { background: CanvasText; }
+  }
+
   .stack-line {
     font-size: clamp(1.15rem, 1rem + 0.8vw, 1.6rem);
     font-weight: 650;
