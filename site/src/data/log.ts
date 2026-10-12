@@ -64,7 +64,7 @@ export const done: Entry[] = [
   {
     date: "10 Oct 2026",
     title: "First backup restore test",
-    body: "Nightly backups of the homelab now go to a second disk, keeping 7 daily and 4 weekly copies. One was restored as a separate machine with its network cut, and it booted. The backup unit moves to amber, not green: there is no off-site copy yet.",
+    body: "Homelab backups go to a second disk, keeping 7 daily and 4 weekly copies. The latest one was restored as a separate machine with its network cut, and it booted. The old services were then shut down for a rebuild. The backup unit moves to amber, not green: there is no off-site copy yet.",
   },
 ];
 

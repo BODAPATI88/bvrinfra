@@ -82,10 +82,10 @@ export const stack: Unit[] = [
     name: "Backups",
     detail: "Daily backups, first restore tested",
     status: "building",
-    how: "Every night at 02:00 Proxmox backs up the machine that runs the homelab's services to a second disk in the same host. It keeps 7 daily and 4 weekly copies and deletes older ones on its own. On 10 October 2026 I restored one of those backups as a separate machine with its network cut, and it booted. Two things are still missing: a copy outside the house, and a restore test with the services running.",
+    how: "Proxmox backs up the homelab's virtual machines to a second disk in the same host at 02:00 each night, keeping 7 daily and 4 weekly copies and deleting older ones on its own. On 10 October 2026 I restored the latest backup as a separate machine with its network cut, and it booted. The old services were then shut down for a rebuild, so the nightly job is paused until the new cluster runs. Two things are still missing: a copy outside the house, and a restore test with the services running.",
     flow: ["Homelab", "Nightly backup", "Second disk", "Restore test", "Off-site copy (next)"],
     facts: [
-      { label: "Schedule", value: "Daily at 02:00" },
+      { label: "Schedule", value: "Daily at 02:00, paused during the rebuild" },
       { label: "Kept", value: "7 daily, 4 weekly" },
       { label: "First restore test", value: "10 October 2026, booted" },
       { label: "Off-site copy", value: "Not yet (Cloudflare R2 planned)" },
