@@ -39,6 +39,19 @@ locals {
       comment = "Email: DMARC policy"
     }
 
+    # GitHub Pages domain verification for the BODAPATI88 account (#20).
+    # Stops another GitHub account from claiming an unused bvrinfra.in subdomain.
+    # Values are exactly what GitHub's Pages settings asked for. GitHub shows
+    # the name with the account's capitals; DNS names are case-insensitive, so
+    # it is written in lowercase like the other records.
+    github_pages_verify = {
+      name    = "_github-pages-challenge-bodapati88.bvrinfra.in"
+      type    = "TXT"
+      content = "325e5d5bb189c0486f95109d1bbbb0"
+      proxied = false
+      comment = "GitHub Pages: domain verification"
+    }
+
     # Cloudflare Email Routing: hello@bvrinfra.in forwards to Ravi's inbox.
     # Values are exactly what the Email Routing dashboard asked for (#19).
     # The 3 MX and the DKIM record are locked by Email Routing, which strips
