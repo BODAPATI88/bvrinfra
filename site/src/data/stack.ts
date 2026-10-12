@@ -80,16 +80,18 @@ export const stack: Unit[] = [
   },
   {
     name: "Backups",
-    detail: "restic, with a tested restore",
-    status: "planned",
-    how: "The homelab will back up with restic to two places: an external drive at home and one cloud copy. A systemd timer, deployed with Ansible, runs it. This unit turns green only after a full restore from those backups has worked.",
-    flow: ["Homelab", "restic", "Home drive + cloud", "Restore test"],
+    detail: "Daily backups, first restore tested",
+    status: "building",
+    how: "Every night at 02:00 Proxmox backs up the machine that runs the homelab's services to a second disk in the same host. It keeps 7 daily and 4 weekly copies and deletes older ones on its own. On 10 October 2026 I restored one of those backups as a separate machine with its network cut, and it booted. Two things are still missing: a copy outside the house, and a restore test with the services running.",
+    flow: ["Homelab", "Nightly backup", "Second disk", "Restore test", "Off-site copy (next)"],
     facts: [
-      { label: "Copies", value: "2, one off-site" },
-      { label: "Scheduler", value: "systemd timer via Ansible" },
-      { label: "Counts as done when", value: "A restore has been tested" },
+      { label: "Schedule", value: "Daily at 02:00" },
+      { label: "Kept", value: "7 daily, 4 weekly" },
+      { label: "First restore test", value: "10 October 2026, booted" },
+      { label: "Off-site copy", value: "Not yet (Cloudflare R2 planned)" },
+      { label: "Counts as done when", value: "An off-site copy exists and a restore brings the services back" },
     ],
-    proves: "This is the unit that would have prevented the September outage, which is why it is last and why it isn't green yet.",
+    proves: "This is the unit that would have prevented the September outage. A backup on a second disk in the same host does not survive losing the host, so it stays amber until a copy lives somewhere else.",
   },
 ];
 

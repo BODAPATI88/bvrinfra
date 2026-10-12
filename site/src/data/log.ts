@@ -61,12 +61,17 @@ export const done: Entry[] = [
     body: "How this site is monitored from the outside, why a monitor needs to survive the system it watches, and what happens when a check fails.",
     link: { href: "/writing/why-the-monitor-runs-off-my-hardware/", label: "Read the article" },
   },
+  {
+    date: "10 Oct 2026",
+    title: "First backup restore test",
+    body: "Nightly backups of the homelab now go to a second disk, keeping 7 daily and 4 weekly copies. One was restored as a separate machine with its network cut, and it booted. The backup unit moves to amber, not green: there is no off-site copy yet.",
+  },
 ];
 
 export const next: Entry[] = [
   {
-    title: "Backups with a tested restore",
-    body: "restic from the homelab to a home drive and one cloud copy, on a systemd timer deployed with Ansible. Done when a full restore has worked, not when the first backup runs.",
+    title: "Off-site backups and a full restore",
+    body: "Add a copy outside the house, planned on Cloudflare R2, then restore with the services running to prove they come back. The backup unit turns green only after both.",
   },
   {
     title: "Harden the homelab",
