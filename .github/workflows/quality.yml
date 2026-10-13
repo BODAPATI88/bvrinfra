@@ -1,0 +1,64 @@
+name: Quality checks
+
+# Lighthouse budgets and an axe accessibility scan on every PR (bvrinfra#31).
+# Runs on every PR (no path filter) so it can be made a required check.
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: site
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+
+      - name: Install and build
+        run: |
+          npm ci
+          npm run build
+
+      - name: Lighthouse (mobile, budgets in site/lighthouserc.json)
+        run: npx --yes @lhci/cli@0.15.1 autorun --config=lighthouserc.json
+
+      - name: Lighthouse scores
+        if: always()
+        run: |
+          [ -f lighthouse-reports/manifest.json ] || exit 0
+          node -e '
+            const m = require("./lighthouse-reports/manifest.json").filter(r => r.isRepresentativeRun);
+            const rows = m.map(r => `| ${new URL(r.url).pathname} | ` + ["performance","accessibility","best-practices","seo"].map(k => Math.round(r.summary[k]*100)).join(" | ") + " |");
+            console.log(["| Page | Perf | A11y | Best practices | SEO |","|---|---|---|---|---|",...rows].join("\n"));
+          ' | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: axe accessibility scan (both themes)
+        if: always()
+        run: |
+          npm install --no-save playwright@1.56.1 axe-core@4.10.2
+          npx playwright install --with-deps chromium
+          (cd dist && python3 -m http.server 4330 >/dev/null 2>&1 &)
+          sleep 2
+          node scripts/axe-check.mjs http://localhost:4330
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lighthouse-reports
+          path: site/lighthouse-reports
+          if-no-files-found: ignore
+          retention-days: 30

@@ -12,7 +12,7 @@ export interface Unit {
   status: Status;
   how: string;
   flow: string[];
-  facts: { label: string; value: string }[];
+  facts: { label: string; value: string; href?: string }[];
   proves: string;
   source?: { href: string; label: string };
 }
@@ -29,6 +29,7 @@ export const stack: Unit[] = [
       { label: "Third-party requests", value: "None (fonts self-hosted)" },
       { label: "Themes", value: "Auto, light, dark" },
       { label: "Back online", value: "8 October 2026" },
+      { label: "Quality checks", value: "Lighthouse and axe on every pull request", href: "https://github.com/BODAPATI88/bvrinfra/actions/workflows/quality.yml" },
     ],
     proves: "The public site can't go down with my homelab. That dependency is what took the last version offline.",
     source: { href: "https://github.com/BODAPATI88/bvrinfra/tree/main/site", label: "Site source on GitHub" },
