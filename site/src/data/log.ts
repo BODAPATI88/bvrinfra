@@ -71,6 +71,12 @@ export const done: Entry[] = [
     title: "Off-site backup copy",
     body: "The latest homelab backup now also lives in Cloudflare R2, outside the house, with a checksum checked after upload. The unit stays amber until a restore brings the services back.",
   },
+  {
+    date: "12 Oct 2026",
+    title: "How I split work between AI agents",
+    body: "How parallel AI agents with isolated file lanes and a human merge gate handle tasks in this repository.",
+    link: { href: "/writing/how-i-split-work-between-ai-agents/", label: "Read the article" },
+  },
 ];
 
 export const next: Entry[] = [
