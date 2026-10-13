@@ -12,94 +12,94 @@ import Base from "../../layouts/Base.astro";
       <h1 class="page-title">How I split work between AI agents</h1>
       <p class="lede">
         This repository runs several AI agents in parallel alongside a human merge gate.
-        That workflow and process is a better signal of how Ravi works than any list of software tools.
+        That workflow and execution model is a clearer signal of how Ravi works than any plain list of tools.
       </p>
     </header>
 
     <section aria-labelledby="tickets-and-sprints">
       <h2 id="tickets-and-sprints">Tickets and sprints</h2>
       <p>
-        All work in this repository is structured and tracked through GitHub Issues.
-        Every ticket represents exactly one outcome and includes an explicit "Done when" list that defines the exact deliverables and acceptance criteria for the task.
-        Sprints are organized as one-week milestones to keep overall progress steady and measurable across every cycle.
+        All work across this repository is structured and managed through GitHub Issues.
+        Every ticket defines exactly one outcome and includes an explicit "Done when" list that sets the precise boundaries and acceptance criteria for completion.
+        Sprints are structured around one-week milestones to keep overall delivery steady, predictable, and focused across each cycle.
       </p>
       <p>
-        Not every open issue can be picked up by automated workers.
-        Only issues opened by Ravi are eligible for agents to work on.
-        Furthermore, tickets that carry specific labels or characteristics—specifically those classified as P0, P1, size L, infra, or security—must wait for an approved label from Ravi before any agent can start work on them.
-        This policy guarantees that urgent items, large tasks, infrastructure modifications, and security-sensitive changes remain paused until Ravi reviews and approves them for agent execution.
+        Not every open issue is automatically available to automated workers.
+        Only issues explicitly opened by Ravi are eligible for AI agents to pick up and work on.
+        Furthermore, tickets that carry specific tags or risk characteristics—specifically those designated as P0, P1, size L, infra, or security—must wait for an approved label from Ravi before any agent can begin execution.
+        This rule ensures that critical priorities, large-scope tickets, infrastructure adjustments, and security-related tasks remain paused until Ravi reviews and approves them for automated handling.
       </p>
     </section>
 
     <section aria-labelledby="division-of-labor">
       <h2 id="division-of-labor">Division of labor</h2>
       <p>
-        Responsibilities across the repository are strictly assigned between human oversight and automated assistants according to specific role boundaries:
+        Responsibilities across the repository are divided between human authority and automated agent capabilities according to clear, non-overlapping roles:
       </p>
       <ul>
         <li>
-          <strong>Ravi:</strong> Decides work priorities, approves sensitive tickets, merges pull requests, applies Terraform configurations, and owns all dashboards and credentials.
+          <strong>Ravi:</strong> Decides work priorities, approves sensitive tickets, merges pull requests, applies Terraform configurations, and owns all operational dashboards and secret credentials.
         </li>
         <li>
-          <strong>Claude (Claude Code):</strong> Handles code, infrastructure, CI, design, and Terraform, and reviews pull requests submitted by other agents.
+          <strong>Claude (Claude Code):</strong> Writes code, builds infrastructure, maintains CI pipelines, works on design, manages Terraform files, and reviews pull requests submitted by other agents.
         </li>
         <li>
           <strong>Gemini (Jules):</strong> Writes new articles using a supplied fact list.
         </li>
         <li>
-          <strong>ChatGPT (Codex):</strong> Performs copy edits named in an issue.
+          <strong>ChatGPT (Codex):</strong> Performs specific copy edits named directly in an issue.
         </li>
       </ul>
       <p>
-        To preserve repository security, each agent connects through its own dedicated GitHub app installed on this repository only.
-        No agent holds Cloudflare, HCP Terraform, or GitHub tokens.
-        All secret credentials, access tokens, and administrative rights remain strictly with Ravi.
+        To preserve security, each agent connects strictly through its own dedicated GitHub app installed on this single repository only.
+        No agent holds Cloudflare credentials, HCP Terraform tokens, or GitHub tokens.
+        All secret credentials, API keys, and administrative access rights remain exclusively with Ravi.
       </p>
     </section>
 
     <section aria-labelledby="isolated-lanes">
       <h2 id="isolated-lanes">Isolated lanes in AGENTS.md</h2>
       <p>
-        To allow parallel execution without friction or file conflicts, each agent operates strictly within a defined lane.
-        A lane is a set of folders that an agent is permitted to change, explicitly written down in AGENTS.md.
+        To allow parallel agent execution without file contention or editing friction, every agent operates strictly inside its own designated lane.
+        A lane is defined as a specific set of permitted folders written directly in AGENTS.md.
       </p>
       <p>
-        Because these lanes do not overlap, two agents can work at the exact same time without making conflicting edits to the codebase.
-        For example, Gemini can draft a new article in its assigned directory while ChatGPT edits designated text files elsewhere, without either agent modifying the other's files or causing merge conflicts in the repository.
+        Because these assigned file lanes do not overlap, two agents can actively work at the exact same time without making conflicting edits to the repository.
+        For example, Gemini can draft a new article inside its permitted directory while ChatGPT performs text edits in its own allowed files, without either agent touching the other's files or causing merge conflicts in git.
       </p>
     </section>
 
     <section aria-labelledby="branches-and-ci-guards">
       <h2 id="branches-and-ci-guards">Branches and CI guard checks</h2>
       <p>
-        Strict development practices govern how code and content enter the main branch.
-        Nobody pushes directly to main under any circumstances.
-        Every proposed change must be developed on a dedicated branch and submitted through a pull request.
-        The very first line of every pull request description must be Closes #N, referencing the exact GitHub issue number it addresses.
+        Strict workflow rules dictate how all code and text enter the repository.
+        Nobody pushes directly to the main branch under any circumstances.
+        Every proposed modification must be made on a separate branch and submitted as a pull request.
+        The very first line of every pull request description must be Closes #N, referencing the corresponding GitHub issue number.
       </p>
       <p>
-        Automated CI guard checks run on every pull request to enforce these workflow rules.
-        A CI guard check fails a pull request if it:
+        Automated CI guard checks run on every pull request to enforce these operational boundaries automatically.
+        A CI guard check fails a pull request if it encounters any of the following conditions:
       </p>
       <ul>
-        <li>Leaves its assigned lane by modifying files outside its permitted folder list in AGENTS.md.</li>
+        <li>Leaves its assigned lane by touching or modifying files outside its permitted folder list in AGENTS.md.</li>
         <li>Lacks Closes #N on the very first line of the pull request description.</li>
-        <li>Leaves an open [CHECK] marker anywhere within the proposed file changes.</li>
-        <li>Contains a private IP address.</li>
+        <li>Leaves an open fact-check review marker anywhere within the proposed file changes.</li>
+        <li>Contains a private IP address in any modified file.</li>
       </ul>
     </section>
 
     <section aria-labelledby="reviews-and-the-merge-gate">
       <h2 id="reviews-and-the-merge-gate">Reviews and the human merge gate</h2>
       <p>
-        Passing automated CI guard checks is only the first step in the pipeline.
-        Before any change is merged, Claude reviews each pull request against the original issue's "Done when" list to verify that all stated criteria have been met.
+        Passing automated CI guard checks is only the first step in the publication process.
+        Before any pull request can be merged, Claude reviews the submitted changes against the original issue's "Done when" list to verify that every requirement has been completely satisfied.
       </p>
       <p>
-        Final authority over the repository remains with Ravi.
-        Ravi merges a pull request only when all automated checks are green and Claude's review has no remaining open items.
-        Nothing merges itself.
-        Additionally, applying Terraform infrastructure changes to live state and managing environment credentials remain manual actions performed exclusively by Ravi.
+        Final authority over integration remains entirely with Ravi.
+        Ravi merges a pull request only when all automated CI guard checks are green and Claude's review has zero open items remaining.
+        Nothing merges itself automatically.
+        Furthermore, applying Terraform infrastructure changes to live environments and managing sensitive credentials remain strictly manual actions executed solely by Ravi.
       </p>
     </section>
   </article>
