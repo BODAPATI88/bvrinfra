@@ -82,16 +82,16 @@ export const stack: Unit[] = [
     name: "Backups",
     detail: "Daily backups, first restore tested",
     status: "building",
-    how: "Proxmox backs up the homelab's virtual machines to a second disk in the same host at 02:00 each night, keeping 7 daily and 4 weekly copies and deleting older ones on its own. On 10 October 2026 I restored the latest backup as a separate machine with its network cut, and it booted. The old services were then shut down for a rebuild, so the nightly job is paused until the new cluster runs. Two things are still missing: a copy outside the house, and a restore test with the services running.",
-    flow: ["Homelab", "Nightly backup", "Second disk", "Restore test", "Off-site copy (next)"],
+    how: "Proxmox backs up the homelab's virtual machines to a second disk in the same host at 02:00 each night, keeping 7 daily and 4 weekly copies and deleting older ones on its own. On 10 October 2026 I restored the latest backup as a separate machine with its network cut, and it booted. The old services were then shut down for a rebuild, so the nightly job is paused until the new cluster runs. Since 12 October 2026 the latest backup also has a copy outside the house, in Cloudflare R2, checked against its checksum after upload. Still missing: a restore test with the services running.",
+    flow: ["Homelab", "Nightly backup", "Second disk", "Off-site copy", "Restore test"],
     facts: [
       { label: "Schedule", value: "Daily at 02:00, paused during the rebuild" },
       { label: "Kept", value: "7 daily, 4 weekly" },
       { label: "First restore test", value: "10 October 2026, booted" },
-      { label: "Off-site copy", value: "Not yet (Cloudflare R2 planned)" },
-      { label: "Counts as done when", value: "An off-site copy exists and a restore brings the services back" },
+      { label: "Off-site copy", value: "Cloudflare R2, since 12 October 2026" },
+      { label: "Counts as done when", value: "A restore brings the services back" },
     ],
-    proves: "This is the unit that would have prevented the September outage. A backup on a second disk in the same host does not survive losing the host, so it stays amber until a copy lives somewhere else.",
+    proves: "This is the unit that would have prevented the September outage. It stays amber until a restore brings the services back, not just a machine that boots.",
   },
 ];
 
