@@ -1,22 +1,27 @@
 ---
 import Base from "../layouts/Base.astro";
 
+// light: which rack LED a project shows. live = green, building = amber, off = grey.
+// The state words stay visible next to the light, so colour is never the only signal.
 const projects = [
   {
     name: "bvrinfra",
     href: "https://github.com/BODAPATI88/bvrinfra",
     state: "Active",
+    light: "live",
     summary: "This site runs as static Astro on Cloudflare Pages. The main branch is protected, DNS is managed in Terraform with manual apply, and each architectural choice has a decision record.",
   },
   {
     name: "infra-homelab",
     state: "Private while being hardened",
+    light: "building",
     summary: "My Proxmox homelab: manifests, ops scripts, namespace quotas and runbooks from the K3s, ArgoCD and Prometheus setup I ran until September 2026. Now on Docker Compose; next, Cloudflare Access for admin, off-site backups with a tested restore, and homelab as code.",
   },
   {
     name: "bvrinfra-site",
     href: "https://github.com/BODAPATI88/bvrinfra-site",
     state: "Archived",
+    light: "off",
     summary: "The previous version of this site, a Kubernetes stack behind a Cloudflare Tunnel. Kept as a record of what it got right, like its locked-down metrics API, and what it got wrong; the post-mortem covers how it was lost.",
   },
 ];
@@ -28,27 +33,122 @@ const projects = [
   <h1 class="page-title">Projects</h1>
   <p class="lede">What I'm building, with an honest status for each. The <a href="/writing/september-2026-outage/">September 2026 post-mortem</a> explains why the rebuild looks the way it does.</p>
 
-  <ul class="projects">
-    {projects.map((p) => (
-      <li>
-        <div class="head">
-          <h2>{p.href ? <a href={p.href}>{p.name}</a> : p.name}</h2>
-          <span class="state">{p.state}</span>
-        </div>
-        <p>{p.summary}</p>
-      </li>
-    ))}
-  </ul>
+  <div class="shelf">
+    <p class="hint">Tap a project to see what it is.</p>
+    <ul class="projects">
+      {projects.map((p) => (
+        <li class:list={["project", p.light]}>
+          <details>
+            <summary class="row">
+              <span class="ear" aria-hidden="true"></span>
+              <span class="name">{p.name}</span>
+              <span class="state">
+                <span class="led" aria-hidden="true"></span>
+                <span>{p.state}</span>
+                <span class="chev" aria-hidden="true"></span>
+              </span>
+            </summary>
+            <div class="panel">
+              <p>{p.summary}</p>
+              {p.href && <p class="source"><a href={p.href}>{p.name} on GitHub</a></p>}
+            </div>
+          </details>
+        </li>
+      ))}
+    </ul>
+  </div>
 </Base>
 
 <style>
-  .projects { list-style: none; margin: 2.5rem 0 0; padding: 0; max-width: 46rem; }
-  .projects li { padding-block: 1.5rem; border-top: 1px solid var(--rule); }
-  .projects li:last-child { border-bottom: 1px solid var(--rule); }
-  .head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
-  .head h2 { font-size: 1.4rem; font-variation-settings: "wdth" 90; }
-  .head h2 a { color: var(--ink); text-decoration: none; }
-  .head h2 a:hover { color: var(--cable); text-decoration: underline; }
-  .state { color: var(--muted); font-variation-settings: "wdth" 75; font-size: 0.95rem; }
-  .projects p { margin: 0; max-width: 38em; }
+  /* Same tokens and status lights as the rack on the home page (Rack.astro). */
+  .shelf {
+    margin-top: 2.5rem; max-width: 52rem;
+    background: var(--steel); color: var(--steel-ink);
+    border-radius: 8px; padding: clamp(0.9rem, 2vw, 1.4rem);
+    box-shadow: inset 0 0 0 1px var(--steel-line);
+  }
+  .hint { margin: 0; padding: 0 0.2rem 0.9rem; color: var(--steel-muted); font-size: 0.85rem; }
+  .projects {
+    list-style: none; margin: 0; padding: 0;
+    border-inline: 8px solid var(--steel-3); border-radius: 2px;
+  }
+  .project { background: var(--steel-2); border-bottom: 2px solid var(--steel); }
+  .project:last-child { border-bottom: 0; }
+  .off { background: var(--steel-3); }
+
+  .row {
+    display: grid; grid-template-columns: 0.6rem minmax(0, 1fr) auto;
+    align-items: center; gap: 1rem;
+    min-height: 4.5rem; padding: 0.8rem 1.1rem 0.8rem 0.9rem;
+    cursor: pointer; list-style: none;
+  }
+  .row::-webkit-details-marker { display: none; }
+  .row:hover .name { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.2em; }
+  .row:focus-visible { outline: 3px solid var(--led-live); outline-offset: -3px; }
+
+  .ear {
+    align-self: stretch;
+    background:
+      radial-gradient(circle at 50% 22%, var(--steel) 0 2.5px, transparent 3px),
+      radial-gradient(circle at 50% 78%, var(--steel) 0 2.5px, transparent 3px),
+      var(--steel-3);
+    border-radius: 2px;
+  }
+  .name {
+    font-weight: 750; font-stretch: 88%;
+    font-size: clamp(1.15rem, 1rem + 0.6vw, 1.45rem); line-height: 1.15;
+  }
+  .off .name { color: var(--steel-muted); }
+  .state {
+    display: inline-flex; align-items: center; justify-content: flex-end; gap: 0.6rem;
+    font-stretch: 80%; font-size: 0.95rem; text-align: right;
+  }
+  .led {
+    width: 0.75rem; height: 0.75rem; border-radius: 50%; flex: none;
+    background: var(--led-off); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.4);
+  }
+  .live .led { background: var(--led-live); box-shadow: 0 0 0 4px rgba(47, 191, 113, 0.2), 0 0 12px rgba(47, 191, 113, 0.55); }
+  .building .led { background: var(--led-build); box-shadow: 0 0 0 4px rgba(240, 180, 41, 0.18); }
+
+  .chev {
+    position: relative; width: 1.75rem; height: 1.75rem; flex: none;
+    border: 1px solid var(--steel-line); border-radius: 50%; margin-left: 0.25rem;
+  }
+  .chev::before, .chev::after {
+    content: ""; position: absolute; left: 50%; top: 50%;
+    width: 0.7rem; height: 2px; background: var(--steel-ink);
+    transform: translate(-50%, -50%);
+  }
+  .chev::after { transform: translate(-50%, -50%) rotate(90deg); transition: transform 0.2s ease; }
+  details[open] .chev::after { transform: translate(-50%, -50%) rotate(0deg); }
+  details[open] .chev { border-color: var(--steel-ink); }
+
+  .panel { padding: 0.25rem 1.1rem 1.4rem calc(0.6rem + 1rem + 0.9rem); display: grid; gap: 0.75rem; }
+  .panel p { margin: 0; line-height: 1.6; max-width: 40em; }
+  .source { font-size: 0.9rem; }
+  .source a { color: var(--steel-ink); }
+
+  @media (prefers-contrast: more) {
+    .project { border-bottom-color: var(--steel-ink); }
+    .chev { border: 1px solid var(--steel-ink); }
+  }
+
+  @media (forced-colors: active) {
+    .shelf, .project, .off { background: Canvas; color: CanvasText; border-color: CanvasText; }
+    .name, .off .name { color: CanvasText; }
+    .projects { border-color: CanvasText; }
+    .ear { display: none; }
+    .row { grid-template-columns: minmax(0, 1fr) auto; }
+    .led { border: 2px solid CanvasText; }
+    .live .led { background: CanvasText; forced-color-adjust: none; }
+    .chev::before, .chev::after { background: CanvasText; }
+  }
+
+  @media (max-width: 30rem) {
+    .row { grid-template-columns: minmax(0, 1fr); row-gap: 0.5rem; padding-inline: 0.75rem; }
+    .ear { display: none; }
+    .state { justify-content: flex-start; text-align: left; }
+    .chev { margin-left: auto; }
+    .panel { padding: 0.25rem 0.75rem 1.25rem; }
+  }
 </style>
