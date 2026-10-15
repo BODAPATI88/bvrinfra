@@ -77,6 +77,11 @@ export const done: Entry[] = [
     body: "How parallel AI agents with isolated file lanes and a human merge gate handle tasks in this repository.",
     link: { href: "/writing/how-i-split-work-between-ai-agents/", label: "Read the article" },
   },
+  {
+    date: "15 Oct 2026",
+    title: "New cluster backed up",
+    body: "The rebuilt cluster's three machines were backed up to the second disk for the first time. They run no applications yet and are rebuilt from code, so the off-site copy waits for the first service that stores data.",
+  },
 ];
 
 export const next: Entry[] = [
