@@ -7,7 +7,7 @@ visitor ─► bvrinfra.in (Cloudflare) ─► Worker "bvrinfra-front-door"
                                           └ else: https://bvrinfra-5l8.pages.dev (same build, Cloudflare Pages) → X-Served-By: pages
 ```
 
-- **Same content both ways.** Pages builds `main`. The `Site image` workflow builds the same commit into `ghcr.io/bodapati88/bvrinfra-site:main`.
+- **Same content both ways.** Pages builds `main`. The `Site image` workflow builds the same commit into `ghcr.io/bodapati88/bvrinfra:main`.
 - **No caching in front.** The Worker asks the homelab on every request, and HTML is sent `no-cache`. Only fingerprinted files under `/_astro/` are cached.
 - **Nothing opened at home.** The tunnel's connector (cloudflared) dials out from the cluster; no port is forwarded.
 - **No Cloudflare token in GitHub.** The Worker is deployed by hand with `wrangler`. DNS stays in Terraform with a manual apply.
@@ -23,7 +23,7 @@ visitor ─► bvrinfra.in (Cloudflare) ─► Worker "bvrinfra-front-door"
 
 ## First-time setup (Ravi)
 
-1. **Image visibility.** After the first merge, the `Site image` workflow pushes the package. On GitHub, open Packages → `bvrinfra-site` → Package settings and set it to **Public**, so the cluster can pull it without a token. The site is public anyway.
+1. **Image visibility.** After the first merge, the `Site image` workflow pushes the package. On GitHub, open Packages → `bvrinfra` → Package settings and set it to **Public**, so the cluster can pull it without a token. The site is public anyway.
 2. **Create the tunnel** (on the Proxmox host or the laptop, with `cloudflared` installed):
    ```bash
    cloudflared tunnel login                 # browser: pick bvrinfra.in
