@@ -25,8 +25,9 @@ const statusState = sites.length ? (upCount === sites.length ? "up" : "down") : 
 // Same count as the rack, from one place (src/data/dns.ts).
 const dnsCount = dnsRecordCount();
 
-// Cloudflare Pages sets CF_PAGES_COMMIT_SHA; fall back to git for local builds.
-let sha = process.env.CF_PAGES_COMMIT_SHA ?? "";
+// Cloudflare Pages sets CF_PAGES_COMMIT_SHA; the homelab image build sets SITE_COMMIT_SHA (#101);
+// fall back to git for local builds.
+let sha = process.env.CF_PAGES_COMMIT_SHA ?? process.env.SITE_COMMIT_SHA ?? "";
 if (!sha) {
   try { sha = execSync("git rev-parse HEAD", { stdio: ["ignore", "pipe", "ignore"] }).toString().trim(); } catch {}
 }
