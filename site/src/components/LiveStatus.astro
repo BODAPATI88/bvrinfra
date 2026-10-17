@@ -3,9 +3,8 @@
 // Status, uptime and response time come from the Upptime monitor (BODAPATI88/status).
 // They are fetched at build time as a fallback, then refreshed in the visitor's
 // browser by /js/live.js. DNS and deploy facts are read at build time.
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
 import { execSync } from "node:child_process";
+import { dnsRecordCount } from "../data/dns";
 
 const SUMMARY = "https://raw.githubusercontent.com/BODAPATI88/status/master/history/summary.json";
 const MONITOR_START = "8 Oct 2026"; // first check in history/bvrinfra-in.yml (startTime)
@@ -23,12 +22,8 @@ const upCount = sites.filter((s) => s.status === "up").length;
 const statusText = sites.length ? (upCount === sites.length ? "Up" : `${sites.length - upCount} of ${sites.length} down`) : "—";
 const statusState = sites.length ? (upCount === sites.length ? "up" : "down") : "unknown";
 
-// Count the DNS records Terraform manages: one `type = "…"` line per record in main.tf.
-let dnsCount: number | null = null;
-try {
-  const tf = readFileSync(resolve(process.cwd(), "../infra/terraform/main.tf"), "utf8");
-  dnsCount = (tf.match(/^\s+type\s+=\s+"[A-Z]+"/gm) ?? []).length || null;
-} catch {}
+// Same count as the rack, from one place (src/data/dns.ts).
+const dnsCount = dnsRecordCount();
 
 // Cloudflare Pages sets CF_PAGES_COMMIT_SHA; fall back to git for local builds.
 let sha = process.env.CF_PAGES_COMMIT_SHA ?? "";
