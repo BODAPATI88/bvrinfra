@@ -1,0 +1,126 @@
+---
+// For managers and stakeholders (#99): the project as a status report.
+// Every line reads from the same data as the rack and the build log, so the report can't drift from them.
+import Base from "../layouts/Base.astro";
+import { stack } from "../data/stack";
+import { done, next } from "../data/log";
+import { project, ragLabel } from "../data/project";
+
+const stateWord = { live: "Live", building: "Building", planned: "Planned" } as const;
+const live = stack.filter((u) => u.status === "live").length;
+const open = stack.filter((u) => u.status !== "live");
+const decisions = [
+  { title: "Why this site is static", href: "/writing/why-this-site-is-static/" },
+  { title: "Why DNS changes need a manual apply", href: "/writing/why-dns-changes-need-a-manual-apply/" },
+  { title: "Why the monitor runs off my hardware", href: "/writing/why-the-monitor-runs-off-my-hardware/" },
+];
+---
+<Base
+  title="Project status report, bvrinfra.in"
+  description="Status of the bvrinfra.in rebuild for managers and stakeholders: workstreams, milestones, open risks, decisions and next steps."
+>
+  <p class="eyebrow">Project status report · {project.sprint} · {project.dates}</p>
+  <h1 class="page-title">Rebuilding bvrinfra.in after the September outage</h1>
+  <p class="lede">
+    The old site was lost in September 2026 with no usable backup. It was rebuilt as a static site with CI,
+    DNS as code and outside monitoring. The <a href="/writing/september-2026-outage/">post-mortem</a> covers what failed.
+  </p>
+
+  <section class="summary" aria-label="Summary">
+    <div class="kpi" data-rag={project.overall}><span class="k">Overall</span><span class="v">{ragLabel[project.overall]}</span><span class="why">{project.overallWhy}</span></div>
+    <div class="kpi"><span class="k">Rack units live</span><span class="v">{live} of {stack.length}</span></div>
+    <div class="kpi"><span class="k">Milestones done</span><span class="v">{done.length}</span></div>
+  </section>
+
+  <section aria-labelledby="ws-h">
+    <h2 id="ws-h">Workstreams</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th scope="col">Workstream</th><th scope="col">Status</th><th scope="col">What it is</th><th scope="col">Why it matters</th></tr></thead>
+        <tbody>
+          {stack.map((u) => (
+            <tr>
+              <th scope="row">{u.name}</th>
+              <td><span class="state"><span class="led" data-state={u.status} aria-hidden="true"></span>{stateWord[u.status]}</span></td>
+              <td>{u.detail}</td>
+              <td class="muted">{u.proves}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="two">
+    <section aria-labelledby="ms-h">
+      <h2 id="ms-h">Milestones</h2>
+      <ol class="list">
+        {done.map((e) => (
+          <li><span class="date">{e.date}</span><span>{e.link ? <a href={e.link.href}>{e.title}</a> : e.title}</span></li>
+        ))}
+      </ol>
+    </section>
+
+    <section aria-labelledby="rk-h">
+      <h2 id="rk-h">Open risks</h2>
+      <ul class="cards">
+        {open.map((u) => (
+          <li><span class="tag tag-risk">Risk · open</span><strong>{u.name} is not live yet</strong><span class="muted">{u.proves}</span></li>
+        ))}
+      </ul>
+      <h2 id="dc-h">Decisions</h2>
+      <ul class="cards" aria-labelledby="dc-h">
+        {decisions.map((d) => (
+          <li><span class="tag">Decision</span><a href={d.href}>{d.title}</a></li>
+        ))}
+      </ul>
+    </section>
+  </div>
+
+  <section aria-labelledby="nx-h">
+    <h2 id="nx-h">Next</h2>
+    <ol class="cards">
+      {next.map((e) => (
+        <li><strong>{e.title}</strong><span class="muted">{e.body}</span></li>
+      ))}
+    </ol>
+    <p class="muted">Work runs in one-week sprints. Each change is a pull request with a ticket and a "Done when" list, checked before merge. The <a href="/log/">build log</a> has every step with dates; engineers can start at the <a href="/architecture/">architecture page</a>.</p>
+  </section>
+</Base>
+
+<style>
+  .eyebrow { font-size: 0.85rem; font-weight: 650; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+  h2 { font-size: clamp(1.25rem, 1.05rem + 0.7vw, 1.6rem); font-stretch: 90%; margin: clamp(2rem, 5vw, 3rem) 0 1rem; }
+  .muted { color: var(--muted); }
+  .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); gap: 0.75rem; margin-top: 1.5rem; }
+  .kpi { background: var(--panel); border: 1px solid var(--rule); border-left: 4px solid var(--cable); border-radius: 8px; padding: 0.9rem 1rem; display: flex; flex-direction: column; gap: 0.2rem; box-shadow: var(--glow); }
+  .kpi[data-rag="amber"] { border-left-color: var(--led-build); }
+  .kpi[data-rag="green"] { border-left-color: var(--led-live); }
+  .kpi[data-rag="red"] { border-left-color: #e5484d; }
+  .k { color: var(--muted); font-size: 0.9rem; }
+  .v { font-size: 1.6rem; font-weight: 800; font-stretch: 105%; }
+  .why { color: var(--muted); font-size: 0.9rem; }
+  .table-wrap { overflow-x: auto; background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; }
+  table { width: 100%; min-width: 44rem; border-collapse: collapse; font-size: 0.95rem; }
+  th, td { text-align: left; vertical-align: top; padding: 0.75rem 1rem; border-bottom: 1px solid var(--rule); }
+  thead th { color: var(--muted); font-weight: 650; font-size: 0.85rem; }
+  tbody tr:last-child > * { border-bottom: 0; }
+  .state { display: inline-flex; align-items: center; gap: 0.45rem; white-space: nowrap; }
+  .led { width: 0.65rem; height: 0.65rem; border-radius: 50%; background: var(--led-off); }
+  .led[data-state="live"] { background: var(--led-live); }
+  .led[data-state="building"] { background: var(--led-build); }
+  .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: 0 2rem; }
+  .list { list-style: none; margin: 0; padding: 0; background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; }
+  .list li { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr); gap: 0.75rem; padding: 0.65rem 1rem; border-bottom: 1px solid var(--rule); }
+  .list li:last-child { border-bottom: 0; }
+  .date { color: var(--muted); font-size: 0.9rem; font-variant-numeric: tabular-nums; }
+  .cards { list-style: none; margin: 0 0 1rem; padding: 0; display: flex; flex-direction: column; gap: 0.6rem; }
+  .cards li { background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: 0.85rem 1rem; display: flex; flex-direction: column; gap: 0.25rem; }
+  .tag { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cable); }
+  .tag-risk { color: var(--ink); }
+  .tag-risk::before { content: ""; display: inline-block; width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--led-build); margin-right: 0.4rem; }
+  @media (forced-colors: active) {
+    .kpi, .table-wrap, .list, .cards li { border-color: CanvasText; }
+    .led, .tag-risk::before { forced-color-adjust: none; }
+  }
+</style>

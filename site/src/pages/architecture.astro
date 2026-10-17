@@ -1,0 +1,113 @@
+---
+// For engineers (#99): how a change reaches production, and a catalog card per component.
+// Cards read from the same data as the rack, so status never differs between pages.
+import Base from "../layouts/Base.astro";
+import { stack } from "../data/stack";
+
+const stateWord = { live: "Live", building: "Building", planned: "Planned" } as const;
+const flow = [
+  { kind: "Change", name: "Pull request with a ticket" },
+  { kind: "Check", name: "Build, guard, Lighthouse, axe" },
+  { kind: "Merge", name: "Protected main branch" },
+  { kind: "Deploy", name: "Cloudflare Pages builds main" },
+  { kind: "DNS", name: "Terraform plan, manual apply" },
+  { kind: "Watch", name: "Outside monitor, every 5 minutes" },
+];
+---
+<Base
+  title="Architecture and service catalog, bvrinfra.in"
+  description="How bvrinfra.in is built and run: the path from pull request to production, and each component with its status, facts and source."
+>
+  <p class="eyebrow">For engineers</p>
+  <h1 class="page-title">Architecture and service catalog</h1>
+  <p class="lede">
+    Every component is in Git and changed by pull request. The decisions are written up
+    in <a href="https://github.com/BODAPATI88/bvrinfra/blob/main/docs/adr/0001-bvrinfra-architecture.md">ADR 0001</a>.
+  </p>
+
+  <section aria-labelledby="flow-h">
+    <h2 id="flow-h">From change to production</h2>
+    <ol class="flow">
+      {flow.map((f) => (
+        <li><span class="kind">{f.kind}</span><span class="name">{f.name}</span></li>
+      ))}
+    </ol>
+    <p class="muted">The monitor runs on GitHub, not on my hardware, so it still reports when the homelab is down.</p>
+  </section>
+
+  <section aria-labelledby="cat-h">
+    <h2 id="cat-h">Service catalog</h2>
+    <ul class="catalog">
+      {stack.map((u, i) => (
+        <li>
+          <article aria-labelledby={`u${i}`}>
+            <div class="head">
+              <span class="slot">U{i + 1}</span>
+              <h3 id={`u${i}`}>{u.name}</h3>
+              <span class="state"><span class="led" data-state={u.status} aria-hidden="true"></span>{stateWord[u.status]}</span>
+            </div>
+            <p class="detail">{u.detail}</p>
+            <dl>
+              {u.facts.map((f) => (
+                <div><dt>{f.label}</dt><dd>{f.href ? <a href={f.href}>{f.value}</a> : f.value}</dd></div>
+              ))}
+            </dl>
+            <details>
+              <summary>How it works</summary>
+              <p>{u.how}</p>
+            </details>
+            {u.source && <p class="src"><a href={u.source.href}>{u.source.label}</a></p>}
+          </article>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <p class="muted">Managers can read the same work as a <a href="/status-report/">status report</a>. Projects beyond this site are on the <a href="/projects/">projects page</a>.</p>
+</Base>
+
+<style>
+  .eyebrow { font-size: 0.85rem; font-weight: 650; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+  h2 { font-size: clamp(1.25rem, 1.05rem + 0.7vw, 1.6rem); font-stretch: 90%; margin: clamp(2rem, 5vw, 3rem) 0 1rem; }
+  .muted { color: var(--muted); }
+  .flow {
+    list-style: none; margin: 0 0 0.75rem; padding: clamp(0.9rem, 2.5vw, 1.25rem);
+    background: var(--steel); border: 1px solid var(--steel-line); border-radius: 10px;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr)); gap: 0.6rem;
+    counter-reset: step;
+  }
+  .flow li {
+    counter-increment: step;
+    display: flex; flex-direction: column; gap: 0.15rem;
+    padding: 0.7rem 0.8rem; border: 1px solid var(--steel-line); border-radius: 8px;
+  }
+  .kind { color: #2dd4bf; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+  .kind::before { content: counter(step) ". "; }
+  .name { color: var(--steel-ink); font-weight: 650; }
+  .catalog { list-style: none; margin: 0 0 2rem; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); gap: 1rem; }
+  .catalog article {
+    height: 100%; box-sizing: border-box;
+    background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; box-shadow: var(--glow);
+    padding: 1rem 1.1rem; display: flex; flex-direction: column; gap: 0.6rem;
+  }
+  .head { display: flex; align-items: center; gap: 0.6rem; }
+  .slot { color: var(--muted); font-size: 0.85rem; font-variant-numeric: tabular-nums; }
+  .head h3 { font-size: 1.2rem; font-stretch: 92%; margin: 0; }
+  .state { margin-left: auto; display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.9rem; font-weight: 650; }
+  .led { width: 0.65rem; height: 0.65rem; border-radius: 50%; background: var(--led-off); }
+  .led[data-state="live"] { background: var(--led-live); }
+  .led[data-state="building"] { background: var(--led-build); }
+  .detail { margin: 0; color: var(--muted); }
+  dl { margin: 0; display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.93rem; }
+  dl div { display: grid; grid-template-columns: 8.5rem minmax(0, 1fr); gap: 0.75rem; }
+  dt { color: var(--muted); }
+  dd { margin: 0; }
+  details summary { cursor: pointer; font-weight: 650; min-height: 44px; display: flex; align-items: center; }
+  details p { margin: 0; color: var(--muted); font-size: 0.93rem; }
+  .src { margin: auto 0 0; font-weight: 650; }
+  @media (max-width: 30rem) { dl div { grid-template-columns: 1fr; gap: 0; } }
+  @media (forced-colors: active) {
+    .flow, .flow li, .catalog article { border-color: CanvasText; }
+    .led { forced-color-adjust: none; }
+  }
+</style>

@@ -2,6 +2,8 @@
 import Base from "../layouts/Base.astro";
 import Rack from "../components/Rack.astro";
 import LiveStatus from "../components/LiveStatus.astro";
+import StatusStrip from "../components/StatusStrip.astro";
+import Doors from "../components/Doors.astro";
 import { phoneTel, linkedin, whatsapp, mail, hello, icons } from "../data/contact";
 
 const actions = [
@@ -70,6 +72,25 @@ const services = [
       qualifying releases and handling incidents. Next: platform engineering and SRE.
     </p>
 
+    <StatusStrip />
+
+    <ul class="actions" aria-label="Get in touch">
+      {actions.map((a) => (
+        <li>
+          <a class={a.cls} href={a.href} rel={a.href.startsWith("http") ? "noopener" : undefined}>
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" set:html={a.icon} />
+            {a.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <Doors />
+
+  <LiveStatus />
+
+  <section class="glance" aria-label="Experience and certification">
     <dl class="stats" aria-label="At a glance">
       <div class="stat"><dt>Years in infrastructure</dt><dd class="num">9.5</dd></div>
       <div class="stat"><dt>Data centre sites, US and Japan</dt><dd class="num">8</dd></div>
@@ -92,19 +113,9 @@ const services = [
       <li>Hybrid Azure</li>
       <li>Terraform</li>
     </ul>
+  </section>
 
-    <ul class="actions" aria-label="Get in touch">
-      {actions.map((a) => (
-        <li>
-          <a class={a.cls} href={a.href} rel={a.href.startsWith("http") ? "noopener" : undefined}>
-            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" set:html={a.icon} />
-            {a.label}
-          </a>
-        </li>
-      ))}
-    </ul>
-
-    <LiveStatus />
+  <p class="details-label">Details</p>
 
     <section class="career" aria-labelledby="career">
       <h2 id="career">Career</h2>
@@ -118,7 +129,6 @@ const services = [
     </section>
 
     <Rack />
-  </section>
 
   <section class="work" aria-labelledby="work">
     <h2 id="work">Work with me</h2>
@@ -221,6 +231,11 @@ const services = [
     .id-row { flex-direction: column; align-items: flex-start; gap: 0.9rem; }
   }
 
+  .glance { margin: 0 0 clamp(2rem, 5vw, 3rem); }
+  .details-label {
+    margin: clamp(2.5rem, 6vw, 4rem) 0 1.5rem; padding-top: 0.75rem; border-top: 1px solid var(--rule);
+    font-size: 0.8rem; font-weight: 650; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+  }
   .career { margin: 0 0 clamp(2rem, 5vw, 3.5rem); max-width: 52rem; }
   .career h2 { font-size: clamp(1.2rem, 1.05rem + 0.6vw, 1.5rem); font-stretch: 90%; margin-bottom: 0.9rem; }
   .timeline { list-style: none; margin: 0; padding: 0 0 0 1.25rem; border-left: 2px solid var(--rule); }

@@ -1,0 +1,94 @@
+---
+// The three things every visitor asks first, before any detail (#98):
+// is he available, is the platform up, and where is the project.
+import { stack } from "../data/stack";
+import { next } from "../data/log";
+import { project, availability, ragLabel } from "../data/project";
+
+const live = stack.filter((u) => u.status === "live").length;
+const total = stack.length;
+const stateWord = { live: "Live", building: "Building", planned: "Planned" } as const;
+const pct = Math.round((live / total) * 100);
+---
+<section class="strip" aria-label="Status at a glance">
+  <article class="card" id="availability" aria-labelledby="av-h">
+    <div class="card-head">
+      <h2 id="av-h" class="eyebrow">Availability</h2>
+      {availability.open && <span class="pill pill-open"><span class="dot" aria-hidden="true"></span>Open to work</span>}
+    </div>
+    <dl class="facts">
+      <dt>Roles</dt><dd>{availability.roles}</dd>
+      <dt>Notice</dt><dd>{availability.notice}</dd>
+      <dt>Location</dt><dd>{availability.location} · {availability.workMode}</dd>
+      <dt>Available</dt><dd>{availability.available}</dd>
+    </dl>
+  </article>
+
+  <article class="card" aria-labelledby="sys-h">
+    <div class="card-head">
+      <h2 id="sys-h" class="eyebrow">Systems</h2>
+      <a class="small" href="https://status.bvrinfra.in">Status page</a>
+    </div>
+    <p class="big">{live === total ? "All units live" : `${live} of ${total} units live`}</p>
+    <ul class="units">
+      {stack.map((u) => (
+        <li><span class="led" data-state={u.status} aria-hidden="true"></span>{u.name} <span class="muted">· {stateWord[u.status]}</span></li>
+      ))}
+    </ul>
+  </article>
+
+  <article class="card" aria-labelledby="pr-h">
+    <div class="card-head">
+      <h2 id="pr-h" class="eyebrow">Project</h2>
+      <span class="pill" data-rag={project.overall}>{ragLabel[project.overall]}</span>
+    </div>
+    <p class="big">{project.sprint} · {project.dates}</p>
+    <div class="bar" role="img" aria-label={`${live} of ${total} rack units live`}><span style={`width: ${pct}%`}></span></div>
+    <p class="muted small-text">{live} of {total} units live. Next: {next[0]?.title.toLowerCase()}.</p>
+    <a class="small" href="/status-report/">Project status report</a>
+  </article>
+</section>
+
+<style>
+  .strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 17.5rem), 1fr));
+    gap: clamp(0.6rem, 1.5vw, 1rem);
+    margin: 0 0 1.25rem;
+  }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    box-shadow: var(--glow);
+    padding: clamp(0.9rem, 2.5vw, 1.2rem);
+    display: flex; flex-direction: column; gap: 0.75rem;
+  }
+  .card-head { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
+  .eyebrow { font-size: 0.8rem; font-weight: 650; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-stretch: 90%; }
+  .small { font-size: 0.9rem; font-weight: 650; }
+  .small-text { font-size: 0.9rem; margin: 0; }
+  .muted { color: var(--muted); }
+  .big { margin: 0; font-size: clamp(1.1rem, 1rem + 0.5vw, 1.3rem); font-weight: 750; font-stretch: 95%; }
+  .facts { margin: 0; display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: 0.35rem 0.75rem; }
+  .facts dt { color: var(--muted); }
+  .facts dd { margin: 0; font-weight: 650; }
+  .pill { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.2rem 0.65rem; border-radius: 999px; font-size: 0.85rem; font-weight: 700; border: 1px solid var(--rule); }
+  .pill-open { border-color: var(--led-live); }
+  .pill[data-rag="green"] { border-color: var(--led-live); }
+  .pill[data-rag="amber"] { border-color: var(--led-build); }
+  .pill[data-rag="red"] { border-color: #e5484d; }
+  .dot { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--led-live); }
+  .units { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 10.5rem), 1fr)); gap: 0.35rem 1rem; font-size: 0.95rem; }
+  .units li { display: flex; align-items: baseline; gap: 0.45rem; white-space: nowrap; }
+  .units .led { align-self: center; }
+  .led { flex: none; width: 0.65rem; height: 0.65rem; border-radius: 50%; background: var(--led-off); }
+  .led[data-state="live"] { background: var(--led-live); }
+  .led[data-state="building"] { background: var(--led-build); }
+  .bar { height: 0.6rem; border-radius: 999px; background: var(--aisle); border: 1px solid var(--rule); overflow: hidden; }
+  .bar span { display: block; height: 100%; background: var(--cable); }
+  @media (forced-colors: active) {
+    .card, .pill, .bar { border-color: CanvasText; }
+    .led, .dot, .bar span { forced-color-adjust: none; }
+  }
+</style>
