@@ -14,10 +14,10 @@ export const project = {
 export const availability = {
   open: true,
   roles: "Platform engineering · SRE",
-  notice: "[CHECK] notice period",
   location: "Hyderabad, India",
   workMode: "[CHECK] on-site, hybrid or remote",
-  available: "[CHECK] available from",
+  // Notice period and start date are discussed on a call, not published (Ravi, 17 Oct).
+  timing: "Notice and start date on a call",
 };
 
 export const ragLabel: Record<Rag, string> = { green: "Green", amber: "Amber", red: "Red" };
