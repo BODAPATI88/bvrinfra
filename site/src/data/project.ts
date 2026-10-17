@@ -15,7 +15,7 @@ export const availability = {
   open: true,
   roles: "Platform engineering · SRE",
   location: "Hyderabad, India",
-  workMode: "[CHECK] on-site, hybrid or remote",
+  workMode: "remote, hybrid or on-site",
   // Notice period and start date are discussed on a call, not published (Ravi, 17 Oct).
   timing: "Notice and start date on a call",
 };
