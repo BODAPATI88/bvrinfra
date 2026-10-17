@@ -4,6 +4,9 @@
 // Each unit expands on the page, so a visitor can understand it without leaving the site.
 // `source` is the optional last step: where to check the claim on GitHub.
 
+import { dnsRecordCount } from "./dns";
+const dnsRecords = dnsRecordCount();
+
 export type Status = "live" | "building" | "planned";
 
 export interface Unit {
@@ -56,7 +59,7 @@ export const stack: Unit[] = [
     how: "All DNS records for bvrinfra.in are defined in Terraform. A pull request gets a plan from HCP Terraform showing the exact change. After merge, the apply waits for a person to confirm it. Every record is protected against accidental deletion.",
     flow: ["Edit records", "Plan on PR", "Merge", "Manual apply", "Cloudflare DNS"],
     facts: [
-      { label: "Records managed", value: "4" },
+      { label: "Records managed", value: dnsRecords ? String(dnsRecords) : "Counted from Terraform at build time" },
       { label: "Dead records removed", value: "22, on 8 October 2026" },
       { label: "Apply", value: "Manual, never automatic" },
       { label: "API token scope", value: "DNS edit on this one zone" },
