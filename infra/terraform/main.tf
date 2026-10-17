@@ -96,7 +96,7 @@ locals {
 }
 
 resource "cloudflare_dns_record" "this" {
-  for_each = local.records
+  for_each = merge(local.records, local.origin_record)
 
   zone_id  = local.zone_id
   name     = each.value.name
