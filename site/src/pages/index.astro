@@ -67,11 +67,6 @@ const services = [
       </div>
     </div>
 
-    <p class="lede-home">
-      Infrastructure operations across eight data centre sites in the US and Japan: provisioning VMs,
-      qualifying releases and handling incidents. Next: platform engineering and SRE.
-    </p>
-
     <StatusStrip />
 
     <ul class="actions" aria-label="Get in touch">
@@ -84,6 +79,11 @@ const services = [
         </li>
       ))}
     </ul>
+
+    <p class="lede-home">
+      Infrastructure operations across eight data centre sites in the US and Japan: provisioning VMs,
+      qualifying releases and handling incidents. Next: platform engineering and SRE.
+    </p>
   </section>
 
   <Doors />
@@ -197,13 +197,14 @@ const services = [
   }
   .headline {
     /* Sized to the viewport so the longest word, "infrastructure", always fits on one line. */
-    font-size: clamp(2.2rem, 7vw, 4.75rem);
+    /* Smaller on the home page so the status strip is in the first screen (#98 follow-up). */
+    font-size: clamp(1.9rem, 4.5vw, 3rem);
     font-stretch: 125%;
     font-weight: 800;
     letter-spacing: -0.035em;
     line-height: 0.95;
-    margin-bottom: clamp(1.5rem, 4vw, 2.75rem);
-    max-width: 14ch;
+    margin-bottom: clamp(1rem, 3vw, 1.5rem);
+    max-width: 16ch;
     text-wrap: balance;
     overflow-wrap: break-word;
     hyphens: manual;
@@ -219,7 +220,7 @@ const services = [
   .id-text .headline { margin-bottom: 0.75rem; }
   .photo {
     display: block;
-    width: clamp(5.5rem, 18vw, 9rem);
+    width: clamp(4.25rem, 14vw, 6.5rem);
     height: auto;
     aspect-ratio: 1;
     border-radius: 50%;
@@ -228,7 +229,7 @@ const services = [
     object-fit: cover;
   }
   @media (max-width: 30rem) {
-    .id-row { flex-direction: column; align-items: flex-start; gap: 0.9rem; }
+    .id-row { gap: 0.9rem; }
   }
 
   .glance { margin: 0 0 clamp(2rem, 5vw, 3rem); }
@@ -275,6 +276,7 @@ const services = [
     margin: -0.5rem 0 1.25rem;
   }
   .lede-home {
+    margin-top: 0.5rem;
     font-size: clamp(1.1rem, 1rem + 0.45vw, 1.35rem);
     line-height: 1.6;
     font-weight: 450;
