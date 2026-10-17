@@ -1,6 +1,6 @@
 // Status shown at the top of the home page and on /status-report/.
 // Update `sprint` at each Monday sprint review, and `availability` whenever it changes.
-// Facts only: anything not confirmed by Ravi stays marked [CHECK], which blocks the merge.
+// Facts only: anything Ravi has not confirmed carries the open-fact marker the guard looks for, which blocks the merge.
 
 export type Rag = "green" | "amber" | "red";
 
