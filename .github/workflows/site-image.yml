@@ -1,7 +1,7 @@
 name: Site image
 
 # Builds the site as a container image for the homelab origin (#101) and tests the
-# front-door Worker. On pull requests: build and test only. On main: also push to GHCR,
+# front-door and watch Workers. On pull requests: build and test only. On main: also push to GHCR,
 # tagged with the commit and `main`; the homelab pulls `main` and rolls out new digests.
 on:
   pull_request:
@@ -26,6 +26,8 @@ jobs:
           node-version: 24
       - name: Worker failover tests
         run: node --test infra/worker/test/index.test.mjs
+      - name: Watch Worker alert tests (#109)
+        run: node --test infra/watch/test/index.test.mjs
 
   image:
     runs-on: ubuntu-latest
