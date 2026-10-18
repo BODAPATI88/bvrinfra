@@ -43,9 +43,9 @@ import Base from "../../layouts/Base.astro";
         This physical separation ensures that the monitoring stays alive regardless of what happens to the site or my local machines.
       </p>
       <p>
-        Every five minutes a scheduled job requests three pages: Home, www, Projects.
-        Because the job runs on shared runners, GitHub may delay the schedule based on their own system load.
-        The interval is not always exactly five minutes, but it is frequent enough to catch any downtime.
+        A scheduled job requests three pages: Home, www, Projects.
+        It is scheduled every five minutes, but GitHub delays and drops scheduled runs on shared runners.
+        In practice it runs every few hours, so an outage shorter than that can fall between two checks.
       </p>
     </section>
 
@@ -60,9 +60,9 @@ import Base from "../../layouts/Base.astro";
         I receive an alert from a system that is still running, telling me about a system that is not.
       </p>
       <p>
-        The monitor continues checking every five minutes while the site is down.
+        The monitor keeps checking on the same schedule while the site is down.
         When the site recovers the issue closes.
-        This creates a clean, permanent record of exactly when the outage started and ended.
+        This creates a permanent record of when the outage was first and last seen.
       </p>
     </section>
 
@@ -86,6 +86,15 @@ import Base from "../../layouts/Base.astro";
         Every test result, every open issue, and the overall uptime percentage are published automatically.
         Results publish to a public status page at <a href="https://status.bvrinfra.in">status.bvrinfra.in</a>.
         This page serves as the official record of the site reliability.
+      </p>
+    </section>
+
+    <section aria-labelledby="correction">
+      <h2 id="correction">Correction, 18 October 2026</h2>
+      <p>
+        This article first said the check runs every five minutes and is frequent enough to catch any downtime.
+        That was wrong. On 17 October 2026 the job ran six times, two to three and a half hours apart, and a short failover test that day fell between two runs.
+        The text above now describes what the schedule really does.
       </p>
     </section>
   </article>
