@@ -6,7 +6,7 @@ const fixes = [
   { cause: "No backup existed", fix: "restic to a home drive plus one cloud copy, done only after a tested restore", status: "Next" },
   { cause: "Nothing described the setup as code, so nothing could rebuild it", fix: "Site, CI and DNS live in one repository; DNS is Terraform", status: "Done" },
   { cause: "DNS was edited by hand and left pointing at things that no longer existed", fix: "Stale records removed; every change is now a reviewed plan with a manual apply", status: "Done" },
-  { cause: "Nothing outside the machine was watching it", fix: "Upptime checks the site every five minutes from GitHub, not from my hardware", status: "Done" },
+  { cause: "Nothing outside the machine was watching it", fix: "Upptime checks the site from GitHub, not from my hardware", status: "Done" },
 ];
 ---
 <Base
@@ -101,6 +101,14 @@ const fixes = [
       <p>
         That is why the backups unit on the home page is the last one, and why it stays grey until a full restore has been tested.
         You can follow the rest of the rebuild in the <a href="/log/">build log</a>.
+      </p>
+    </section>
+
+    <section aria-labelledby="correction">
+      <h2 id="correction">Correction, 18 October 2026</h2>
+      <p>
+        The table first said Upptime checks the site every five minutes.
+        It is scheduled that often, but GitHub runs it every few hours in practice, so the claim is removed.
       </p>
     </section>
   </article>
