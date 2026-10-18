@@ -23,18 +23,20 @@ export interface Unit {
 export const stack: Unit[] = [
   {
     name: "Site",
-    detail: "Static Astro on Cloudflare Pages",
+    detail: "Astro, served from the homelab, Cloudflare Pages as fallback",
     status: "live",
-    how: "Every page is plain HTML generated at build time. When a change lands on main, Cloudflare Pages builds the site and serves it from its edge network. There is no server of mine in the path, so there is nothing to patch and nothing to keep powered on.",
-    flow: ["Merge to main", "Pages build", "Edge network", "Visitor"],
+    how: "Every page is plain HTML generated at build time. Since 17 October 2026, bvrinfra.in is served from my homelab: CI builds the site into an nginx container image, which runs on the K3s cluster and is reached through a Cloudflare Tunnel that opens no ports at home. A Cloudflare Worker sits in front of every request. It tries the homelab first, and if that takes more than 2.5 seconds, returns a server error or the tunnel is down, it serves the same build from Cloudflare Pages instead. A response header, X-Served-By, says which one answered.",
+    flow: ["Merge to main", "Image build", "Worker", "Homelab, or Pages if down", "Visitor"],
     facts: [
-      { label: "Hosting", value: "Cloudflare Pages, free tier" },
+      { label: "Primary", value: "nginx on K3s, through a Cloudflare Tunnel" },
+      { label: "Fallback", value: "Cloudflare Pages, same build" },
+      { label: "Switch", value: "Cloudflare Worker, header X-Served-By" },
       { label: "Third-party requests", value: "None (fonts self-hosted)" },
       { label: "Themes", value: "Auto, light, dark" },
       { label: "Back online", value: "8 October 2026" },
       { label: "Quality checks", value: "Lighthouse and axe on every pull request", href: "https://github.com/BODAPATI88/bvrinfra/actions/workflows/quality.yml" },
     ],
-    proves: "The public site can't go down with my homelab. That dependency is what took the last version offline.",
+    proves: "The site runs on my own platform but doesn't depend on it. On 17 October 2026 I shut down the homelab machine that serves it, and the site kept loading from the Pages copy; when the machine came back, the homelab answered again.",
     source: { href: "https://github.com/BODAPATI88/bvrinfra/tree/main/site", label: "Site source on GitHub" },
   },
   {
