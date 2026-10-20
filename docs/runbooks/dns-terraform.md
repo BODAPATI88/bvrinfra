@@ -31,6 +31,9 @@ DNS for `bvrinfra.in` is managed in `infra/terraform/` (ADR 0001, D2). The dashb
 |---|---|---|
 | 2026-10-09 | Cloudflare token "Edit zone DNS" rolled; new value set in HCP; plan-only run: No changes | Created on a work machine at launch (#25) |
 | 2026-10-09 | Docker Hub: all three personal access tokens deactivated and deleted (`github-actions` from the archived site, two Docker Desktop CLI logins) | Old site retired; tokens had read/write/delete and no expiry (#25) |
+| 2026-10-20 | Cloudflare R2 account token for `homelab-backups` rolled; new one in the host's `r2.env`, old one deleted; read and list checked with a full fetch (sha256 OK) | Roll alongside #95. Also fixed `r2.env`: a pasted shell command on line 1 hid the account ID, and `R2_BUCKET` held the token's name |
+| 2026-10-20 | Proxmox `terraform@pve!homelab` token: secret regenerated on the host, same name and permissions | The old secret wasn't available for the #95 apply |
+| 2026-10-20 | K3s join token rotated (`k3s token rotate`), all three nodes updated; old token refused (401), new accepted (200) | Printed into an AI chat on 17 Oct (#95) |
 
 Add a row every time a credential is rolled or revoked.
 
