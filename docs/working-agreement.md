@@ -42,7 +42,7 @@ Every agent works in a **lane**, a set of folders it may change, defined in [AGE
 |---|---|---|---|
 | 1. Pick | Ravi or dispatcher | Ticket enters **This sprint** with one `owner:` label (Ravi, or the dispatcher inside the auto-approve band) | This sprint |
 | 2. Brief | Dispatcher | Posts an `agent-brief` comment: the exact prompt and steps for the owning agent | This sprint |
-| 3. Start | Dispatcher | On its hourly weekday run, hands the ticket to the agent with the brief's prompt (Jules: `jules` label; Codex: a mention; Claude: works it directly) | In progress |
+| 3. Start | Board keeper / dispatcher | Hands the ticket to the agent: the Board keeper adds the `jules` label on its hourly weekday run; the daily dispatcher mentions Codex with the brief's prompt, or works Claude's ticket directly | In progress |
 | 4. PR | Agent | Branch `<agent>/<issue>-<name>`, PR starting `Closes #N` | In review |
 | 5. Guard | CI | `build` and `guard` must pass: lane, `Closes #N`, no open `[CHECK]`, no private IPs | In review |
 | 6. Review | Claude | Reads the diff against the issue's **Done when** list, posts approve or change requests | In review |
@@ -93,7 +93,7 @@ It runs every hour from 10:00 to 18:00 IST, Monday to Friday, and on each run it
 
 To try it without changing anything: Actions → Board keeper → Run workflow, with **dry run** ticked. The run summary lists what it would do. Every PR that changes the workflow also runs a dry run against the live board.
 
-**What still needs Claude:** reviewing PRs against the merge standard, writing `agent-brief` comments, triage (owner, type, priority and size labels), the auto-approve band, mentioning Codex with a brief's prompt, and working `owner:claude` tickets. The workflow reads labels and markers, not the text of a brief, so a brief that says "wait for X" still needs a person or Claude to hold the ticket (`blocked`).
+**What still needs Claude**, in the dispatcher scheduled task once each weekday at about 10:50 IST (since 28 Oct 2026, decided on #86): reviewing PRs against the merge standard, writing `agent-brief` comments, triage (owner, type, priority and size labels), the auto-approve band, mentioning Codex with a brief's prompt, and working `owner:claude` tickets. The workflow reads labels and markers, not the text of a brief, so a brief that says "wait for X" still needs a person or Claude to hold the ticket (`blocked`).
 
 ## Rules
 
@@ -104,4 +104,4 @@ To try it without changing anything: Actions → Board keeper → Run workflow, 
 5. **Facts before publishing.** AI-drafted text marks assumptions with `[CHECK]`; nothing with an open `[CHECK]` is merged.
 6. **The rack stays honest.** A rack unit changes status in the same PR that ships the work, never ahead of it.
 7. **Sprint review, each Monday:** close what's done, move what isn't, size anything new.
-8. **Progress lives on the ticket.** Every agent comments on its issue when it starts, opens a PR, gets blocked and finishes, in the format in [AGENTS.md](../AGENTS.md#report-on-the-ticket). An agent that can't comment puts the same block in its chat reply for Ravi to paste. The dispatcher flags any dispatched ticket with no update after 24 hours.
+8. **Progress lives on the ticket.** Every agent comments on its issue when it starts, opens a PR, gets blocked and finishes, in the format in [AGENTS.md](../AGENTS.md#report-on-the-ticket). An agent that can't comment puts the same block in its chat reply for Ravi to paste. The Board keeper flags any dispatched ticket with no update after 24 hours.
