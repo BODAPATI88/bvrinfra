@@ -43,6 +43,7 @@ Then, on day one, run the read-only checks: `curl -sI https://bvrinfra.in/ | gre
 | [runbooks/k3s-token-rotation.md](runbooks/k3s-token-rotation.md) | Rotating the K3s join token without printing it (not run yet) |
 | [runbooks/watch-worker.md](runbooks/watch-worker.md) | The 15-minute outside monitor: setup, test, way back |
 | [runbooks/upptime.md](runbooks/upptime.md) | Upptime and the status page; running it by hand; the real interval |
+| [runbooks/cloudflared-update.md](runbooks/cloudflared-update.md) | Updating the tunnel connector, proving it worked, the cluster DNS pitfall, the way back |
 
 ## Decisions
 
