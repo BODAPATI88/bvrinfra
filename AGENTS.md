@@ -47,22 +47,24 @@ Use this format, so updates from every agent read the same:
 If you cannot comment on GitHub (for example a 403 or no network), end your chat reply with the same block. Ravi pastes it into the issue. Never report work as done unless the build ran and passed.
 
 ## Schedule and checks
-You do not start yourself. The dispatcher (Claude, on a schedule) hands you work and checks on it. This file tells you what it will check.
+You do not start yourself. Two schedulers hand you work and check on it. This file tells you what they check.
 
-**When the dispatcher runs:** every hour from 10:00 to 18:00 IST, Monday to Friday.
+**Board keeper** (GitHub Actions, no AI): every hour from 10:00 to 18:00 IST, Monday to Friday.
+1. Adds the `jules` label to the highest-priority eligible ticket owned by `owner:gemini` alone in the current sprint.
+2. Posts a stale-check on a handed-over ticket with no PR and no comment in 24 hours.
+3. Posts the daily status at 18:00 IST on the `Daily status` issue.
 
-**Each run it:**
-1. Writes an `agent-brief` on any owned ticket that has none.
-2. Hands each agent at most one ticket from the current sprint, highest priority first (Jules: `jules` label; Codex: a mention with the brief's prompt; Claude: works it directly).
-3. Reviews every new PR commit against the Merge standard in [docs/working-agreement.md](docs/working-agreement.md#merge-standard).
-4. Posts a daily status at 18:00 IST on the `Daily status` issue.
+**Dispatcher** (Claude): once each weekday at about 10:50 IST.
+1. Reviews every new PR commit against the Merge standard in [docs/working-agreement.md](docs/working-agreement.md#merge-standard).
+2. Writes an `agent-brief` on any owned ticket that has none.
+3. Hands Codex at most one ticket from the current sprint (a mention with the brief's prompt), and works one `owner:claude` ticket directly.
 
 **What you must do after you are handed a ticket:**
 
 | By | You post | If you don't |
 |---|---|---|
 | Your first response | A **started** update on the issue | — |
-| 24 hours | A PR (and a **PR opened** update), or a **blocked** update with the exact error | The dispatcher posts a stale-check and hands you the ticket again |
+| 24 hours | A PR (and a **PR opened** update), or a **blocked** update with the exact error | The Board keeper posts a stale-check, and the ticket is handed to you again |
 | 48 hours | Same | Handed over once more |
 | After two hand-overs with no reply | — | The ticket is listed for Ravi, who may reassign it |
 
