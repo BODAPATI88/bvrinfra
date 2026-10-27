@@ -82,6 +82,21 @@ export const done: Entry[] = [
     title: "New cluster backed up",
     body: "The rebuilt cluster's three machines were backed up to the second disk for the first time. They run no applications yet and are rebuilt from code, so the off-site copy waits for the first service that stores data.",
   },
+  {
+    date: "26 Oct 2026",
+    title: "Routine checks move to a free workflow",
+    body: "Stale-ticket checks, handing articles to the writing agent and the daily status table now run as a scheduled GitHub Actions workflow with no AI. PR reviews and briefs still go through Claude.",
+  },
+  {
+    date: "27 Oct 2026",
+    title: "Tunnel connector updated, and a hidden DNS fault fixed",
+    body: "The connector that links the homelab to Cloudflare was 22 months old, outside Cloudflare's one-year support window. The update exposed a fault that had been there unnoticed: the cluster could not resolve outside names, because its DNS server ignored the cluster's queries. The homelab origin was down for 7 minutes while the Pages copy served the site. The cluster now uses a different DNS server, set in code, and two connectors run so an update no longer takes the origin down.",
+  },
+  {
+    date: "27 Oct 2026",
+    title: "Version checks on a schedule",
+    body: "A monthly workflow opens a ticket when the connector is three months behind, and every workflow moved to Node 24 actions before the old runtime caused trouble.",
+  },
 ];
 
 export const next: Entry[] = [
