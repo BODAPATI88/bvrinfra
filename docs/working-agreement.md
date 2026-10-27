@@ -79,6 +79,22 @@ Assignment is automatic inside these limits. Change a limit with a PR to this fi
 
 Only people with write access can add the `jules` label that starts Jules. Keep write access to Ravi alone.
 
+## Board keeper
+
+The rule-based part of the dispatcher runs as a GitHub Actions workflow with no AI: [`.github/workflows/board-keeper.yml`](../.github/workflows/board-keeper.yml), logic in [`.github/scripts/board-keeper.js`](../.github/scripts/board-keeper.js). It uses only the workflow's own `GITHUB_TOKEN`, with permission to write issues and read everything else. It cannot merge, approve, push or change settings.
+
+It runs every hour from 10:00 to 18:00 IST, Monday to Friday, and on each run it:
+
+1. **Stale-checks** any ticket handed to Jules or Codex more than 24 hours ago that has no PR and no comment of any kind in the last 24 hours. One comment per ticket per day, starting `<!-- stale-check YYYY-MM-DD -->`. Tickets labelled `blocked`, and tickets no longer owned by that agent, are skipped.
+2. **Dispatches to Jules:** adds the `jules` label to the highest-priority eligible ticket in the current sprint that is owned by `owner:gemini` alone and has an `agent-brief` by BODAPATI88, but only when Jules has no open PR and no other dispatched ticket still open. A ticket with a second owner label is a hand-off (Ravi's part comes first), so it is never dispatched automatically; remove the other owner label when that part is done.
+3. **Posts the daily status** on the `Daily status` issue on the first run at or after 18:00 IST: the **By agent** table, open PRs, approvals, what waits on Ravi, stale tickets and untrusted issue numbers. Once a day.
+
+"Eligible" is the same test as above: opened by BODAPATI88, not `untrusted` or `blocked`, has a **Done when** list, and has `approved` if it is P0, P1, size:L, type:infra or type:security.
+
+To try it without changing anything: Actions → Board keeper → Run workflow, with **dry run** ticked. The run summary lists what it would do. Every PR that changes the workflow also runs a dry run against the live board.
+
+**What still needs Claude:** reviewing PRs against the merge standard, writing `agent-brief` comments, triage (owner, type, priority and size labels), the auto-approve band, mentioning Codex with a brief's prompt, and working `owner:claude` tickets. The workflow reads labels and markers, not the text of a brief, so a brief that says "wait for X" still needs a person or Claude to hold the ticket (`blocked`).
+
 ## Rules
 
 1. **No ticket, no PR.** Every PR description starts with `Closes #N`, which closes the ticket on merge.

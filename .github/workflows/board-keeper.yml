@@ -1,0 +1,85 @@
+name: Board keeper
+
+# The rule-based part of the dispatcher, with no AI (bvrinfra#86):
+# stale-checks, the `jules` label for dispatch, and the daily status table.
+# PR reviews and briefs still need Claude. Logic: .github/scripts/board-keeper.js.
+# See "Schedule and checks" in AGENTS.md and "Board keeper" in docs/working-agreement.md.
+on:
+  schedule:
+    - cron: "30 4-12 * * 1-5" # hourly 10:00–18:00 IST, Monday to Friday
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Only print what it would do (no comments, no labels)"
+        type: boolean
+        default: true
+      post_status:
+        description: "Post the daily status now, even before 18:00 IST"
+        type: boolean
+        default: false
+  pull_request:
+    paths:
+      - ".github/scripts/board-keeper.js"
+      - ".github/scripts/test/**"
+      - ".github/workflows/board-keeper.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: board-keeper-${{ github.event_name == 'pull_request' && github.ref || 'main' }}
+  cancel-in-progress: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Unit tests
+        run: node --test .github/scripts/test/board-keeper.test.js
+
+  # On a PR: read-only dry run against the live board. The job summary shows what it would do.
+  plan:
+    if: github.event_name == 'pull_request'
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const bk = require(`${process.env.GITHUB_WORKSPACE}/.github/scripts/board-keeper.js`);
+            await bk.run({ github, context, core, dryRun: true, forceStatus: true });
+
+  keep:
+    if: github.event_name != 'pull_request'
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/github-script@v7
+        env:
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
+          POST_STATUS: ${{ github.event_name == 'workflow_dispatch' && inputs.post_status || false }}
+        with:
+          script: |
+            const bk = require(`${process.env.GITHUB_WORKSPACE}/.github/scripts/board-keeper.js`);
+            await bk.run({
+              github, context, core,
+              dryRun: process.env.DRY_RUN === "true",
+              forceStatus: process.env.POST_STATUS === "true",
+            });
