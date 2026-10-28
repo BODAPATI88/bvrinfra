@@ -1,0 +1,54 @@
+/* Mockup for #99: mobile-first home page. Overlay on the current build; no text changed. */
+@media (max-width: 40rem) {
+  /* 1. Compact identity: smaller photo and headline, so status is in the first screen */
+  .id-row { align-items: flex-start !important; gap: 0.85rem !important; margin-bottom: 1rem !important; }
+  .photo { width: 4rem !important; border-width: 2px !important; }
+  .id-text .who { margin-bottom: 0.3rem !important; font-size: 0.95rem !important; }
+  .headline { font-size: 1.75rem !important; line-height: 1 !important; margin-bottom: 0.35rem !important; }
+  .stack-line { font-size: 1.05rem !important; margin: 0 !important; }
+
+  /* 2. One status card instead of three stacked cards */
+  .strip { display: grid !important; grid-template-columns: 1fr !important; gap: 0 !important;
+    border: 1px solid var(--rule); border-radius: 10px; background: var(--panel); overflow: hidden; margin-bottom: 1rem !important; }
+  .strip .card { border: 0 !important; border-radius: 0 !important; box-shadow: none !important; background: transparent !important;
+    padding: 0.85rem 1rem !important; }
+  .strip .card + .card { border-top: 1px solid var(--rule) !important; }
+  .strip .facts { display: grid !important; grid-template-columns: 5rem 1fr !important; row-gap: 0.25rem !important; font-size: 0.95rem; }
+  .strip .facts dd { font-size: 0.95rem; }
+  .strip .big { font-size: 1.05rem !important; margin: 0.25rem 0 0.4rem !important; }
+  .strip .units { display: flex !important; flex-wrap: wrap !important; gap: 0.35rem 0.9rem !important; margin: 0 !important; font-size: 0.92rem; }
+  .strip .units .muted { display: none; }
+  .strip .card-head { margin-bottom: 0.2rem !important; }
+  .strip .bar { margin: 0.3rem 0 !important; }
+  .strip .small-text { margin-bottom: 0.25rem !important; }
+
+  /* 3. No duplicate contact buttons: the bottom bar already has WhatsApp, Call and Email */
+  .actions { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 0.5rem !important; }
+  .actions li:nth-child(-n + 3) { display: none !important; }
+  .actions li { grid-column: auto !important; }
+  .actions .btn { width: 100%; justify-content: center; min-height: 2.75rem; }
+  .lede-home { font-size: 1.05rem !important; }
+
+  /* 4. Audience doors as a tappable list, not four tall cards */
+  .doors ul, .doors ol { display: flex !important; flex-direction: column !important; gap: 0 !important;
+    border: 1px solid var(--steel-line); border-radius: 10px; overflow: hidden; background: var(--steel); }
+  .doors li { margin: 0 !important; }
+  .doors li + li { border-top: 1px solid var(--steel-line); }
+  .doors a { display: grid !important; grid-template-columns: 1fr auto !important; align-items: center !important;
+    min-height: 3.5rem !important; height: auto !important; gap: 0.15rem 0.75rem !important; padding: 0.7rem 1rem !important; border: 0 !important; border-radius: 0 !important; box-shadow: none !important; background: transparent !important; }
+  .doors .what { display: none !important; }
+  .doors .who { grid-column: 1; font-size: 0.75rem !important; margin: 0 !important; }
+  .doors .title { grid-column: 1; font-size: 1.02rem !important; }
+  .doors .go { grid-column: 2; grid-row: 1 / span 2; font-size: 0 !important; margin: 0 !important; }
+  .doors .go::after { content: "›"; font-size: 1.6rem; color: var(--cable); }
+
+  /* 5. Live figures as a two-column grid */
+  .live-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 0.5rem !important; }
+  .lv { padding: 0.7rem 0.8rem !important; }
+  .lv-sub { font-size: 0.8rem !important; }
+
+  /* 6. Shorter gaps between sections */
+  .work, .next-reads { margin-top: 2.5rem !important; }
+  .story { margin-top: 2.5rem !important; }
+  .services li { padding: 1rem !important; }
+}
