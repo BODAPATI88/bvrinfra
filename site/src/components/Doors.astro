@@ -1,0 +1,46 @@
+---
+// One front door, four routes: each audience gets its own depth (#98, #99).
+const doors = [
+  { who: "HR and recruiters", title: "Profile, skills and certification", what: "Roles, experience, how deep each skill goes, and a one-tap CV request.", href: "/skills/" },
+  { who: "Managers and stakeholders", title: "Project status report", what: "What was built, the results, open risks and what comes next.", href: "/status-report/" },
+  { who: "Engineers", title: "Architecture and service catalog", what: "How a change reaches production, and every component with its source.", href: "/architecture/" },
+  { who: "Everyone", title: "Status and incidents", what: "Live checks, uptime history and the post-mortem of the September outage.", href: "https://status.bvrinfra.in" },
+];
+---
+<section class="doors" aria-labelledby="doors-h">
+  <h2 id="doors-h">Start where you are</h2>
+  <ul>
+    {doors.map((d) => (
+      <li>
+        <a href={d.href} rel={d.href.startsWith("http") ? "noopener" : undefined}>
+          <span class="who">{d.who}</span>
+          <span class="title">{d.title}</span>
+          <span class="what">{d.what}</span>
+          <span class="go" aria-hidden="true">Open →</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .doors { margin: clamp(2rem, 5vw, 3rem) 0; }
+  .doors h2 { font-size: clamp(1.35rem, 1.1rem + 0.8vw, 1.8rem); font-stretch: 90%; margin-bottom: 1rem; }
+  .doors ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: 1rem; }
+  .doors a {
+    display: flex; flex-direction: column; gap: 0.5rem; height: 100%; box-sizing: border-box;
+    padding: 1.2rem 1.25rem; min-height: 11rem;
+    background: var(--steel); color: var(--steel-ink);
+    border: 1px solid var(--steel-line); border-radius: 10px;
+    text-decoration: none;
+    transition: transform 0.25s ease, border-color 0.25s ease;
+  }
+  .doors a:hover { transform: translateY(-3px); border-color: var(--cable); }
+  .doors a:hover .title { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.2em; }
+  .who { font-size: 0.8rem; font-weight: 650; letter-spacing: 0.08em; text-transform: uppercase; color: #2dd4bf; font-stretch: 90%; }
+  .title { font-size: 1.2rem; font-weight: 750; font-stretch: 92%; line-height: 1.2; }
+  .what { color: var(--steel-muted); font-size: 0.95rem; }
+  .go { margin-top: auto; font-weight: 700; font-size: 0.95rem; }
+  @media (prefers-reduced-motion: reduce) { .doors a { transition: none; } .doors a:hover { transform: none; } }
+  @media (forced-colors: active) { .doors a { border-color: CanvasText; } }
+</style>

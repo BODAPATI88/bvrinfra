@@ -1,0 +1,16 @@
+# bvrinfra.in front door (#101). Deployed by hand by Ravi with `npx wrangler deploy` from this folder,
+# after reviewing the PR; never from CI (no Cloudflare token in GitHub, per the working agreement).
+name = "bvrinfra-front-door"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+workers_dev = false
+
+# Only the apex. www keeps going straight to Pages until the apex has run cleanly for a week.
+routes = [
+  { pattern = "bvrinfra.in/*", zone_name = "bvrinfra.in" },
+]
+
+[vars]
+ORIGIN = "https://origin.bvrinfra.in"
+FALLBACK = "https://bvrinfra-5l8.pages.dev"
+TIMEOUT_MS = "2500"

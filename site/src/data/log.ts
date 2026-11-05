@@ -46,15 +46,63 @@ export const done: Entry[] = [
   {
     date: "8 Oct 2026",
     title: "Why this site is static",
-    body: "A write-up explaining the decision to move to a static architecture after the September 2026 outage.",
+    body: "Why the rebuild has no server, what that costs, and what I would revisit.",
     link: { href: "/writing/why-this-site-is-static/", label: "Read the article" },
+  },
+  {
+    date: "8 Oct 2026",
+    title: "Why DNS changes need a manual apply",
+    body: "How 22 stale records led to DNS as code, speculative plans on PRs, and a manual apply gate.",
+    link: { href: "/writing/why-dns-changes-need-a-manual-apply/", label: "Read the article" },
+  },
+  {
+    date: "9 Oct 2026",
+    title: "Why the monitor runs off my hardware",
+    body: "How this site is monitored from the outside, why a monitor needs to survive the system it watches, and what happens when a check fails.",
+    link: { href: "/writing/why-the-monitor-runs-off-my-hardware/", label: "Read the article" },
+  },
+  {
+    date: "10 Oct 2026",
+    title: "First backup restore test",
+    body: "Homelab backups go to a second disk, keeping 7 daily and 4 weekly copies. The latest one was restored as a separate machine with its network cut, and it booted. The old services were then shut down for a rebuild. The backup unit moves to amber, not green: there is no off-site copy yet.",
+  },
+  {
+    date: "12 Oct 2026",
+    title: "Off-site backup copy",
+    body: "The latest homelab backup now also lives in Cloudflare R2, outside the house, with a checksum checked after upload. The unit stays amber until a restore brings the services back.",
+  },
+  {
+    date: "12 Oct 2026",
+    title: "How I split work between AI agents",
+    body: "How parallel AI agents with isolated file lanes and a human merge gate handle tasks in this repository.",
+    link: { href: "/writing/how-i-split-work-between-ai-agents/", label: "Read the article" },
+  },
+  {
+    date: "15 Oct 2026",
+    title: "New cluster backed up",
+    body: "The rebuilt cluster's three machines were backed up to the second disk for the first time. They run no applications yet and are rebuilt from code, so the off-site copy waits for the first service that stores data.",
+  },
+  {
+    date: "26 Oct 2026",
+    title: "Routine checks move to a free workflow",
+    body: "Stale-ticket checks, handing articles to the writing agent and the daily status table now run as a scheduled GitHub Actions workflow with no AI. PR reviews and briefs still go through Claude.",
+  },
+  {
+    date: "27 Oct 2026",
+    title: "Tunnel connector updated, and a hidden DNS fault fixed",
+    body: "The connector that links the homelab to Cloudflare was 22 months old, outside Cloudflare's one-year support window. The update exposed a fault that had been there unnoticed: the cluster could not resolve outside names, because its DNS server ignored the cluster's queries. The homelab origin was down for 7 minutes while the Pages copy served the site. The cluster now uses a different DNS server, set in code, and two connectors run so an update no longer takes the origin down.",
+  },
+  {
+    date: "27 Oct 2026",
+    title: "Version checks on a schedule",
+    body: "A monthly workflow opens a ticket when the connector is three months behind, and every workflow moved to Node 24 actions before the old runtime caused trouble.",
   },
 ];
 
 export const next: Entry[] = [
   {
-    title: "Backups with a tested restore",
-    body: "restic from the homelab to a home drive and one cloud copy, on a systemd timer deployed with Ansible. Done when a full restore has worked, not when the first backup runs.",
+    title: "A full restore",
+    body: "Restore the new cluster from backup with the services running, to prove they come back. The backup unit turns green only after that.",
   },
   {
     title: "Harden the homelab",
@@ -77,6 +125,6 @@ export const later: Entry[] = [
   },
   {
     title: "More write-ups",
-    body: "Short pieces on decisions that shaped this site: why static, why manual apply, and why the monitor runs off my hardware.",
+    body: "Short pieces on decisions that shaped this site: why DNS changes need a manual apply, and why the monitor runs off my hardware.",
   },
 ];

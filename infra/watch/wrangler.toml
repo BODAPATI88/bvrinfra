@@ -1,0 +1,28 @@
+# bvrinfra watch (#109): a second outside monitor that runs on time, every 15 minutes.
+# Deployed by hand by Ravi with `npx wrangler deploy` from this folder, after reviewing the PR;
+# never from CI (no Cloudflare token in GitHub, per the working agreement). Setup: docs/runbooks/watch-worker.md
+name = "bvrinfra-watch"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+workers_dev = false
+
+# No route: this Worker serves no traffic. It only runs on the schedule.
+[triggers]
+crons = ["*/15 * * * *"]
+
+# Remembers the last state between runs. Written only when something changes.
+# Create it once with `npx wrangler kv namespace create WATCH_STATE` and paste the id here.
+[[kv_namespaces]]
+binding = "STATE"
+id = "PASTE_KV_NAMESPACE_ID"
+
+# Sends the alert through Cloudflare Email Routing (#19). The recipient must be a verified
+# destination address; it is set with `npx wrangler secret put ALERT_TO`, never in git.
+[[send_email]]
+name = "MAIL"
+
+[vars]
+TARGET = "https://bvrinfra.in/"
+FROM = "watch@bvrinfra.in"
+TIMEOUT_MS = "10000"
+FAILS_FOR_DOWN = "2"

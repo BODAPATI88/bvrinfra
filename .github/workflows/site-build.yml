@@ -22,11 +22,11 @@ jobs:
       run:
         working-directory: site
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
           cache-dependency-path: site/package-lock.json
 
@@ -38,6 +38,6 @@ jobs:
 
       - name: Check expected pages exist
         run: |
-          for f in index.html projects/index.html contact/index.html skills/index.html log/index.html writing/september-2026-outage/index.html 404.html; do
+          for f in index.html projects/index.html contact/index.html skills/index.html log/index.html status-report/index.html architecture/index.html writing/september-2026-outage/index.html writing/why-this-site-is-static/index.html 404.html; do
             test -s "dist/$f" || { echo "::error::missing dist/$f"; exit 1; }
           done

@@ -1,6 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import Rack from "../components/Rack.astro";
+import NetworkVisualization from "../components/NetworkVisualization.astro";
 ---
 <Base
   jsonLd={{
@@ -10,7 +11,7 @@ import Rack from "../components/Rack.astro";
     jobTitle: "Infrastructure engineer",
     url: "https://bvrinfra.in/",
     address: { "@type": "PostalAddress", addressLocality: "Hyderabad", addressCountry: "IN" },
-    knowsAbout: ["Windows Server", "Active Directory", "VMware vSphere", "Microsoft Azure", "Terraform", "Data-centre operations"],
+    knowsAbout: ["Windows Server", "Active Directory", "VMware vSphere", "Microsoft Azure", "Terraform", "Data-centre operations", "Platform Engineering", "Cloud Infrastructure"],
     hasCredential: {
       "@type": "EducationalOccupationalCredential",
       name: "Microsoft Certified: Windows Server Hybrid Administrator Associate",
@@ -18,137 +19,429 @@ import Rack from "../components/Rack.astro";
     },
     sameAs: ["https://github.com/BODAPATI88", "https://www.linkedin.com/in/ravikishore-b-917b85226/"],
   }}
-  title="Ravi Kishore, infrastructure engineer"
-  description="Infrastructure engineer in Hyderabad. Windows Server, Active Directory, VMware, hybrid Azure, and automation. This site is built and run as infrastructure as code."
+  title="BVR Infra | Engineering the Infrastructure Behind Tomorrow"
+  description="Building reliable cloud infrastructure, automated platforms, and intelligent engineering systems designed for performance, scalability, and resilience."
 >
-  <section class="hero" aria-labelledby="headline">
-    <p class="who">Ravi Kishore, Hyderabad</p>
-    <h1 id="headline" class="headline">I build infrastructure that can be rebuilt.</h1>
+  <div class="hero-wrapper">
+    <NetworkVisualization />
 
-    <div class="intro">
-      <p class="intro-text">
-        I work in infrastructure operations across eight data centre sites in the US and Japan,
-        provisioning VMs, qualifying releases and handling incidents as part of a five-engineer rotation.
-        Next, I want to take that production experience into platform engineering and SRE.
-      </p>
-      <p class="facts">
-        About 9.5 years across Windows Server, Active Directory, VMware vSphere, hybrid Azure and automation.
-        Microsoft Certified: Windows Server Hybrid Administrator Associate.
-      </p>
+    <section class="hero" aria-labelledby="headline">
+      <div class="hero-content">
+        <div class="badge">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="badge-icon"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          <span>Systems Operational</span>
+        </div>
+        <h1 id="headline" class="headline">Engineering the Infrastructure Behind Tomorrow.</h1>
+        <p class="lede">
+          Building reliable cloud infrastructure, automated platforms, and intelligent engineering systems designed for performance, scalability, and resilience.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#infrastructure" class="btn btn-primary">
+            Explore Infrastructure
+          </a>
+          <a href="/projects" class="btn btn-secondary">
+            View Engineering Projects
+          </a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section id="infrastructure" class="features" aria-labelledby="features-title">
+    <h2 id="features-title" class="section-title">Core Architecture</h2>
+    <p class="section-desc">The foundation of our platform engineering ecosystem.</p>
+
+    <div class="feature-grid">
+      <a href="/skills" class="feature-card">
+        <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg></div>
+        <h3>Cloud Infrastructure</h3>
+        <p>Enterprise-grade hybrid cloud environments spanning Azure and on-premises data centers.</p>
+      </a>
+
+      <a href="/projects" class="feature-card">
+        <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg></div>
+        <h3>Container Platforms</h3>
+        <p>Kubernetes orchestration and containerized workloads optimized for high availability.</p>
+      </a>
+
+      <a href="/log" class="feature-card">
+        <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" x2="20" y1="19" y2="19"/></svg></div>
+        <h3>Infrastructure as Code</h3>
+        <p>Immutable infrastructure managed entirely through Terraform and automated pipelines.</p>
+      </a>
+
+      <a href="/projects" class="feature-card">
+        <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="8" x="3" y="3" rx="2"/><path d="M7 11v4a2 2 0 0 0 2 2h4"/><rect width="8" height="8" x="13" y="13" rx="2"/></svg></div>
+        <h3>CI/CD & GitOps</h3>
+        <p>Continuous integration and delivery workflows enforcing quality and reliability.</p>
+      </a>
+
+      <a href="https://status.bvrinfra.in" class="feature-card">
+        <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+        <h3>Observability</h3>
+        <p>Comprehensive monitoring, metrics, and alerting to maintain system health.</p>
+      </a>
+
+      <a href="/skills" class="feature-card">
+        <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg></div>
+        <h3>Reliability Engineering</h3>
+        <p>Automated recovery, incident response, and resilient system design.</p>
+      </a>
     </div>
+  </section>
 
+  <section class="live-env" aria-labelledby="env-title">
+    <div class="env-header">
+      <h2 id="env-title">Live Engineering Environment</h2>
+      <p>This site operates on the same infrastructure principles we build for production.</p>
+    </div>
     <Rack />
   </section>
 
-  <section class="story" aria-labelledby="why">
-    <h2 id="why">Why this site is built like this</h2>
-    <div class="prose">
-      <p>
-        In September 2026 the previous version of bvrinfra.in disappeared with the machine it ran on.
-        There was no backup, and nothing described the setup well enough to rebuild it.
-      </p>
-      <p>
-        This version is the fix. Everything is in one repository, every change goes through a pull request,
-        and the rack above only lights a unit once it is actually running. Open any unit to see how it works.
-        The decisions are written up in <a href="https://github.com/BODAPATI88/bvrinfra/blob/main/docs/adr/0001-bvrinfra-architecture.md">ADR 0001</a>.
-      </p>
+  <section class="philosophy" aria-labelledby="philosophy-title">
+    <div class="philosophy-content">
+      <h2 id="philosophy-title" class="section-title">Infrastructure engineered for reliability, not just deployment.</h2>
+
+      <div class="principles">
+        <div class="principle">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="principle-icon"><polyline points="4 17 10 11 4 5"/><line x1="12" x2="20" y1="19" y2="19"/></svg>
+          <div>
+            <h4>Automation first</h4>
+            <p>Manual processes are technical debt. We automate provisioning, configuration, and recovery.</p>
+          </div>
+        </div>
+        <div class="principle">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="principle-icon"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          <div>
+            <h4>Observability by design</h4>
+            <p>You cannot fix what you cannot see. Metrics and logs are built into the foundation.</p>
+          </div>
+        </div>
+        <div class="principle">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="principle-icon"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+          <div>
+            <h4>Security by default</h4>
+            <p>Identity boundaries, zero-trust principles, and automated compliance checks.</p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <section class="next-reads" aria-labelledby="read-next">
-    <h2 id="read-next">Read next</h2>
-    <ul>
-      <li>
-        <a href="/writing/september-2026-outage/">
-          <span class="nr-kind">Post-mortem</span>
-          <span class="nr-title">The September 2026 outage</span>
-          <span class="nr-desc">What failed, why nothing could be restored, and what changed.</span>
-        </a>
-      </li>
-      <li>
-        <a href="/skills/">
-          <span class="nr-kind">Skills</span>
-          <span class="nr-title">What I know, and how deep it goes</span>
-          <span class="nr-desc">About 9.5 years, from Windows and VMware to data-centre operations.</span>
-        </a>
-      </li>
-      <li>
-        <a href="/log/">
-          <span class="nr-kind">Build log</span>
-          <span class="nr-title">Done, next and later</span>
-          <span class="nr-desc">Every step of the rebuild with dates, and what comes after backups.</span>
-        </a>
-      </li>
-    </ul>
+  <section class="tech-stack" aria-labelledby="stack-title">
+    <h2 id="stack-title" class="section-title">Technology Ecosystem</h2>
+
+    <div class="tech-grid">
+      <div class="tech-item"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg><span>Microsoft Azure</span></div>
+      <div class="tech-item"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg><span>Proxmox</span></div>
+      <div class="tech-item"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M10 4v4"/><path d="M2 8h20"/><path d="M6 4v4"/></svg><span>Kubernetes</span></div>
+      <div class="tech-item"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" x2="20" y1="19" y2="19"/></svg><span>Terraform</span></div>
+      <div class="tech-item"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="8" x="3" y="3" rx="2"/><path d="M7 11v4a2 2 0 0 0 2 2h4"/><rect width="8" height="8" x="13" y="13" rx="2"/></svg><span>GitHub Actions</span></div>
+      <div class="tech-item"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span>Prometheus</span></div>
+      <div class="tech-item"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg><span>Linux</span></div>
+      <div class="tech-item"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg><span>ArgoCD</span></div>
+    </div>
+  </section>
+
+  <section class="cta-final" aria-labelledby="cta-title">
+    <div class="cta-content">
+      <h2 id="cta-title">Let's Build Something Reliable.</h2>
+      <p>Explore the infrastructure, architecture, and engineering systems powering BVR Infra.</p>
+
+      <div class="hero-actions">
+        <a href="/projects" class="btn btn-primary">Explore Projects</a>
+        <a href="/contact" class="btn btn-secondary">Get in Touch</a>
+      </div>
+    </div>
   </section>
 </Base>
 
 <style>
-  .who {
-    color: var(--muted); font-stretch: 85%;
-    margin-bottom: 0.9rem;
+  /* Base structural styles */
+  .hero-wrapper {
+    position: relative;
+    padding: clamp(3rem, 10vw, 8rem) 0 clamp(4rem, 12vw, 10rem);
+    border-bottom: 1px solid var(--rule);
+    margin-top: calc(-1 * max(1rem, env(safe-area-inset-top)) - 44px - 2rem);
+    padding-top: calc(clamp(3rem, 10vw, 8rem) + max(1rem, env(safe-area-inset-top)) + 44px);
   }
+
+  .hero {
+    position: relative;
+    z-index: 1;
+    max-width: 52rem;
+  }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.35rem 0.75rem;
+    background: color-mix(in srgb, var(--led-live) 15%, transparent);
+    color: var(--led-live);
+    border-radius: 99px;
+    font-size: 0.85rem; font-weight: 700; font-stretch: 85%;
+    margin-bottom: 1.5rem;
+    border: 1px solid color-mix(in srgb, var(--led-live) 30%, transparent);
+  }
+
+  .badge-icon { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+  @keyframes pulse { 50% { opacity: 0.5; } }
+
   .headline {
-    /* Sized to the viewport so the longest word, "infrastructure", always fits on one line. */
-    font-size: clamp(1.9rem, 8.4vw, 7.5rem);
-    font-stretch: 125%;
+    font-size: clamp(2.2rem, 5.5vw, 4.5rem);
+    font-stretch: 110%;
     font-weight: 800;
     letter-spacing: -0.035em;
-    line-height: 0.95;
-    margin-bottom: clamp(1.5rem, 4vw, 2.75rem);
-    max-width: 14ch;
+    line-height: 1.05;
+    margin-bottom: 1.25rem;
     text-wrap: balance;
-    overflow-wrap: break-word;
-    hyphens: manual;
   }
-  .intro {
-    display: grid;
-    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-    gap: clamp(1rem, 4vw, 4rem);
-    align-items: start;
-    margin-bottom: clamp(2rem, 5vw, 3.5rem);
-  }
-  .intro-text {
-    font-size: clamp(1.1rem, 1rem + 0.45vw, 1.35rem);
-    line-height: 1.5;
-    max-width: 34em;
-    margin: 0;
-  }
-  .facts { color: var(--muted); max-width: 30em; margin: 0; }
 
-  .story {
-    margin-top: clamp(3.5rem, 8vw, 6rem);
-    padding-top: 2rem;
-    border-top: 1px solid var(--rule);
+  .lede {
+    font-size: clamp(1.1rem, 2vw, 1.35rem);
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 38ch;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-actions {
+    display: flex; gap: 1rem; flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 0.8rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 650; font-stretch: 90%;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .btn-primary {
+    background: var(--cable);
+    color: #fff;
+    border: 1px solid var(--cable);
+  }
+
+  .btn-primary:hover {
+    background: color-mix(in srgb, var(--cable) 85%, #000);
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--cable) 30%, transparent);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--rule);
+  }
+
+  .btn-secondary:hover {
+    background: var(--panel);
+    border-color: var(--muted);
+    text-decoration: none;
+  }
+
+  /* Sections common */
+  section:not(.hero) {
+    padding-block: clamp(3.5rem, 8vw, 6rem);
+  }
+
+  .section-title {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-stretch: 105%;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+  }
+
+  .section-desc {
+    color: var(--muted);
+    font-size: 1.1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  /* Features grid */
+  .feature-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+    gap: 1.25rem;
+  }
+
+  .feature-card {
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    padding: 1.75rem;
+    color: var(--ink);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: flex; flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .feature-card::before {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(800px circle at var(--mouse-x, 0) var(--mouse-y, 0), color-mix(in srgb, var(--cable) 8%, transparent), transparent 40%);
+    opacity: 0; transition: opacity 0.3s ease;
+  }
+
+  .feature-card:hover {
+    border-color: var(--cable);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px -8px color-mix(in srgb, var(--ink) 15%, transparent);
+  }
+
+  .feature-card:hover::before { opacity: 1; }
+
+  .feature-card:hover h3 { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.2em; }
+
+  .feature-icon {
+    color: var(--cable);
+    margin-bottom: 1.25rem;
+    background: color-mix(in srgb, var(--cable) 10%, transparent);
+    width: 3rem; height: 3rem;
+    border-radius: 8px;
+    display: grid; place-items: center;
+  }
+
+  .feature-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .feature-card p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  /* Live Env */
+  .live-env {
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .env-header {
+    margin-bottom: 2.5rem;
+    max-width: 40rem;
+  }
+
+  .env-header h2 {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    margin-bottom: 0.5rem;
+  }
+
+  .env-header p {
+    color: var(--muted);
+    font-size: 1.1rem;
+  }
+
+  /* Philosophy */
+  .philosophy {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .philosophy-content h2 { max-width: 25ch; margin-bottom: 2.5rem; }
+
+  .principles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
     gap: 2rem;
   }
-  .story h2 {
-    font-size: clamp(1.35rem, 1.1rem + 0.8vw, 1.8rem);
-    font-stretch: 90%;
-    max-width: 14ch;
+
+  .principle {
+    display: flex; gap: 1rem; align-items: flex-start;
   }
 
-  .next-reads { margin-top: clamp(3rem, 7vw, 5rem); }
-  .next-reads h2 { font-size: clamp(1.35rem, 1.1rem + 0.8vw, 1.8rem); font-stretch: 90%; margin-bottom: 1.25rem; }
-  .next-reads ul {
-    list-style: none; margin: 0; padding: 0;
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); gap: 1rem;
+  .principle-icon {
+    color: var(--cable);
+    flex-shrink: 0;
+    margin-top: 0.15rem;
   }
-  .next-reads a {
-    display: flex; flex-direction: column; gap: 0.35rem; height: 100%;
-    padding: 1.2rem 1.25rem 1.3rem;
-    background: var(--panel); border: 1px solid var(--rule); border-radius: 8px;
-    color: var(--ink); text-decoration: none;
-  }
-  .next-reads a:hover { border-color: var(--ink); }
-  .next-reads a:hover .nr-title { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.2em; }
-  .nr-kind { color: var(--muted); font-size: 0.85rem; font-stretch: 85%; }
-  .nr-title { font-weight: 750; font-size: 1.2rem; font-stretch: 92%; line-height: 1.2; }
-  .nr-desc { color: var(--muted); font-size: 0.95rem; }
 
-  @media (max-width: 52rem) {
-    .intro, .story { grid-template-columns: 1fr; }
+  .principle h4 { font-size: 1.1rem; margin-bottom: 0.25rem; }
+  .principle p { color: var(--muted); font-size: 0.95rem; margin: 0; }
+
+  /* Tech Stack */
+  .tech-stack {
+    border-top: 1px solid var(--rule);
+    text-align: center;
+  }
+
+  .tech-stack .section-title { margin-bottom: 2.5rem; }
+
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+    gap: 1rem;
+  }
+
+  .tech-item {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem;
+    padding: 1.5rem;
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    color: var(--muted);
+    transition: all 0.2s ease;
+  }
+
+  .tech-item:hover {
+    color: var(--ink);
+    border-color: var(--muted);
+    background: var(--aisle);
+  }
+
+  .tech-item span { font-size: 0.9rem; font-weight: 600; font-stretch: 90%; }
+
+  /* CTA */
+  .cta-final {
+    border-top: 1px solid var(--rule);
+    text-align: center;
+    padding-block: clamp(4rem, 10vw, 7rem) clamp(3rem, 8vw, 5rem);
+  }
+
+  .cta-content {
+    max-width: 36rem;
+    margin-inline: auto;
+  }
+
+  .cta-content h2 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin-bottom: 1rem;
+  }
+
+  .cta-content p {
+    color: var(--muted);
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+  }
+
+  .cta-content .hero-actions {
+    justify-content: center;
+  }
+
+  /* Utilities */
+  @media (prefers-reduced-motion: reduce) {
+    .feature-card:hover { transform: none; }
+    .btn-primary:hover { transform: none; }
   }
 </style>
+
+<script>
+  // Add subtle mouse tracking effect for cards
+  const cards = document.querySelectorAll('.feature-card');
+  cards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      (card as HTMLElement).style.setProperty('--mouse-x', `${x}px`);
+      (card as HTMLElement).style.setProperty('--mouse-y', `${y}px`);
+    });
+  });
+</script>

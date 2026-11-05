@@ -1,0 +1,106 @@
+---
+---
+<div class="network-viz" aria-hidden="true">
+  <svg class="nodes-container" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <!-- Lines -->
+    <path d="M150 150 L350 250 L550 150 L400 450 Z" class="connection" />
+    <path d="M150 150 L100 350 L400 450 L650 350 L550 150" class="connection" />
+    <path d="M350 250 L400 450 L650 350" class="connection" />
+    <path d="M100 350 L350 250" class="connection" />
+
+    <!-- Nodes -->
+    <g class="node n1"><circle cx="150" cy="150" r="6" /><circle cx="150" cy="150" r="14" class="pulse" /></g>
+    <g class="node n2"><circle cx="350" cy="250" r="8" /><circle cx="350" cy="250" r="18" class="pulse" /></g>
+    <g class="node n3"><circle cx="550" cy="150" r="6" /><circle cx="550" cy="150" r="14" class="pulse" /></g>
+    <g class="node n4"><circle cx="100" cy="350" r="5" /><circle cx="100" cy="350" r="12" class="pulse" /></g>
+    <g class="node n5"><circle cx="400" cy="450" r="10" /><circle cx="400" cy="450" r="22" class="pulse" /></g>
+    <g class="node n6"><circle cx="650" cy="350" r="7" /><circle cx="650" cy="350" r="16" class="pulse" /></g>
+
+    <!-- Data packets -->
+    <circle cx="150" cy="150" r="3" class="packet p1" />
+    <circle cx="350" cy="250" r="3" class="packet p2" />
+    <circle cx="550" cy="150" r="3" class="packet p3" />
+    <circle cx="100" cy="350" r="3" class="packet p4" />
+  </svg>
+</div>
+
+<style>
+  .network-viz {
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    z-index: 0;
+    overflow: hidden;
+    opacity: 0.15;
+    pointer-events: none;
+  }
+  .nodes-container {
+    width: 100%;
+    height: 100%;
+    min-width: 800px;
+    transform-origin: center right;
+  }
+
+  .connection {
+    fill: none;
+    stroke: var(--cable);
+    stroke-width: 1.5;
+    stroke-dasharray: 4 4;
+    animation: dash 30s linear infinite;
+  }
+
+  .node circle {
+    fill: var(--cable);
+  }
+  .node .pulse {
+    fill: none;
+    stroke: var(--cable);
+    stroke-width: 1.5;
+    transform-origin: center;
+    animation: ping 3s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+
+  .n1 .pulse { animation-delay: 0s; }
+  .n2 .pulse { animation-delay: 0.5s; }
+  .n3 .pulse { animation-delay: 1s; }
+  .n4 .pulse { animation-delay: 1.5s; }
+  .n5 .pulse { animation-delay: 2s; }
+  .n6 .pulse { animation-delay: 2.5s; }
+
+  .packet {
+    fill: var(--led-live);
+    filter: drop-shadow(0 0 4px var(--led-live));
+  }
+
+  .p1 { animation: travel1 4s linear infinite; }
+  .p2 { animation: travel2 5s linear infinite; }
+  .p3 { animation: travel3 3s linear infinite; }
+  .p4 { animation: travel4 6s linear infinite; }
+
+  @keyframes dash {
+    to { stroke-dashoffset: -100; }
+  }
+  @keyframes ping {
+    75%, 100% { transform: scale(2); opacity: 0; }
+  }
+  @keyframes travel1 {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(200px, 100px); }
+  }
+  @keyframes travel2 {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(200px, -100px); }
+  }
+  @keyframes travel3 {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(100px, 200px); }
+  }
+  @keyframes travel4 {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(300px, 100px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .connection, .pulse, .packet { animation: none; }
+    .packet { display: none; }
+  }
+</style>

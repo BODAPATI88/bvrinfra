@@ -14,7 +14,7 @@ laptop ──PR──▶ GitHub (this repo, main protected)
                  └─ HCP Terraform ──── Cloudflare DNS (manual apply)
 
 BODAPATI88/status (Upptime)
-  GitHub Actions checks bvrinfra.in every 5 min → status.bvrinfra.in
+  GitHub Actions checks bvrinfra.in (scheduled every 5 min; every few hours in practice) → status.bvrinfra.in
 
 homelab (separate repo: infra-homelab, private while hardened)
   Proxmox host, services on Docker Compose (K3s decommissioned Sep 2026)

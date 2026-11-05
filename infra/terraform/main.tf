@@ -34,23 +34,78 @@ locals {
     dmarc = {
       name    = "_dmarc.bvrinfra.in"
       type    = "TXT"
-      content = "v=DMARC1; p=quarantine; adkim=r; aspf=r; rua=mailto:dmarc_rua@onsecureserver.net;"
+      content = "v=DMARC1; p=quarantine; adkim=r; aspf=r;"
       proxied = false
       comment = "Email: DMARC policy"
+    }
+
+    # GitHub Pages domain verification for the BODAPATI88 account (#20).
+    # Stops another GitHub account from claiming an unused bvrinfra.in subdomain.
+    # Values are exactly what GitHub's Pages settings asked for. GitHub shows
+    # the name with the account's capitals; DNS names are case-insensitive, so
+    # it is written in lowercase like the other records.
+    github_pages_verify = {
+      name    = "_github-pages-challenge-bodapati88.bvrinfra.in"
+      type    = "TXT"
+      content = "325e5d5bb189c0486f95109d1bbbb0"
+      proxied = false
+      comment = "GitHub Pages: domain verification"
+    }
+
+    # Cloudflare Email Routing: hello@bvrinfra.in forwards to Ravi's inbox.
+    # Values are exactly what the Email Routing dashboard asked for (#19).
+    # The 3 MX and the DKIM record are locked by Email Routing, which strips
+    # comments and stores DKIM as two quoted 255-character chunks. They match
+    # that stored form here, so plans stay clean (#55). Don't add comments or
+    # join the DKIM chunks. SPF is not locked and keeps its comment.
+    mx_route1 = {
+      name     = "bvrinfra.in"
+      type     = "MX"
+      content  = "route1.mx.cloudflare.net"
+      priority = 91
+      proxied  = false
+    }
+    mx_route2 = {
+      name     = "bvrinfra.in"
+      type     = "MX"
+      content  = "route2.mx.cloudflare.net"
+      priority = 90
+      proxied  = false
+    }
+    mx_route3 = {
+      name     = "bvrinfra.in"
+      type     = "MX"
+      content  = "route3.mx.cloudflare.net"
+      priority = 12
+      proxied  = false
+    }
+    spf = {
+      name    = "bvrinfra.in"
+      type    = "TXT"
+      content = "v=spf1 include:_spf.mx.cloudflare.net ~all"
+      proxied = false
+      comment = "Email: Cloudflare Email Routing"
+    }
+    dkim_cf2024 = {
+      name    = "cf2024-1._domainkey.bvrinfra.in"
+      type    = "TXT"
+      content = "\"v=DKIM1; h=sha256; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAiweykoi+o48IOGuP7GR3X0MOExCUDY/BCRHoWBnh3rChl7WhdyCxW3jgq1daEjPPqoi7sJvdg5hEQVsgVRQP4DcnQDVjGMbASQtrY4WmB1VebF+RPJB2ECPsEDTpeiI5ZyUAwJaVX7r6bznU67g7LvFq35yIo4sdlmtZGV+i0H4cpYH9+3JJ78k\" \"m4KXwaf9xUJCWF6nxeD+qG6Fyruw1Qlbds2r85U9dkNDVAS3gioCvELryh1TxKGiVTkg4wqHTyHfWsp7KD3WQHYJn0RyfJJu6YEmL77zonn7p2SRMvTMP3ZEXibnC9gz3nnhR6wcYL8Q7zXypKTMD58bTixDSJwIDAQAB\""
+      proxied = false
     }
   }
 }
 
 resource "cloudflare_dns_record" "this" {
-  for_each = local.records
+  for_each = merge(local.records, local.origin_record)
 
-  zone_id = local.zone_id
-  name    = each.value.name
-  type    = each.value.type
-  content = each.value.content
-  proxied = each.value.proxied
-  ttl     = 1 # 1 = automatic
-  comment = each.value.comment
+  zone_id  = local.zone_id
+  name     = each.value.name
+  type     = each.value.type
+  content  = each.value.content
+  priority = try(each.value.priority, null)
+  proxied  = each.value.proxied
+  ttl      = 1 # 1 = automatic
+  comment  = try(each.value.comment, null)
 
   lifecycle {
     # Deleting the apex or www takes the site down. Terraform refuses to plan

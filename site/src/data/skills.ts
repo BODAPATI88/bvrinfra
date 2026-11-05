@@ -10,7 +10,7 @@ export const skills: SkillGroup[] = [
   {
     area: "Windows Server and identity",
     tools: ["Windows Server", "Active Directory", "Microsoft 365"],
-    depth: "The core of my enterprise work. Certified Windows Server Hybrid Administrator (AZ-800 and AZ-801).",
+    depth: "The core of my enterprise work. Microsoft Certified Windows Server Administrator Associate (AZ-800 and AZ-801).",
   },
   {
     area: "Virtualisation",

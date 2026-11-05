@@ -4,6 +4,9 @@
 // Each unit expands on the page, so a visitor can understand it without leaving the site.
 // `source` is the optional last step: where to check the claim on GitHub.
 
+import { dnsRecordCount } from "./dns";
+const dnsRecords = dnsRecordCount();
+
 export type Status = "live" | "building" | "planned";
 
 export interface Unit {
@@ -12,7 +15,7 @@ export interface Unit {
   status: Status;
   how: string;
   flow: string[];
-  facts: { label: string; value: string }[];
+  facts: { label: string; value: string; href?: string }[];
   proves: string;
   source?: { href: string; label: string };
 }
@@ -20,17 +23,20 @@ export interface Unit {
 export const stack: Unit[] = [
   {
     name: "Site",
-    detail: "Static Astro on Cloudflare Pages",
+    detail: "Astro, served from the homelab, Cloudflare Pages as fallback",
     status: "live",
-    how: "Every page is plain HTML generated at build time. When a change lands on main, Cloudflare Pages builds the site and serves it from its edge network. There is no server of mine in the path, so there is nothing to patch and nothing to keep powered on.",
-    flow: ["Merge to main", "Pages build", "Edge network", "Visitor"],
+    how: "Every page is plain HTML generated at build time. Since 17 October 2026, bvrinfra.in is served from my homelab: CI builds the site into an nginx container image, which runs on the K3s cluster and is reached through a Cloudflare Tunnel that opens no ports at home. A Cloudflare Worker sits in front of every request. It tries the homelab first, and if that takes more than 2.5 seconds, returns a server error or the tunnel is down, it serves the same build from Cloudflare Pages instead. A response header, X-Served-By, says which one answered.",
+    flow: ["Merge to main", "Image build", "Worker", "Homelab, or Pages if down", "Visitor"],
     facts: [
-      { label: "Hosting", value: "Cloudflare Pages, free tier" },
+      { label: "Primary", value: "nginx on K3s, through a Cloudflare Tunnel" },
+      { label: "Fallback", value: "Cloudflare Pages, same build" },
+      { label: "Switch", value: "Cloudflare Worker, header X-Served-By" },
       { label: "Third-party requests", value: "None (fonts self-hosted)" },
       { label: "Themes", value: "Auto, light, dark" },
       { label: "Back online", value: "8 October 2026" },
+      { label: "Quality checks", value: "Lighthouse and axe on every pull request", href: "https://github.com/BODAPATI88/bvrinfra/actions/workflows/quality.yml" },
     ],
-    proves: "The public site can't go down with my homelab. That dependency is what took the last version offline.",
+    proves: "The site runs on my own platform but doesn't depend on it. On 17 October 2026 I shut down the homelab machine that serves it, and the site kept loading from the Pages copy; when the machine came back, the homelab answered again.",
     source: { href: "https://github.com/BODAPATI88/bvrinfra/tree/main/site", label: "Site source on GitHub" },
   },
   {
@@ -55,7 +61,7 @@ export const stack: Unit[] = [
     how: "All DNS records for bvrinfra.in are defined in Terraform. A pull request gets a plan from HCP Terraform showing the exact change. After merge, the apply waits for a person to confirm it. Every record is protected against accidental deletion.",
     flow: ["Edit records", "Plan on PR", "Merge", "Manual apply", "Cloudflare DNS"],
     facts: [
-      { label: "Records managed", value: "4" },
+      { label: "Records managed", value: dnsRecords ? String(dnsRecords) : "Counted from Terraform at build time" },
       { label: "Dead records removed", value: "22, on 8 October 2026" },
       { label: "Apply", value: "Manual, never automatic" },
       { label: "API token scope", value: "DNS edit on this one zone" },
@@ -67,29 +73,31 @@ export const stack: Unit[] = [
     name: "Monitoring",
     detail: "Upptime on GitHub Actions",
     status: "live",
-    how: "Every five minutes a scheduled GitHub Actions job requests three pages of this site and records the result. If a check fails, it opens an issue, which emails me; when the site recovers, the issue closes. The results publish to a public status page.",
-    flow: ["Every 5 min", "Check 3 URLs", "Record result", "Issue if down", "Status page"],
+    how: "A scheduled GitHub Actions job requests three pages of this site and records the result. It is scheduled every five minutes, but GitHub delays and drops scheduled runs, so in practice it runs every few hours. If a check fails, it opens an issue, which emails me; when the site recovers, the issue closes. The results publish to a public status page.",
+    flow: ["Every few hours", "Check 3 URLs", "Record result", "Issue if down", "Status page"],
     facts: [
       { label: "URLs checked", value: "Home, www, Projects" },
-      { label: "Interval", value: "5 minutes (GitHub may delay)" },
+      { label: "Interval", value: "Scheduled every 5 minutes; every few hours in practice" },
       { label: "Runs on", value: "GitHub, not my hardware" },
       { label: "Status page", value: "status.bvrinfra.in" },
     ],
-    proves: "Outages get noticed and recorded even when my homelab is switched off. A monitor on the machine it watches can't do that.",
+    proves: "Outages that last more than a few hours get recorded even when my homelab is switched off. A monitor on the machine it watches can't do that. A shorter outage can fall between two checks.",
     source: { href: "https://status.bvrinfra.in", label: "Open the status page" },
   },
   {
     name: "Backups",
-    detail: "restic, with a tested restore",
-    status: "planned",
-    how: "The homelab will back up with restic to two places: an external drive at home and one cloud copy. A systemd timer, deployed with Ansible, runs it. This unit turns green only after a full restore from those backups has worked.",
-    flow: ["Homelab", "restic", "Home drive + cloud", "Restore test"],
+    detail: "Daily backups, first restore tested",
+    status: "building",
+    how: "The homelab's three virtual machines are built from code: Terraform creates them and installs the cluster from the repository. Proxmox also backs them up to a second disk in the same host at 02:00 each night, keeping 7 daily and 4 weekly copies; the new cluster's first backup ran on 15 October 2026. On 10 October 2026 I restored a backup of the old system as a separate machine with its network cut, and it booted. The old system's final backup is also stored outside the house, in Cloudflare R2, checked against its checksum. The new cluster runs no applications yet, so it has no application data to copy off-site; that copy starts with the first service that stores data. Still missing: a restore test with the services running.",
+    flow: ["Code in Git", "Cluster", "Nightly backup", "Second disk", "Restore test"],
     facts: [
-      { label: "Copies", value: "2, one off-site" },
-      { label: "Scheduler", value: "systemd timer via Ansible" },
-      { label: "Counts as done when", value: "A restore has been tested" },
+      { label: "Schedule", value: "Daily at 02:00" },
+      { label: "Kept", value: "7 daily, 4 weekly" },
+      { label: "First restore test", value: "10 October 2026, old system, booted" },
+      { label: "Off-site copy", value: "Old system in Cloudflare R2; app data once apps run" },
+      { label: "Counts as done when", value: "A restore brings the services back" },
     ],
-    proves: "This is the unit that would have prevented the September outage, which is why it is last and why it isn't green yet.",
+    proves: "This is the unit that would have prevented the September outage. It stays amber until a restore brings the services back, not just a machine that boots.",
   },
 ];
 

@@ -13,7 +13,7 @@ How work on bvrinfra is planned and split between me and the AI tools I use, so 
 | Group | Labels | Meaning |
 |---|---|---|
 | Owner | `owner:claude` `owner:gemini` `owner:chatgpt` `owner:ravi` | Exactly one *doing* owner. A second owner label means a hand-off (for example, Gemini drafts, Ravi fact-checks). |
-| Type | `type:site` `type:infra` `type:content` `type:ops` `type:security` | What part of the system it touches |
+| Type | `type:site` `type:infra` `type:content` `type:ops` `type:security` `type:feature` | What part of the system it touches; `type:feature` marks a new capability rather than a fix |
 | Priority | `P0` → `P3` | P0 = correctness or trust, first |
 | Size | `size:S` (<1 h) `size:M` (1–3 h) `size:L` (more than a session) | Sizing for sprint planning |
 | State | `blocked` | Waiting on something outside the ticket; the note says what |
@@ -36,6 +36,65 @@ Every agent works in a **lane**, a set of folders it may change, defined in [AGE
 - Agents can open branches and PRs. Only Ravi merges.
 - To revoke an agent: GitHub → Settings → Applications → the app → Configure → remove the repository.
 
+## Pipeline: from ticket to merge
+
+| Step | Who | What happens | Board column |
+|---|---|---|---|
+| 1. Pick | Ravi or dispatcher | Ticket enters **This sprint** with one `owner:` label (Ravi, or the dispatcher inside the auto-approve band) | This sprint |
+| 2. Brief | Dispatcher | Posts an `agent-brief` comment: the exact prompt and steps for the owning agent | This sprint |
+| 3. Start | Board keeper / dispatcher | Hands the ticket to the agent: the Board keeper adds the `jules` label on its hourly weekday run; the daily dispatcher mentions Codex with the brief's prompt, or works Claude's ticket directly | In progress |
+| 4. PR | Agent | Branch `<agent>/<issue>-<name>`, PR starting `Closes #N` | In review |
+| 5. Guard | CI | `build` and `guard` must pass: lane, `Closes #N`, no open `[CHECK]`, no private IPs | In review |
+| 6. Review | Claude | Reads the diff against the issue's **Done when** list, posts approve or change requests | In review |
+| 7. Merge | Ravi | Merges only when both checks are green **and** Claude's latest review has no open items | Done |
+
+Nothing merges itself. Steps 5 and 6 make step 7 a two-minute decision, not a re-review.
+
+### Merge standard
+
+Ravi merges a PR only when all of these hold:
+
+- [ ] `build`, `guard` and the Cloudflare Pages preview are green
+- [ ] Claude's latest review on the current commit says **ready for Ravi to merge**
+- [ ] Every item in the issue's **Done when** list is met
+- [ ] No open `[CHECK]`, no invented facts, no employer or client names, IPs or costs
+- [ ] The agent posted a **done** update on the issue
+- [ ] Ravi opened the preview and read the changed text
+
+If any box is empty, comment what is missing and leave it open.
+
+## Assignment policy
+
+Assignment is automatic inside these limits. Change a limit with a PR to this file.
+
+| Rule | How it works | Enforced by |
+|---|---|---|
+| **Author gate** | Only issues opened by Ravi (BODAPATI88) are eligible. Any other author's issue gets `untrusted` and agents ignore it. | `issue-gate` workflow, no AI |
+| **Approval gate** | `P0`, `P1`, `size:L`, `type:infra` and `type:security` tickets get `needs-approval`. They start only after Ravi adds `approved`. | `issue-gate` workflow, no AI |
+| **Shape gate** | The issue needs a **Done when** list. Without it the dispatcher asks for one and does not assign. | Dispatcher |
+| **Owner by rule** | New article → `owner:gemini`. Wording change in an existing page → `owner:chatgpt`. Code, CI, design → `owner:claude`. Dashboards, credentials, facts → `owner:ravi`. | Dispatcher |
+| **Auto-approve band** | Eligible `P2`/`P3`, `size:S`/`size:M`, `type:site`/`type:content` tickets are added to the current sprint and labelled `auto-approved`. | Dispatcher |
+| **Never automatic** | Terraform, DNS, secrets, `.github/**`, rack status in `stack.ts`. These are always `owner:claude` or `owner:ravi` with `needs-approval`. | Dispatcher + `guard` |
+| **Limits** | One open PR per agent. At most 3 `auto-approved` tickets per agent per sprint. | Dispatcher |
+
+Only people with write access can add the `jules` label that starts Jules. Keep write access to Ravi alone.
+
+## Board keeper
+
+The rule-based part of the dispatcher runs as a GitHub Actions workflow with no AI: [`.github/workflows/board-keeper.yml`](../.github/workflows/board-keeper.yml), logic in [`.github/scripts/board-keeper.js`](../.github/scripts/board-keeper.js). It uses only the workflow's own `GITHUB_TOKEN`, with permission to write issues and read everything else. It cannot merge, approve, push or change settings.
+
+It runs every hour from 10:00 to 18:00 IST, Monday to Friday, and on each run it:
+
+1. **Stale-checks** any ticket handed to Jules or Codex more than 24 hours ago that has no PR and no comment of any kind in the last 24 hours. One comment per ticket per day, starting `<!-- stale-check YYYY-MM-DD -->`. Tickets labelled `blocked`, and tickets no longer owned by that agent, are skipped.
+2. **Dispatches to Jules:** adds the `jules` label to the highest-priority eligible ticket in the current sprint that is owned by `owner:gemini` alone and has an `agent-brief` by BODAPATI88, but only when Jules has no open PR and no other dispatched ticket still open. A ticket with a second owner label is a hand-off (Ravi's part comes first), so it is never dispatched automatically; remove the other owner label when that part is done.
+3. **Posts the daily status** on the `Daily status` issue on the first run at or after 18:00 IST: the **By agent** table, open PRs, approvals, what waits on Ravi, stale tickets and untrusted issue numbers. Once a day.
+
+"Eligible" is the same test as above: opened by BODAPATI88, not `untrusted` or `blocked`, has a **Done when** list, and has `approved` if it is P0, P1, size:L, type:infra or type:security.
+
+To try it without changing anything: Actions → Board keeper → Run workflow, with **dry run** ticked. The run summary lists what it would do. Every PR that changes the workflow also runs a dry run against the live board.
+
+**What still needs Claude**, in the dispatcher scheduled task once each weekday at about 10:50 IST (since 28 Oct 2026, decided on #86): reviewing PRs against the merge standard, writing `agent-brief` comments, triage (owner, type, priority and size labels), the auto-approve band, mentioning Codex with a brief's prompt, and working `owner:claude` tickets. The workflow reads labels and markers, not the text of a brief, so a brief that says "wait for X" still needs a person or Claude to hold the ticket (`blocked`).
+
 ## Rules
 
 1. **No ticket, no PR.** Every PR description starts with `Closes #N`, which closes the ticket on merge.
@@ -45,3 +104,4 @@ Every agent works in a **lane**, a set of folders it may change, defined in [AGE
 5. **Facts before publishing.** AI-drafted text marks assumptions with `[CHECK]`; nothing with an open `[CHECK]` is merged.
 6. **The rack stays honest.** A rack unit changes status in the same PR that ships the work, never ahead of it.
 7. **Sprint review, each Monday:** close what's done, move what isn't, size anything new.
+8. **Progress lives on the ticket.** Every agent comments on its issue when it starts, opens a PR, gets blocked and finishes, in the format in [AGENTS.md](../AGENTS.md#report-on-the-ticket). An agent that can't comment puts the same block in its chat reply for Ravi to paste. The Board keeper flags any dispatched ticket with no update after 24 hours.

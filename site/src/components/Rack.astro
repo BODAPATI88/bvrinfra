@@ -42,7 +42,7 @@ const live = stack.filter((u) => u.status === "live").length;
               {unit.facts.map((f) => (
                 <div>
                   <dt>{f.label}</dt>
-                  <dd>{f.value}</dd>
+                  <dd>{f.href ? <a href={f.href}>{f.value}</a> : f.value}</dd>
                 </div>
               ))}
             </dl>
@@ -191,6 +191,7 @@ const live = stack.filter((u) => u.status === "live").length;
   }
   .facts dt { color: var(--steel-muted); font-size: 0.78rem; font-stretch: 85%; }
   .facts dd { margin: 0.15rem 0 0; font-weight: 650; font-size: 0.95rem; }
+  .facts dd a { color: var(--steel-ink); }
 
   .proves {
     margin: 0; padding-left: 0.9rem;
