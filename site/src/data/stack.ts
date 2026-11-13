@@ -79,6 +79,21 @@ export const stack: Unit[] = [
     source: { href: "https://status.bvrinfra.in", label: "Open the status page" },
   },
   {
+    name: "Autonomous AI Workforce",
+    detail: "3 self-hosted AI agents with private memory",
+    status: "live",
+    how: "Instead of paying thousands of dollars for heavy cloud servers, this platform runs 3 autonomous AI workers on ultra-lightweight private containers. The agents automatically review code, conduct research, and optimize resumes. If the home server ever loses power, the public site keeps running seamlessly from the cloud edge.",
+    flow: ["Task Request", "Security Check", "AI Agent Assignment", "Autonomous Execution", "Private Storage"],
+    facts: [
+      { label: "Cost & Compute", value: "90% less memory than standard cloud setups" },
+      { label: "Active AI Workforce", value: "3 Agents (Code, Career, Research)" },
+      { label: "Data Sovereignty", value: "100% Private (No data leaves private hardware)" },
+      { label: "Network Security", value: "Zero open ports (Bank-grade Cloudflare Shield)" },
+    ],
+    proves: "Companies don't need massive cloud bills or complex server farms to run private, secure AI automation. Smart architecture cuts costs by 90% while keeping data completely private.",
+    source: { href: "https://github.com/BODAPATI88/bvr-nexus", label: "BVR Nexus Architecture" },
+  },
+  {
     name: "Backups",
     detail: "restic, with a tested restore",
     status: "planned",
