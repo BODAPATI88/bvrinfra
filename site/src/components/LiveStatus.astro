@@ -39,7 +39,10 @@ const deployed = new Date().toLocaleDateString("en-GB", { day: "numeric", month:
       <h2 id="live-h">Live Architecture & Reliability</h2>
       <p class="live-tagline">Real-time telemetry from my private silicon and edge network.</p>
     </div>
-    <a class="live-src" href="https://status.bvrinfra.in">External Audit Page</a>
+    <div class="live-links">
+      <a class="live-src" href="#arch-h">Architecture Diagram &darr;</a>
+      <a class="live-src" href="https://status.bvrinfra.in" target="_blank" rel="noopener">Audit Status &rarr;</a>
+    </div>
   </div>
 
   <div class="biz-pill" aria-label="Architecture highlight">
@@ -100,6 +103,7 @@ const deployed = new Date().toLocaleDateString("en-GB", { day: "numeric", month:
   .live-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: 0.6rem; }
   .live-head h2 { font-size: clamp(1.1rem, 1rem + 0.5vw, 1.35rem); font-stretch: 90%; margin: 0; }
   .live-tagline { color: var(--muted); font-size: 0.85rem; margin: 0.2rem 0 0; }
+  .live-links { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; }
   .live-src { font-size: 0.85rem; font-weight: 650; }
 
   .biz-pill {

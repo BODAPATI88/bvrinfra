@@ -90,6 +90,32 @@ const services = [
 
   <LiveStatus />
 
+  <section class="arch-showcase" aria-labelledby="arch-h">
+    <div class="arch-head">
+      <div>
+        <h2 id="arch-h">Hybrid Cloud & Autonomous AI Architecture</h2>
+        <p class="arch-sub">End-to-end topology: Cloudflare Zero-Trust edge failover &rarr; Proxmox VE micro-containers &rarr; autonomous AI workforce.</p>
+      </div>
+      <a class="arch-link" href="/architecture/">Full Service Catalog &rarr;</a>
+    </div>
+    <figure class="arch-fig">
+      <a href="/img/architecture-diagram.jpg" target="_blank" rel="noopener" title="Click to view full-resolution 3D architecture diagram">
+        <img
+          src="/img/architecture-diagram.jpg"
+          alt="BVR Infrastructure Hybrid Cloud and Autonomous AI Workforce Architecture Diagram"
+          width="1200"
+          height="675"
+          loading="lazy"
+          decoding="async"
+        />
+      </a>
+      <figcaption>
+        <span class="fig-title">Interactive Hybrid Topology (Proxmox VE 9.1 + LXC + Cloudflare Edge)</span>
+        <span class="click-hint">Click diagram to open 4K full-resolution view &rarr;</span>
+      </figcaption>
+    </figure>
+  </section>
+
   <section class="glance" aria-label="Experience and certification">
     <dl class="stats" aria-label="At a glance">
       <div class="stat"><dt>Years in infrastructure</dt><dd class="num">9.5</dd></div>
@@ -191,6 +217,79 @@ const services = [
 </Base>
 
 <style>
+  .arch-showcase {
+    max-width: 52rem;
+    margin: 0 0 clamp(2rem, 5vw, 3.5rem);
+    padding: clamp(0.9rem, 2.5vw, 1.25rem);
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    box-shadow: var(--glow);
+  }
+  .arch-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.9rem;
+  }
+  .arch-head h2 {
+    font-size: clamp(1.1rem, 1rem + 0.5vw, 1.35rem);
+    font-stretch: 90%;
+    margin: 0;
+  }
+  .arch-sub {
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin: 0.2rem 0 0;
+  }
+  .arch-link {
+    font-size: 0.85rem;
+    font-weight: 650;
+  }
+  .arch-fig {
+    margin: 0;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--aisle);
+  }
+  .arch-fig a {
+    display: block;
+    cursor: zoom-in;
+  }
+  .arch-fig img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    transition: transform 0.25s ease;
+  }
+  .arch-fig a:hover img {
+    transform: scale(1.015);
+  }
+  .arch-fig figcaption {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    padding: 0.6rem 0.85rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+    border-top: 1px solid var(--rule);
+    background: var(--panel);
+  }
+  .fig-title {
+    font-weight: 600;
+    color: var(--text);
+  }
+  .click-hint {
+    color: var(--cable);
+    font-weight: 600;
+  }
+
   .who {
     color: var(--muted); font-stretch: 85%;
     margin-bottom: 0.9rem;

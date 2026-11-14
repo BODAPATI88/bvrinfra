@@ -5,9 +5,10 @@ Upptime is scheduled every 5 minutes, but GitHub runs it every few hours (#107).
 ## What it does
 
 - One request per run, about 96 a day.
-- **Up:** any 2xx or 3xx within 10 seconds. A page served by the Pages fallback (`X-Served-By: pages`) is up, because visitors get the site. It is only recorded.
-- **Down:** 2 failed checks in a row (30 minutes). One failure alone is not an alert.
-- **Email only on a change:** one "is down" email, then nothing until one "is back up" email.
+- **Up (Silicon Active):** 2xx/3xx served by homelab (`X-Served-By: homelab`). Everything healthy.
+- **Degraded (Origin Failover):** 2 consecutive checks served by Pages fallback (`X-Served-By: pages`). Triggers alert: `⚠️ Homelab Silicon Offline: Cloudflare Pages Failover Active`.
+- **Down (Edge Outage):** 2 failed checks in a row (30 minutes). Neither homelab nor Pages could serve. Triggers alert: `🚨 bvrinfra.in is down`.
+- **Multi-channel paging:** sends alert email via Cloudflare Email Routing AND sends instant webhook notification (Telegram / Discord / Slack / Pushover) if `ALERT_WEBHOOK_URL` is configured.
 - State is kept in KV (`WATCH_STATE`) and written only when it changes.
 - Every run logs one JSON line (`check`, `status`, `fails`, `alert`), visible under the Worker's **Logs** in the dashboard.
 

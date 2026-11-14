@@ -10,7 +10,21 @@ locals {
         type    = "CNAME"
         content = "${var.origin_tunnel_id}.cfargotunnel.com"
         proxied = true
-        comment = "Site: homelab origin on k3s-apps through Cloudflare Tunnel (#101)"
+        comment = "Site: homelab origin through Cloudflare Tunnel (#101)"
+      }
+      api = {
+        name    = "api.bvrinfra.in"
+        type    = "CNAME"
+        content = "${var.origin_tunnel_id}.cfargotunnel.com"
+        proxied = true
+        comment = "API: BVR Nexus telemetry and AI orchestration endpoint"
+      }
+      kestra = {
+        name    = "kestra.bvrinfra.in"
+        type    = "CNAME"
+        content = "${var.origin_tunnel_id}.cfargotunnel.com"
+        proxied = true
+        comment = "Orchestrator: Kestra workflow UI and execution engine"
       }
     } : k => v if var.origin_tunnel_id != ""
   }

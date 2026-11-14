@@ -25,6 +25,23 @@ const flow = [
     in <a href="https://github.com/BODAPATI88/bvrinfra/blob/main/docs/adr/0001-bvrinfra-architecture.md">ADR 0001</a>.
   </p>
 
+  <figure class="arch-fig">
+    <a href="/img/architecture-diagram.jpg" target="_blank" rel="noopener" title="Click to view full-resolution 3D architecture diagram">
+      <img
+        src="/img/architecture-diagram.jpg"
+        alt="BVR Infrastructure Hybrid Cloud and Autonomous AI Workforce Architecture Diagram"
+        width="1200"
+        height="675"
+        loading="lazy"
+        decoding="async"
+      />
+    </a>
+    <figcaption>
+      <span class="fig-title">Comprehensive 3D Topology: Proxmox VE 9.1 Host, Dual LXC Micro-Containers, Autonomous AI Agents & Cloudflare Tunnel</span>
+      <span class="click-hint">Click diagram to open 4K full-resolution view &rarr;</span>
+    </figcaption>
+  </figure>
+
   <section aria-labelledby="flow-h">
     <h2 id="flow-h">From change to production</h2>
     <ol class="flow">
@@ -67,6 +84,49 @@ const flow = [
 </Base>
 
 <style>
+  .arch-fig {
+    margin: 1.5rem 0 2rem;
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--panel);
+    box-shadow: var(--glow);
+  }
+  .arch-fig a {
+    display: block;
+    cursor: zoom-in;
+  }
+  .arch-fig img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    transition: transform 0.25s ease;
+  }
+  .arch-fig a:hover img {
+    transform: scale(1.015);
+  }
+  .arch-fig figcaption {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    padding: 0.7rem 1rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+    border-top: 1px solid var(--rule);
+    background: var(--panel);
+  }
+  .fig-title {
+    font-weight: 600;
+    color: var(--text);
+  }
+  .click-hint {
+    color: var(--cable);
+    font-weight: 600;
+  }
+
   .eyebrow { font-size: 0.85rem; font-weight: 650; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
   h2 { font-size: clamp(1.25rem, 1.05rem + 0.7vw, 1.6rem); font-stretch: 90%; margin: clamp(2rem, 5vw, 3rem) 0 1rem; }
   .muted { color: var(--muted); }
